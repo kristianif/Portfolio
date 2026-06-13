@@ -1,16 +1,16 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
-  --bg:        #F7F5F0;
-  --bg-2:      #EEECEA;
-  --bg-3:      #E4E1DA;
-  --border:    #D4D0C8;
-  --border-2:  #C0BCB3;
-  --fg:        #111110;
-  --fg-muted:  #5C5C56;
-  --fg-dim:    #A8A49C;
-  --amber:     #A8640A;
-  --amber-hi:  #C4780E;
+  --bg:        #22242A;
+  --bg-2:      #2A2C34;
+  --bg-3:      #32353E;
+  --border:    #3C404C;
+  --border-2:  #4C5060;
+  --fg:        #EEEAE4;
+  --fg-muted:  #8A8A84;
+  --fg-dim:    #4A4A52;
+  --amber:     #D4880C;
+  --amber-hi:  #F0A010;
   --mono:      'JetBrains Mono', 'Courier New', monospace;
 }
 
@@ -29,7 +29,7 @@ body {
 /* ─── NAV ─────────────────────────────────────────────────────── */
 nav {
   position: fixed; top: 0; left: 0; right: 0; z-index: 200;
-  background: rgba(247,245,240,0.92);
+  background: rgba(34,36,42,0.92);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   border-bottom: 1px solid var(--border);
@@ -135,7 +135,7 @@ nav {
   transition: all 0.2s;
 }
 .btn-primary { background: var(--fg); color: var(--bg); border-color: var(--fg); }
-.btn-primary:hover { background: var(--amber); border-color: var(--amber); color: #fff; }
+.btn-primary:hover { background: var(--amber); border-color: var(--amber); color: var(--bg); }
 .btn-outline { background: transparent; color: var(--fg); border-color: var(--border-2); }
 .btn-outline:hover { border-color: var(--fg); }
 .btn-amber { background: var(--amber); color: #fff; border-color: var(--amber); }
