@@ -1,16 +1,16 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
-  --bg:        #080808;
-  --bg-2:      #101010;
-  --bg-3:      #181818;
-  --border:    #1C1C1C;
-  --border-2:  #2A2A2A;
-  --fg:        #F0EDE8;
-  --fg-muted:  #7A7A72;
-  --fg-dim:    #363630;
-  --amber:     #C4780A;
-  --amber-hi:  #E8960E;
+  --bg:        #F7F5F0;
+  --bg-2:      #EEECEA;
+  --bg-3:      #E4E1DA;
+  --border:    #D4D0C8;
+  --border-2:  #C0BCB3;
+  --fg:        #111110;
+  --fg-muted:  #5C5C56;
+  --fg-dim:    #A8A49C;
+  --amber:     #A8640A;
+  --amber-hi:  #C4780E;
   --mono:      'JetBrains Mono', 'Courier New', monospace;
 }
 
@@ -29,7 +29,7 @@ body {
 /* ─── NAV ─────────────────────────────────────────────────────── */
 nav {
   position: fixed; top: 0; left: 0; right: 0; z-index: 200;
-  background: rgba(8,8,8,0.90);
+  background: rgba(247,245,240,0.92);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   border-bottom: 1px solid var(--border);
@@ -135,11 +135,11 @@ nav {
   transition: all 0.2s;
 }
 .btn-primary { background: var(--fg); color: var(--bg); border-color: var(--fg); }
-.btn-primary:hover { background: var(--amber); border-color: var(--amber); color: var(--bg); }
+.btn-primary:hover { background: var(--amber); border-color: var(--amber); color: #fff; }
 .btn-outline { background: transparent; color: var(--fg); border-color: var(--border-2); }
 .btn-outline:hover { border-color: var(--fg); }
-.btn-amber { background: var(--amber); color: var(--bg); border-color: var(--amber); }
-.btn-amber:hover { background: var(--amber-hi); border-color: var(--amber-hi); }
+.btn-amber { background: var(--amber); color: #fff; border-color: var(--amber); }
+.btn-amber:hover { background: var(--amber-hi); border-color: var(--amber-hi); color: #fff; }
 
 /* ─── LAYOUT ──────────────────────────────────────────────────── */
 .container { max-width: 1200px; margin: 0 auto; padding: 0 2rem; }
@@ -664,7 +664,7 @@ footer {
 /* Lightbox */
 .lightbox {
   position: fixed; inset: 0; z-index: 500;
-  background: rgba(0,0,0,0.92);
+  background: rgba(10,10,8,0.94);
   display: flex; align-items: center; justify-content: center;
   opacity: 0; visibility: hidden;
   transition: opacity 0.2s, visibility 0.2s;
