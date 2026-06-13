@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>7.3L Powerstroke — Kristian Felten</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">KF<span class="dot">.</span></a>
+    <ul class="nav-links">
+      <li><a href="about.html">About</a></li>
+      <li>
+        <a href="projects.html" class="active">
+          Projects
+          <svg class="nav-chevron" viewBox="0 0 10 6" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 1l4 4 4-4"/></svg>
+        </a>
+        <ul class="nav-dropdown">
+          <li><a href="project-jeep-cj5.html"><span class="dd-num">01</span> 1973 Jeep CJ5</a></li>
+          <li><a href="project-powerstroke.html" class="active"><span class="dd-num">02</span> 7.3L Powerstroke</a></li>
+        </ul>
+      </li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+    <button class="nav-toggle" onclick="toggleMobileNav()" aria-label="Menu">
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 5h16M2 10h16M2 15h16"/></svg>
+    </button>
+  </div>
+  <div class="nav-mobile" id="mobileNav">
+    <a href="about.html">About</a>
+    <a href="projects.html">Projects</a>
+    <a href="project-jeep-cj5.html" class="sub"><span class="dd-num">01</span>1973 Jeep CJ5</a>
+    <a href="project-powerstroke.html" class="sub"><span class="dd-num">02</span>7.3L Powerstroke</a>
+    <a href="contact.html">Contact</a>
+  </div>
+</nav>
+
+<!-- PROJECT HERO -->
+<div class="page-hero" style="min-height:65vh;">
+  <div class="page-hero-inner">
+    <p class="page-label">Project 02 — Engine Rebuild</p>
+    <h1 class="page-title">7.3L Powerstroke<br>Diesel Engine Rebuilds</h1>
+    <p class="page-desc">
+      Multiple full rebuilds of Ford's 7.3L Powerstroke — one of the most durable diesel engines
+      ever produced, and unforgiving if the details aren't right.
+    </p>
+    <div style="display:flex; flex-wrap:wrap; gap:0.4rem; margin-top:1.5rem;">
+      <span class="tag">Diesel Systems</span>
+      <span class="tag">Precision Measurement</span>
+      <span class="tag">Fuel Systems</span>
+      <span class="tag">Turbocharging</span>
+    </div>
+  </div>
+</div>
+
+<!-- PHOTO GALLERY -->
+<div class="gallery-wrap">
+  <div class="gallery-hint">
+    <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 7h12M8 2l5 5-5 5"/></svg>
+    Drag to scroll
+  </div>
+  <div class="gallery-scroll" id="psGallery">
+    <!--
+      TO ADD PHOTOS: replace the .photo-ph divs below with:
+      <div class="gallery-item"><img src="photos/ps-1.jpg" alt="Description"></div>
+    -->
+    <div class="gallery-item">
+      <div class="photo-ph" style="width:680px; height:540px;">
+        <span>Engine Disassembly</span>
+      </div>
+    </div>
+    <div class="gallery-item">
+      <div class="photo-ph" style="width:480px; height:540px;">
+        <span>Precision Measurement</span>
+      </div>
+    </div>
+    <div class="gallery-item">
+      <div class="photo-ph" style="width:680px; height:540px;">
+        <span>Injector Service</span>
+      </div>
+    </div>
+    <div class="gallery-item">
+      <div class="photo-ph" style="width:480px; height:540px;">
+        <span>Head Gaskets</span>
+      </div>
+    </div>
+    <div class="gallery-item">
+      <div class="photo-ph" style="width:680px; height:540px;">
+        <span>Turbocharger</span>
+      </div>
+    </div>
+    <div class="gallery-item">
+      <div class="photo-ph" style="width:480px; height:540px;">
+        <span>Reassembly</span>
+      </div>
+    </div>
+  </div>
+  <div class="gallery-counter">
+    <span id="psLabel" style="font-family:var(--mono); font-size:10px; letter-spacing:0.14em; text-transform:uppercase; color:var(--fg-muted);">Photo 1 of 6</span>
+    <div class="gallery-dots" id="psDots"></div>
+  </div>
+</div>
+
+<!-- OVERVIEW -->
+<section class="section">
+  <p class="section-label">Project Overview</p>
+  <div style="display:grid; grid-template-columns:1.2fr 0.8fr; gap:5rem; align-items:start;">
+    <div>
+      <p class="about-text">
+        The Ford 7.3L Powerstroke IDI diesel is one of the most robust engines ever put in a
+        pickup truck — and one of the most demanding to rebuild correctly. Tolerances are tight,
+        and every measurement matters. Get one thing wrong and the whole build is compromised.
+      </p>
+      <p class="about-text">
+        Multiple full rebuilds means understanding not just the procedure, but why it works.
+        Precision measurement and machining tolerances, injector calibration, head gasket replacement
+        under correct torque sequences, turbocharger inspection and balancing — the 7.3L teaches you
+        to do it right, every time.
+      </p>
+    </div>
+    <div>
+      <table class="specs-table">
+        <tr>
+          <td>Engine</td>
+          <td>Ford 7.3L Powerstroke IDI Diesel</td>
+        </tr>
+        <tr>
+          <td>Build Type</td>
+          <td>Full Rebuild (Multiple)</td>
+        </tr>
+        <tr>
+          <td>Displacement</td>
+          <td>7.3 Liters / 444 cu in</td>
+        </tr>
+        <tr>
+          <td>Configuration</td>
+          <td>V8, Turbocharged, Indirect Injection</td>
+        </tr>
+        <tr>
+          <td>Work Performed</td>
+          <td>Full disassembly, precision measurement, injector service, head gaskets, turbo, reassembly to factory spec</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- DETAIL SECTIONS -->
+<div>
+
+  <div class="detail-row">
+    <div class="detail-text">
+      <p class="detail-sub">Step 01</p>
+      <h3 class="detail-heading">Teardown &amp; Measurement</h3>
+      <p class="detail-body">
+        Complete disassembly, then precision measurement of every critical dimension — cylinder bores,
+        crankshaft journals, connecting rod clearances. Numbers don't lie; this is where you find
+        what actually needs to be done.
+      </p>
+    </div>
+    <div class="detail-img">
+      <!-- <img src="photos/ps-teardown.jpg" alt="Engine teardown"> -->
+      <div class="photo-ph"><span>Teardown &amp; Measurement</span></div>
+    </div>
+  </div>
+
+  <div class="detail-row rev">
+    <div class="detail-text">
+      <p class="detail-sub">Step 02</p>
+      <h3 class="detail-heading">Injector Service</h3>
+      <p class="detail-body">
+        The 7.3L's indirect injection system is reliable when maintained properly and catastrophic
+        when it isn't. Full injector service — removal, cleaning, testing, and reinstallation to
+        factory torque spec. Fuel delivery is everything on a diesel.
+      </p>
+    </div>
+    <div class="detail-img">
+      <!-- <img src="photos/ps-injectors.jpg" alt="Injector service"> -->
+      <div class="photo-ph"><span>Injector Service</span></div>
+    </div>
+  </div>
+
+  <div class="detail-row">
+    <div class="detail-text">
+      <p class="detail-sub">Step 03</p>
+      <h3 class="detail-heading">Head Gasket Replacement</h3>
+      <p class="detail-body">
+        Head gasket work on a 7.3L is not casual. Heads pulled, surfaces inspected and machined
+        if needed, new gaskets installed using the correct multi-stage torque sequence.
+        Miss a step and you're doing it again.
+      </p>
+    </div>
+    <div class="detail-img">
+      <!-- <img src="photos/ps-heads.jpg" alt="Head gasket replacement"> -->
+      <div class="photo-ph"><span>Head Gaskets</span></div>
+    </div>
+  </div>
+
+  <div class="detail-row rev">
+    <div class="detail-text">
+      <p class="detail-sub">Step 04</p>
+      <h3 class="detail-heading">Turbocharger &amp; Reassembly</h3>
+      <p class="detail-body">
+        Turbocharger inspection, shaft play measurement, and reinstallation. Then full reassembly
+        to factory specification — every torque value, every sequence, every clearance checked
+        before the engine goes back in the truck.
+      </p>
+    </div>
+    <div class="detail-img">
+      <!-- <img src="photos/ps-turbo.jpg" alt="Turbocharger and reassembly"> -->
+      <div class="photo-ph"><span>Turbo &amp; Reassembly</span></div>
+    </div>
+  </div>
+
+</div>
+
+<!-- NAVIGATION -->
+<section class="section" style="padding-top:3rem; padding-bottom:3rem;">
+  <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem;">
+    <a href="projects.html" class="back-link" style="margin-bottom:0;">
+      <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M13 7H1M6 2L1 7l5 5"/></svg>
+      All Projects
+    </a>
+    <a href="project-jeep-cj5.html" class="back-link" style="margin-bottom:0; flex-direction:row-reverse;">
+      1973 Jeep CJ5
+      <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" style="transform:rotate(180deg)"><path d="M13 7H1M6 2L1 7l5 5"/></svg>
+    </a>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-inner">
+    <span>© 2025 Kristian Felten</span>
+    <span>Mechanical Engineering — University of Idaho</span>
+    <a href="contact.html">Get in Touch</a>
+  </div>
+</footer>
+
+<script>
+  function toggleMobileNav() {
+    document.getElementById('mobileNav').classList.toggle('open');
+  }
+
+  (function() {
+    const gallery = document.getElementById('psGallery');
+    const dotsEl  = document.getElementById('psDots');
+    const label   = document.getElementById('psLabel');
+    const items   = gallery.querySelectorAll('.gallery-item');
+    const total   = items.length;
+
+    items.forEach((_, i) => {
+      const d = document.createElement('div');
+      d.className = 'gallery-dot' + (i === 0 ? ' active' : '');
+      dotsEl.appendChild(d);
+    });
+
+    gallery.addEventListener('scroll', () => {
+      const scrollLeft = gallery.scrollLeft;
+      const width = gallery.offsetWidth;
+      const idx = Math.round(scrollLeft / width);
+      const clamped = Math.max(0, Math.min(idx, total - 1));
+      dotsEl.querySelectorAll('.gallery-dot').forEach((d, i) => {
+        d.classList.toggle('active', i === clamped);
+      });
+      label.textContent = `Photo ${clamped + 1} of ${total}`;
+    });
+
+    let isDown = false, startX, scrollLeftStart;
+    gallery.addEventListener('mousedown', e => {
+      isDown = true; startX = e.pageX - gallery.offsetLeft;
+      scrollLeftStart = gallery.scrollLeft;
+    });
+    document.addEventListener('mouseup', () => { isDown = false; });
+    document.addEventListener('mousemove', e => {
+      if (!isDown) return;
+      e.preventDefault();
+      const x = e.pageX - gallery.offsetLeft;
+      gallery.scrollLeft = scrollLeftStart - (x - startX);
+    });
+  })();
+</script>
+
+</body>
+</html>

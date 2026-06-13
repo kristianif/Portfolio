@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About — Kristian Felten</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">KF<span class="dot">.</span></a>
+    <ul class="nav-links">
+      <li><a href="about.html" class="active">About</a></li>
+      <li>
+        <a href="projects.html">
+          Projects
+          <svg class="nav-chevron" viewBox="0 0 10 6" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 1l4 4 4-4"/></svg>
+        </a>
+        <ul class="nav-dropdown">
+          <li><a href="project-jeep-cj5.html"><span class="dd-num">01</span> 1973 Jeep CJ5</a></li>
+          <li><a href="project-powerstroke.html"><span class="dd-num">02</span> 7.3L Powerstroke</a></li>
+        </ul>
+      </li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+    <button class="nav-toggle" onclick="toggleMobileNav()" aria-label="Menu">
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 5h16M2 10h16M2 15h16"/></svg>
+    </button>
+  </div>
+  <div class="nav-mobile" id="mobileNav">
+    <a href="about.html">About</a>
+    <a href="projects.html">Projects</a>
+    <a href="project-jeep-cj5.html" class="sub"><span class="dd-num">01</span>1973 Jeep CJ5</a>
+    <a href="project-powerstroke.html" class="sub"><span class="dd-num">02</span>7.3L Powerstroke</a>
+    <a href="contact.html">Contact</a>
+  </div>
+</nav>
+
+<!-- PAGE HERO -->
+<div class="page-hero">
+  <div class="page-hero-inner">
+    <p class="page-label">About</p>
+    <h1 class="page-title">Engineer.<br>Builder. Tinkerer.</h1>
+    <p class="page-desc">
+      Mechanical engineering student at the University of Idaho, going into senior year.
+      My education gave me the vocabulary for what I've always done naturally.
+    </p>
+  </div>
+</div>
+
+<!-- BIO -->
+<section class="section">
+  <p class="section-label">Background</p>
+  <div class="about-grid">
+    <div>
+      <h2 class="about-headline">Built things before I could name what I was doing.</h2>
+      <p class="about-text">
+        I'm a mechanical engineering student at the University of Idaho going into my senior year.
+        My education has given me the vocabulary for what I've always done naturally: understand systems,
+        diagnose problems, and build solutions that last.
+      </p>
+      <p class="about-text">
+        My work spans vehicle restoration, precision engine rebuilding, and hands-on fabrication.
+        I bring the same methodical thinking to a frame-off Jeep restoration that I bring to
+        engineering coursework — thorough, detail-oriented, and not done until it's right.
+      </p>
+      <p class="about-text">
+        Engineering school didn't teach me to work with my hands. It taught me to understand
+        why what I was already doing worked — and how to do it better.
+      </p>
+      <div style="margin-top:2.5rem;">
+        <a href="contact.html" class="btn btn-primary" style="margin-right:1rem;">Get in Touch</a>
+        <a href="projects.html" class="btn btn-outline">View Projects</a>
+      </div>
+    </div>
+    <div>
+      <div style="display:flex; flex-direction:column; gap:0; border:1px solid var(--border);">
+        <div class="stat-cell" style="border-bottom:1px solid var(--border);">
+          <div class="stat-val">4+</div>
+          <div class="stat-key">Years hands-on mechanical work</div>
+        </div>
+        <div class="stat-cell" style="border-bottom:1px solid var(--border);">
+          <div class="stat-val">7.3L</div>
+          <div class="stat-key">Powerstroke rebuilds — inside and out</div>
+        </div>
+        <div class="stat-cell" style="border-bottom:1px solid var(--border);">
+          <div class="stat-val">'73</div>
+          <div class="stat-key">Jeep CJ5 — frame-off restoration in progress</div>
+        </div>
+        <div class="stat-cell">
+          <div class="stat-val">U of I</div>
+          <div class="stat-key">B.S. Mechanical Engineering, Senior Year</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SKILLS -->
+<section class="section">
+  <p class="section-label">Skills &amp; Capabilities</p>
+  <div class="skills-grid">
+    <div class="skill-cell">CAD / SolidWorks</div>
+    <div class="skill-cell">FEA</div>
+    <div class="skill-cell">Engine Rebuilding</div>
+    <div class="skill-cell">Fabrication</div>
+    <div class="skill-cell">Diesel Systems</div>
+    <div class="skill-cell">Welding</div>
+    <div class="skill-cell">Diagnostics</div>
+    <div class="skill-cell">Electrical Systems</div>
+    <div class="skill-cell">Materials Science</div>
+    <div class="skill-cell">Precision Measurement</div>
+    <div class="skill-cell">Suspension Systems</div>
+    <div class="skill-cell">Turbocharging</div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-inner">
+    <span>© 2025 Kristian Felten</span>
+    <span>Mechanical Engineering — University of Idaho</span>
+    <a href="contact.html">Get in Touch</a>
+  </div>
+</footer>
+
+<script>
+  function toggleMobileNav() {
+    document.getElementById('mobileNav').classList.toggle('open');
+  }
+</script>
+</body>
+</html>

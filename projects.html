@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Projects — Kristian Felten</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">KF<span class="dot">.</span></a>
+    <ul class="nav-links">
+      <li><a href="about.html">About</a></li>
+      <li>
+        <a href="projects.html" class="active">
+          Projects
+          <svg class="nav-chevron" viewBox="0 0 10 6" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 1l4 4 4-4"/></svg>
+        </a>
+        <ul class="nav-dropdown">
+          <li><a href="project-jeep-cj5.html"><span class="dd-num">01</span> 1973 Jeep CJ5</a></li>
+          <li><a href="project-powerstroke.html"><span class="dd-num">02</span> 7.3L Powerstroke</a></li>
+        </ul>
+      </li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+    <button class="nav-toggle" onclick="toggleMobileNav()" aria-label="Menu">
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 5h16M2 10h16M2 15h16"/></svg>
+    </button>
+  </div>
+  <div class="nav-mobile" id="mobileNav">
+    <a href="about.html">About</a>
+    <a href="projects.html">Projects</a>
+    <a href="project-jeep-cj5.html" class="sub"><span class="dd-num">01</span>1973 Jeep CJ5</a>
+    <a href="project-powerstroke.html" class="sub"><span class="dd-num">02</span>7.3L Powerstroke</a>
+    <a href="contact.html">Contact</a>
+  </div>
+</nav>
+
+<!-- PAGE HERO -->
+<div class="page-hero">
+  <div class="page-hero-inner">
+    <p class="page-label">Projects</p>
+    <h1 class="page-title">Work that gets<br>your hands dirty.</h1>
+    <p class="page-desc">
+      Hands-on mechanical projects — from frame-off restorations to precision engine rebuilds.
+      Click any project to see the full build.
+    </p>
+  </div>
+</div>
+
+<!-- PROJECT LIST -->
+<section class="section" style="padding-top:4rem;">
+  <div class="projects-list">
+
+    <a href="project-jeep-cj5.html" class="project-card">
+      <div class="project-card-cover" style="height:280px;">
+        <!-- <img src="photos/jeep-cover.jpg" alt="1973 Jeep CJ5"> -->
+      </div>
+      <p class="project-card-num">Project 01</p>
+      <h3 class="project-card-title">1973 Jeep CJ5 Frame-Off Restoration</h3>
+      <p class="project-card-desc">
+        A complete ground-up restoration of a 1973 Jeep CJ5. Every system has been touched:
+        frame inspection and repair, suspension rebuild, drivetrain overhaul, bodywork, and engine work.
+        This project demands knowledge across mechanical, structural, and electrical systems simultaneously.
+      </p>
+      <div class="tag-row">
+        <span class="tag">Fabrication</span>
+        <span class="tag">Drivetrain</span>
+        <span class="tag">Suspension</span>
+        <span class="tag">Bodywork</span>
+        <span class="tag">Electrical</span>
+      </div>
+      <span class="card-cta">
+        View Build
+        <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 7h12M8 2l5 5-5 5"/></svg>
+      </span>
+    </a>
+
+    <a href="project-powerstroke.html" class="project-card">
+      <div class="project-card-cover" style="height:280px;">
+        <!-- <img src="photos/powerstroke-cover.jpg" alt="7.3L Powerstroke"> -->
+      </div>
+      <p class="project-card-num">Project 02</p>
+      <h3 class="project-card-title">7.3L Powerstroke Diesel Engine Rebuilds</h3>
+      <p class="project-card-desc">
+        Multiple full rebuilds of Ford's 7.3L Powerstroke diesel — one of the most durable
+        diesel engines ever produced, and unforgiving if the details aren't right. Precision
+        measurement, injector service, head gaskets, turbo inspection, and full reassembly.
+      </p>
+      <div class="tag-row">
+        <span class="tag">Diesel Systems</span>
+        <span class="tag">Precision Measurement</span>
+        <span class="tag">Fuel Systems</span>
+        <span class="tag">Turbocharging</span>
+      </div>
+      <span class="card-cta">
+        View Build
+        <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 7h12M8 2l5 5-5 5"/></svg>
+      </span>
+    </a>
+
+  </div>
+</section>
+
+<footer>
+  <div class="footer-inner">
+    <span>© 2025 Kristian Felten</span>
+    <span>Mechanical Engineering — University of Idaho</span>
+    <a href="contact.html">Get in Touch</a>
+  </div>
+</footer>
+
+<script>
+  function toggleMobileNav() {
+    document.getElementById('mobileNav').classList.toggle('open');
+  }
+</script>
+</body>
+</html>
