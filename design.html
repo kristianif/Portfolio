@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Design — Kristian Felten</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">KF<span class="dot">.</span></a>
+    <ul class="nav-links">
+      <li><a href="about.html">About</a></li>
+      <li>
+        <a href="projects.html">
+          Projects
+          <svg class="nav-chevron" viewBox="0 0 10 6" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 1l4 4 4-4"/></svg>
+        </a>
+        <ul class="nav-dropdown">
+          <li><a href="project-jeep-cj5.html"><span class="dd-num">01</span> 1973 Jeep CJ5</a></li>
+          <li><a href="project-powerstroke.html"><span class="dd-num">02</span> 7.3L Powerstroke</a></li>
+        </ul>
+      </li>
+      <li><a href="design.html" class="active">Design</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+    <button class="nav-toggle" onclick="toggleMobileNav()" aria-label="Menu">
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 5h16M2 10h16M2 15h16"/></svg>
+    </button>
+  </div>
+  <div class="nav-mobile" id="mobileNav">
+    <a href="about.html">About</a>
+    <a href="projects.html">Projects</a>
+    <a href="project-jeep-cj5.html" class="sub"><span class="dd-num">01</span>1973 Jeep CJ5</a>
+    <a href="project-powerstroke.html" class="sub"><span class="dd-num">02</span>7.3L Powerstroke</a>
+    <a href="design.html">Design</a>
+    <a href="contact.html">Contact</a>
+  </div>
+</nav>
+
+<!-- PAGE HERO -->
+<div class="page-hero">
+  <div class="page-hero-inner">
+    <p class="page-label">Design &amp; Engineering</p>
+    <h1 class="page-title">CAD. Renderings.<br>Technical Work.</h1>
+    <p class="page-desc">
+      SolidWorks models, FEA analysis, technical drawings, and engineering coursework.
+      Click any card to view full size.
+    </p>
+  </div>
+</div>
+
+<!-- FILTER + GRID -->
+<section class="section" style="padding-top:4rem;">
+
+  <div class="filter-bar">
+    <button class="filter-btn active" data-filter="all">All</button>
+    <button class="filter-btn" data-filter="cad">CAD Models</button>
+    <button class="filter-btn" data-filter="rendering">Renderings</button>
+    <button class="filter-btn" data-filter="fea">FEA / Analysis</button>
+    <button class="filter-btn" data-filter="drawing">Technical Drawings</button>
+    <button class="filter-btn" data-filter="coursework">Coursework</button>
+  </div>
+
+  <div class="design-grid" id="designGrid">
+
+    <!--
+    ════════════════════════════════════════════════════════════
+    HOW TO ADD A DESIGN CARD:
+
+    Copy this block and fill in the details:
+
+    <div class="design-card" data-cat="cad">
+      <div class="design-card-img">
+        <img src="photos/your-image.jpg" alt="Description">
+      </div>
+      <div class="design-card-body">
+        <p class="design-card-cat">CAD Model</p>
+        <h3 class="design-card-title">Part or Assembly Name</h3>
+        <p class="design-card-desc">Brief description of what this is and what it demonstrates.</p>
+      </div>
+      <div class="design-card-footer">
+        <span class="tag">SolidWorks</span>
+        <span class="tag">Sheet Metal</span>
+      </div>
+    </div>
+
+    data-cat options: cad | rendering | fea | drawing | coursework
+    ════════════════════════════════════════════════════════════
+    -->
+
+    <!-- PLACEHOLDER CARDS — replace with real work as you add it -->
+
+    <div class="design-card" data-cat="cad">
+      <div class="design-card-img ph">
+        <!-- <img src="photos/design-cad-1.jpg" alt="CAD Model"> -->
+      </div>
+      <div class="design-card-body">
+        <p class="design-card-cat">CAD Model</p>
+        <h3 class="design-card-title">Add your first CAD model</h3>
+        <p class="design-card-desc">Drop an image in the photos/ folder and replace this placeholder.</p>
+      </div>
+      <div class="design-card-footer">
+        <span class="tag">SolidWorks</span>
+      </div>
+    </div>
+
+    <div class="design-card" data-cat="rendering">
+      <div class="design-card-img ph">
+        <!-- <img src="photos/design-render-1.jpg" alt="Rendering"> -->
+      </div>
+      <div class="design-card-body">
+        <p class="design-card-cat">Rendering</p>
+        <h3 class="design-card-title">Add a rendering</h3>
+        <p class="design-card-desc">Visualizations, photo-realistic renders, or presentation images from your models.</p>
+      </div>
+      <div class="design-card-footer">
+        <span class="tag">SolidWorks Visualize</span>
+      </div>
+    </div>
+
+    <div class="design-card" data-cat="fea">
+      <div class="design-card-img ph">
+        <!-- <img src="photos/design-fea-1.jpg" alt="FEA Analysis"> -->
+      </div>
+      <div class="design-card-body">
+        <p class="design-card-cat">FEA / Analysis</p>
+        <h3 class="design-card-title">Add an FEA study</h3>
+        <p class="design-card-desc">Stress analysis, thermal studies, or other simulation results.</p>
+      </div>
+      <div class="design-card-footer">
+        <span class="tag">FEA</span>
+        <span class="tag">Simulation</span>
+      </div>
+    </div>
+
+    <div class="design-card" data-cat="drawing">
+      <div class="design-card-img ph">
+        <!-- <img src="photos/design-drawing-1.jpg" alt="Technical Drawing"> -->
+      </div>
+      <div class="design-card-body">
+        <p class="design-card-cat">Technical Drawing</p>
+        <h3 class="design-card-title">Add a technical drawing</h3>
+        <p class="design-card-desc">GD&T drawings, dimensioned views, or shop drawings from coursework or projects.</p>
+      </div>
+      <div class="design-card-footer">
+        <span class="tag">GD&amp;T</span>
+        <span class="tag">Drafting</span>
+      </div>
+    </div>
+
+    <div class="design-card" data-cat="coursework">
+      <div class="design-card-img ph">
+        <!-- <img src="photos/design-coursework-1.jpg" alt="Coursework"> -->
+      </div>
+      <div class="design-card-body">
+        <p class="design-card-cat">Coursework</p>
+        <h3 class="design-card-title">Add a class project</h3>
+        <p class="design-card-desc">Engineering coursework, senior capstone work, or lab reports with visual outputs.</p>
+      </div>
+      <div class="design-card-footer">
+        <span class="tag">U of I</span>
+      </div>
+    </div>
+
+    <div class="design-card" data-cat="cad">
+      <div class="design-card-img ph">
+        <!-- <img src="photos/design-cad-2.jpg" alt="Assembly"> -->
+      </div>
+      <div class="design-card-body">
+        <p class="design-card-cat">CAD Model</p>
+        <h3 class="design-card-title">Add another model</h3>
+        <p class="design-card-desc">Assemblies, parts, or mechanism designs.</p>
+      </div>
+      <div class="design-card-footer">
+        <span class="tag">SolidWorks</span>
+        <span class="tag">Assembly</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- TOOLS STRIP -->
+<section class="section" style="padding-top:3rem;">
+  <p class="section-label">Software &amp; Tools</p>
+  <div class="skills-grid">
+    <div class="skill-cell">SolidWorks</div>
+    <div class="skill-cell">SolidWorks Simulation (FEA)</div>
+    <div class="skill-cell">SolidWorks Visualize</div>
+    <div class="skill-cell">AutoCAD</div>
+    <div class="skill-cell">GD&amp;T</div>
+    <div class="skill-cell">MATLAB</div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-inner">
+    <span>© 2025 Kristian Felten</span>
+    <span>Mechanical Engineering — University of Idaho</span>
+    <a href="contact.html">Get in Touch</a>
+  </div>
+</footer>
+
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox" onclick="closeLightbox()">
+  <button class="lightbox-close" onclick="closeLightbox()">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+      <path d="M18 6L6 18M6 6l12 12"/>
+    </svg>
+  </button>
+  <img class="lightbox-img" id="lightboxImg" src="" alt="">
+  <p class="lightbox-caption" id="lightboxCaption"></p>
+</div>
+
+<script>
+  function toggleMobileNav() {
+    document.getElementById('mobileNav').classList.toggle('open');
+  }
+
+  // Filter
+  document.querySelectorAll('.filter-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const filter = btn.dataset.filter;
+      document.querySelectorAll('.design-card').forEach(card => {
+        const show = filter === 'all' || card.dataset.cat === filter;
+        card.hidden = !show;
+      });
+    });
+  });
+
+  // Lightbox — only open if card has a real image
+  document.querySelectorAll('.design-card').forEach(card => {
+    card.addEventListener('click', () => {
+      const img = card.querySelector('img');
+      if (!img) return;
+      const title = card.querySelector('.design-card-title')?.textContent || '';
+      document.getElementById('lightboxImg').src = img.src;
+      document.getElementById('lightboxImg').alt = img.alt;
+      document.getElementById('lightboxCaption').textContent = title;
+      document.getElementById('lightbox').classList.add('open');
+    });
+  });
+
+  function closeLightbox() {
+    document.getElementById('lightbox').classList.remove('open');
+  }
+
+  // Close on Escape
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') closeLightbox();
+  });
+</script>
+
+</body>
+</html>

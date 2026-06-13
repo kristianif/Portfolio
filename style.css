@@ -536,6 +536,106 @@ footer {
 .footer-inner a { color: var(--fg-dim); text-decoration: none; transition: color 0.2s; }
 .footer-inner a:hover { color: var(--amber); }
 
+/* ─── DESIGN PAGE ────────────────────────────────────────────── */
+.filter-bar {
+  display: flex; gap: 0; flex-wrap: wrap;
+  margin-bottom: 3rem;
+  border: 1px solid var(--border);
+}
+.filter-btn {
+  font-family: var(--mono); font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase;
+  padding: 0.75rem 1.25rem;
+  background: none; border: none; border-right: 1px solid var(--border);
+  color: var(--fg-muted); cursor: pointer;
+  transition: color 0.15s, background 0.15s;
+}
+.filter-btn:last-child { border-right: none; }
+.filter-btn:hover { color: var(--fg); background: var(--bg-2); }
+.filter-btn.active { color: var(--bg); background: var(--amber); }
+
+.design-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  background: var(--border);
+}
+
+.design-card {
+  background: var(--bg);
+  display: flex; flex-direction: column;
+  text-decoration: none; color: inherit;
+  transition: background 0.2s;
+  cursor: pointer;
+}
+.design-card:hover { background: var(--bg-2); }
+.design-card[hidden] { display: none; }
+
+.design-card-img {
+  width: 100%; aspect-ratio: 4/3;
+  overflow: hidden; position: relative;
+  background: var(--bg-3);
+}
+.design-card-img img {
+  width: 100%; height: 100%; object-fit: cover; display: block;
+  transition: transform 0.4s ease;
+}
+.design-card:hover .design-card-img img { transform: scale(1.04); }
+
+/* Blueprint grid on empty slots */
+.design-card-img:not(:has(img))::before,
+.design-card-img.ph::before {
+  content: '';
+  position: absolute; inset: 0;
+  background-image:
+    linear-gradient(var(--border) 1px, transparent 1px),
+    linear-gradient(90deg, var(--border) 1px, transparent 1px);
+  background-size: 28px 28px;
+}
+
+.design-card-body { padding: 1.5rem 1.5rem; flex: 1; }
+.design-card-cat {
+  font-family: var(--mono); font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--amber); margin-bottom: 0.5rem;
+}
+.design-card-title {
+  font-size: 1rem; font-weight: 600; letter-spacing: -0.01em;
+  line-height: 1.3; margin-bottom: 0.5rem; color: var(--fg);
+}
+.design-card-desc {
+  font-size: 13px; color: var(--fg-muted); line-height: 1.7;
+}
+.design-card-footer {
+  padding: 0.75rem 1.5rem;
+  border-top: 1px solid var(--border);
+  display: flex; gap: 0.4rem; flex-wrap: wrap;
+}
+
+/* Lightbox */
+.lightbox {
+  position: fixed; inset: 0; z-index: 500;
+  background: rgba(0,0,0,0.92);
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0; visibility: hidden;
+  transition: opacity 0.2s, visibility 0.2s;
+}
+.lightbox.open { opacity: 1; visibility: visible; }
+.lightbox-img {
+  max-width: 90vw; max-height: 88vh;
+  object-fit: contain; display: block;
+}
+.lightbox-close {
+  position: absolute; top: 1.5rem; right: 1.5rem;
+  background: none; border: none; color: var(--fg-muted);
+  cursor: pointer; padding: 8px;
+  transition: color 0.2s;
+}
+.lightbox-close:hover { color: var(--fg); }
+.lightbox-caption {
+  position: absolute; bottom: 2rem; left: 50%; transform: translateX(-50%);
+  font-family: var(--mono); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--fg-muted); white-space: nowrap;
+}
+
 /* ─── RESPONSIVE ──────────────────────────────────────────────── */
 @media (max-width: 900px) {
   .about-grid { grid-template-columns: 1fr; gap: 3rem; }
@@ -557,6 +657,7 @@ footer {
   .stat-cell:nth-child(2) { border-bottom: 1px solid var(--border); }
 
   .skills-grid { grid-template-columns: 1fr 1fr; }
+  .design-grid { grid-template-columns: 1fr 1fr; }
 
   .gallery-item img,
   .gallery-item .photo-ph { height: 300px; min-width: 280px; }
