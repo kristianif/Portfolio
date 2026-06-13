@@ -41,7 +41,7 @@ nav {
 }
 
 .nav-logo {
-  font-family: var(--mono); font-size: 13px; font-weight: 500;
+  font-family: var(--mono); font-size: 17px; font-weight: 600;
   letter-spacing: 0.12em; text-transform: uppercase;
   color: var(--fg); text-decoration: none;
 }
@@ -158,11 +158,18 @@ nav {
 .section-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
 
 /* ─── HERO (HOMEPAGE) ─────────────────────────────────────────── */
+.home-hero-wrap {
+  min-height: 100vh;
+  background-size: cover;
+  background-position: center;
+  display: flex; flex-direction: column; justify-content: flex-end;
+  position: relative;
+}
 .home-hero {
   min-height: 100vh;
   display: flex; flex-direction: column; justify-content: flex-end;
   padding: 0 2rem 5.5rem;
-  max-width: 1200px; margin: 0 auto;
+  max-width: 1200px; margin: 0 auto; width: 100%;
   position: relative;
 }
 
