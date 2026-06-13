@@ -374,6 +374,18 @@ nav {
   height: 540px; width: auto; min-width: 360px;
   display: block; object-fit: cover;
 }
+
+/* ─── MOBILE GALLERY ──────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .gallery-item {
+    flex: 0 0 100vw;
+  }
+  .gallery-item img,
+  .gallery-item .photo-ph {
+    height: 56vw !important; width: 100vw !important; min-width: unset !important;
+    object-fit: cover;
+  }
+}
 .gallery-item .photo-ph {
   width: 640px;
   background: var(--bg-3);
@@ -717,8 +729,7 @@ footer {
   .skills-grid { grid-template-columns: 1fr 1fr; }
   .design-grid { grid-template-columns: 1fr 1fr; }
 
-  .gallery-item img,
-  .gallery-item .photo-ph { height: 300px; min-width: 280px; }
+  /* gallery handled by dedicated mobile rule above */
 
   .detail-img { min-height: 280px; }
   .detail-text { padding: 2.5rem 1.5rem; }
