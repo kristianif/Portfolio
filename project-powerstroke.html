@@ -77,6 +77,36 @@
   </div>
 </div>
 
+<!-- CATEGORY GALLERIES -->
+<div class="cat-galleries">
+
+  <div class="cat-section">
+    <div class="cat-header">
+      <span class="cat-header-label">Engine</span>
+      <div class="cat-header-line"></div>
+      <span class="cat-header-count">2 photos</span>
+    </div>
+    <div class="cat-gallery">
+      <div class="cat-item"><img src="photos/ps-cover.jpg" alt="7.3L Powerstroke"></div>
+      <div class="cat-item"><img src="photos/ps-top.jpg" alt="Powerstroke top view"></div>
+    </div>
+  </div>
+
+  <!-- Add more categories here as you get more photos, e.g.:
+  <div class="cat-section">
+    <div class="cat-header">
+      <span class="cat-header-label">Injectors</span>
+      <div class="cat-header-line"></div>
+      <span class="cat-header-count">X photos</span>
+    </div>
+    <div class="cat-gallery">
+      <div class="cat-item"><img src="photos/ps-injector-1.jpg" alt="..."></div>
+    </div>
+  </div>
+  -->
+
+</div>
+
 <!-- OVERVIEW -->
 <section class="section">
   <p class="section-label">Project Overview</p>
@@ -208,6 +238,15 @@
   </div>
 </footer>
 
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox">
+  <button class="lightbox-close" onclick="document.getElementById('lightbox').classList.remove('open')">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 6L6 18M6 6l12 12"/></svg>
+  </button>
+  <img class="lightbox-img" id="lightboxImg" src="" alt="">
+  <p class="lightbox-caption" id="lightboxCaption"></p>
+</div>
+
 <script>
   function toggleMobileNav() {
     document.getElementById('mobileNav').classList.toggle('open');
@@ -250,6 +289,36 @@
       gallery.scrollLeft = scrollLeftStart - (x - startX);
     });
   })();
+
+  // Category gallery drag scroll
+  document.querySelectorAll('.cat-gallery').forEach(g => {
+    let down = false, sx, sl;
+    g.addEventListener('mousedown', e => { down = true; sx = e.pageX - g.offsetLeft; sl = g.scrollLeft; g.style.cursor = 'grabbing'; });
+    document.addEventListener('mouseup', () => { down = false; g.style.cursor = 'grab'; });
+    document.addEventListener('mousemove', e => {
+      if (!down) return;
+      e.preventDefault();
+      g.scrollLeft = sl - (e.pageX - g.offsetLeft - sx);
+    });
+  });
+
+  // Lightbox for category images
+  const lb    = document.getElementById('lightbox');
+  const lbImg = document.getElementById('lightboxImg');
+  const lbCap = document.getElementById('lightboxCaption');
+
+  document.querySelectorAll('.cat-item img').forEach(img => {
+    img.style.cursor = 'zoom-in';
+    img.addEventListener('click', () => {
+      lbImg.src = img.src;
+      lbImg.alt = img.alt;
+      lbCap.textContent = img.alt;
+      lb.classList.add('open');
+    });
+  });
+
+  document.getElementById('lightbox').addEventListener('click', () => lb.classList.remove('open'));
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') lb.classList.remove('open'); });
 </script>
 
 </body>
