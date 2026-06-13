@@ -85,6 +85,50 @@
   </div>
 </div>
 
+<!-- CATEGORY GALLERIES -->
+<div class="cat-galleries">
+
+  <div class="cat-section">
+    <div class="cat-header">
+      <span class="cat-header-label">Exterior</span>
+      <div class="cat-header-line"></div>
+      <span class="cat-header-count">3 photos</span>
+    </div>
+    <div class="cat-gallery">
+      <div class="cat-item"><img src="photos/jeep-hero.jpg" alt="Jeep CJ5"></div>
+      <div class="cat-item"><img src="photos/jeep-night.jpg" alt="Jeep at night"></div>
+      <div class="cat-item"><img src="photos/jeep-grill.jpg" alt="Front grill"></div>
+    </div>
+  </div>
+
+  <div class="cat-section">
+    <div class="cat-header">
+      <span class="cat-header-label">Interior</span>
+      <div class="cat-header-line"></div>
+      <span class="cat-header-count">4 photos</span>
+    </div>
+    <div class="cat-gallery">
+      <div class="cat-item"><img src="photos/jeep-dash.jpg" alt="Dash panel"></div>
+      <div class="cat-item"><img src="photos/jeep-dash2.jpg" alt="Dash installed"></div>
+      <div class="cat-item"><img src="photos/jeep-seats.jpg" alt="Bucket seats"></div>
+      <div class="cat-item"><img src="photos/jeep-interior.jpg" alt="Interior"></div>
+    </div>
+  </div>
+
+  <div class="cat-section">
+    <div class="cat-header">
+      <span class="cat-header-label">Fabrication &amp; Electrical</span>
+      <div class="cat-header-line"></div>
+      <span class="cat-header-count">2 photos</span>
+    </div>
+    <div class="cat-gallery">
+      <div class="cat-item"><img src="photos/jeep-sheetmetal.jpg" alt="Sheet metal fabrication"></div>
+      <div class="cat-item"><img src="photos/jeep-wiring.jpg" alt="Wiring harness"></div>
+    </div>
+  </div>
+
+</div>
+
 <!-- OVERVIEW -->
 <section class="section">
   <p class="section-label">Project Overview</p>
@@ -259,7 +303,48 @@
       gallery.scrollLeft = scrollLeftStart - (x - startX);
     });
   })();
+
+  // (lightbox HTML is below the script tag — see #lightbox div)
+
+  // Category gallery drag scroll
+  document.querySelectorAll('.cat-gallery').forEach(g => {
+    let down = false, sx, sl;
+    g.addEventListener('mousedown', e => { down = true; sx = e.pageX - g.offsetLeft; sl = g.scrollLeft; g.style.cursor = 'grabbing'; });
+    document.addEventListener('mouseup', () => { down = false; g.style.cursor = 'grab'; });
+    document.addEventListener('mousemove', e => {
+      if (!down) return;
+      e.preventDefault();
+      g.scrollLeft = sl - (e.pageX - g.offsetLeft - sx);
+    });
+  });
+
+  // Lightbox for category images
+  const lb    = document.getElementById('lightbox');
+  const lbImg = document.getElementById('lightboxImg');
+  const lbCap = document.getElementById('lightboxCaption');
+
+  document.querySelectorAll('.cat-item img').forEach(img => {
+    img.style.cursor = 'zoom-in';
+    img.addEventListener('click', () => {
+      lbImg.src = img.src;
+      lbImg.alt = img.alt;
+      lbCap.textContent = img.alt;
+      lb.classList.add('open');
+    });
+  });
+
+  document.getElementById('lightbox').addEventListener('click', () => lb.classList.remove('open'));
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') lb.classList.remove('open'); });
 </script>
+
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox">
+  <button class="lightbox-close" onclick="document.getElementById('lightbox').classList.remove('open')">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 6L6 18M6 6l12 12"/></svg>
+  </button>
+  <img class="lightbox-img" id="lightboxImg" src="" alt="">
+  <p class="lightbox-caption" id="lightboxCaption"></p>
+</div>
 
 </body>
 </html>

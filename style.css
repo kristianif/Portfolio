@@ -536,6 +536,57 @@ footer {
 .footer-inner a { color: var(--fg-dim); text-decoration: none; transition: color 0.2s; }
 .footer-inner a:hover { color: var(--amber); }
 
+/* ─── CATEGORY GALLERIES ─────────────────────────────────────── */
+.cat-galleries {
+  background: var(--bg-2);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+
+.cat-section { border-bottom: 1px solid var(--border); }
+.cat-section:last-child { border-bottom: none; }
+
+.cat-header {
+  max-width: 1200px; margin: 0 auto;
+  padding: 1.75rem 2rem 1.25rem;
+  display: flex; align-items: center; gap: 1rem;
+}
+.cat-header-label {
+  font-family: var(--mono); font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--amber); white-space: nowrap;
+}
+.cat-header-line { flex: 1; height: 1px; background: var(--border); }
+.cat-header-count {
+  font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--fg-dim); white-space: nowrap;
+}
+
+.cat-gallery {
+  display: flex; gap: 2px;
+  overflow-x: auto; overflow-y: hidden;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  cursor: grab;
+  user-select: none;
+  scrollbar-width: none;
+  padding: 0 2rem 1.5rem;
+}
+.cat-gallery::-webkit-scrollbar { display: none; }
+.cat-gallery:active { cursor: grabbing; }
+
+.cat-item {
+  flex: 0 0 auto;
+  scroll-snap-align: start;
+  position: relative;
+  overflow: hidden;
+}
+.cat-item img {
+  height: 300px; width: auto; min-width: 200px;
+  display: block; object-fit: cover;
+  transition: opacity 0.2s;
+}
+.cat-item:hover img { opacity: 0.85; cursor: zoom-in; }
+
 /* ─── DESIGN PAGE ────────────────────────────────────────────── */
 .filter-bar {
   display: flex; gap: 0; flex-wrap: wrap;
