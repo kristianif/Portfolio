@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kristian Felten — Mechanical Engineering</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --cream: #F7F5F0;
+      --ink: #1A1A18;
+      --ink-soft: #4A4A46;
+      --ink-muted: #8A8A84;
+      --rule: #DDDBD4;
+      --accent: #2C5F8A;
+      --accent-light: #E6F1FB;
+      --white: #FFFFFF;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--cream);
+      color: var(--ink);
+      font-size: 16px;
+      line-height: 1.7;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* NAV */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      background: rgba(247, 245, 240, 0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--rule);
+    }
+
+    .nav-inner {
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 0 2rem;
+      height: 56px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .nav-logo {
+      font-family: 'DM Serif Display', serif;
+      font-size: 18px;
+      color: var(--ink);
+      text-decoration: none;
+      letter-spacing: -0.02em;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--ink-soft);
+      text-decoration: none;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover { color: var(--ink); }
+
+    /* HERO */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      padding: 0 2rem;
+      max-width: 1080px;
+      margin: 0 auto;
+    }
+
+    .hero-content {
+      padding-top: 56px;
+    }
+
+    .hero-eyebrow {
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 1.5rem;
+    }
+
+    .hero-name {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(3rem, 8vw, 6.5rem);
+      line-height: 1.0;
+      letter-spacing: -0.03em;
+      color: var(--ink);
+      margin-bottom: 0.25rem;
+    }
+
+    .hero-name em {
+      font-style: italic;
+      color: var(--accent);
+    }
+
+    .hero-title {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(1.5rem, 3vw, 2.5rem);
+      font-weight: 400;
+      color: var(--ink-soft);
+      margin-bottom: 2rem;
+      letter-spacing: -0.02em;
+    }
+
+    .hero-bio {
+      max-width: 520px;
+      font-size: 16px;
+      color: var(--ink-soft);
+      line-height: 1.8;
+      margin-bottom: 2.5rem;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 0.65rem 1.5rem;
+      border-radius: 2px;
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      text-decoration: none;
+      transition: all 0.2s;
+      cursor: pointer;
+      border: 1px solid transparent;
+    }
+
+    .btn-primary {
+      background: var(--ink);
+      color: var(--white);
+    }
+    .btn-primary:hover { background: var(--accent); }
+
+    .btn-secondary {
+      background: transparent;
+      color: var(--ink);
+      border-color: var(--rule);
+    }
+    .btn-secondary:hover { border-color: var(--ink); }
+
+    /* SECTION LAYOUT */
+    section {
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 5rem 2rem;
+      border-top: 1px solid var(--rule);
+    }
+
+    .section-label {
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--ink-muted);
+      margin-bottom: 3rem;
+    }
+
+    /* ABOUT */
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: start;
+    }
+
+    .about-headline {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(1.75rem, 3vw, 2.5rem);
+      line-height: 1.2;
+      letter-spacing: -0.02em;
+      margin-bottom: 1.5rem;
+    }
+
+    .about-text {
+      color: var(--ink-soft);
+      font-size: 15px;
+      line-height: 1.85;
+      margin-bottom: 1rem;
+    }
+
+    .skills-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 2rem;
+    }
+
+    .skill-tag {
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      padding: 5px 12px;
+      border: 1px solid var(--rule);
+      border-radius: 2px;
+      color: var(--ink-soft);
+      background: var(--white);
+    }
+
+    .about-stats {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .stat-item {
+      padding-bottom: 1.5rem;
+      border-bottom: 1px solid var(--rule);
+    }
+
+    .stat-item:last-child { border-bottom: none; }
+
+    .stat-number {
+      font-family: 'DM Serif Display', serif;
+      font-size: 3rem;
+      line-height: 1;
+      color: var(--ink);
+      letter-spacing: -0.04em;
+    }
+
+    .stat-label {
+      font-size: 13px;
+      color: var(--ink-muted);
+      margin-top: 4px;
+    }
+
+    /* PROJECTS */
+    .projects-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2px;
+    }
+
+    .project-card {
+      background: var(--white);
+      padding: 2.5rem;
+      transition: background 0.2s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .project-card:hover { background: var(--accent-light); }
+
+    .project-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0;
+      width: 3px;
+      height: 0;
+      background: var(--accent);
+      transition: height 0.3s ease;
+    }
+
+    .project-card:hover::before { height: 100%; }
+
+    .project-num {
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      color: var(--ink-muted);
+      margin-bottom: 1rem;
+    }
+
+    .project-title {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.6rem;
+      letter-spacing: -0.02em;
+      line-height: 1.2;
+      margin-bottom: 1rem;
+      color: var(--ink);
+    }
+
+    .project-desc {
+      font-size: 14px;
+      color: var(--ink-soft);
+      line-height: 1.75;
+      margin-bottom: 1.5rem;
+    }
+
+    .project-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+    }
+
+    .project-tag {
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding: 3px 8px;
+      background: var(--accent-light);
+      color: var(--accent);
+      border-radius: 2px;
+    }
+
+    /* CONTACT */
+    .contact-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: start;
+    }
+
+    .contact-headline {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(2rem, 4vw, 3rem);
+      line-height: 1.15;
+      letter-spacing: -0.03em;
+      margin-bottom: 1rem;
+    }
+
+    .contact-sub {
+      color: var(--ink-soft);
+      font-size: 15px;
+      line-height: 1.8;
+      margin-bottom: 2rem;
+    }
+
+    .contact-links {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .contact-link {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      text-decoration: none;
+      color: var(--ink);
+      font-size: 14px;
+      font-weight: 500;
+      padding: 1rem 1.25rem;
+      background: var(--white);
+      border: 1px solid var(--rule);
+      border-radius: 2px;
+      transition: all 0.2s;
+    }
+
+    .contact-link:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .contact-link svg {
+      width: 18px;
+      height: 18px;
+      flex-shrink: 0;
+    }
+
+    .contact-form {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .form-group label {
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--ink-muted);
+    }
+
+    .form-group input,
+    .form-group textarea {
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      padding: 0.7rem 1rem;
+      background: var(--white);
+      border: 1px solid var(--rule);
+      border-radius: 2px;
+      color: var(--ink);
+      outline: none;
+      transition: border-color 0.2s;
+      resize: none;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus {
+      border-color: var(--accent);
+    }
+
+    /* FOOTER */
+    footer {
+      border-top: 1px solid var(--rule);
+      padding: 2rem;
+      text-align: center;
+      font-size: 12px;
+      color: var(--ink-muted);
+      letter-spacing: 0.04em;
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 720px) {
+      .about-grid,
+      .projects-grid,
+      .contact-layout { grid-template-columns: 1fr; }
+
+      .hero-name { font-size: 3.5rem; }
+      .nav-links { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <div class="nav-inner">
+      <a href="#" class="nav-logo">KF</a>
+      <ul class="nav-links">
+        <li><a href="#about">About</a></li>
+        <li><a href="#projects">Projects</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-content">
+      <p class="hero-eyebrow">Mechanical Engineering — University of Idaho</p>
+      <h1 class="hero-name">Kristian<br><em>Felten</em></h1>
+      <p class="hero-title">Engineer. Builder. Tinkerer.</p>
+      <p class="hero-bio">
+        Senior-year mechanical engineering student with hands-on experience restoring
+        classic vehicles, rebuilding diesel powertrains, and fabricating custom solutions
+        from the ground up. I don't just study how things work — I take them apart and put them back together better.
+      </p>
+      <div class="hero-actions">
+        <a href="#projects" class="btn btn-primary">View Projects</a>
+        <a href="#contact" class="btn btn-secondary">Get in Touch</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ABOUT -->
+  <section id="about">
+    <p class="section-label">About</p>
+    <div class="about-grid">
+      <div>
+        <h2 class="about-headline">Built things before I could name what I was doing.</h2>
+        <p class="about-text">
+          I'm a mechanical engineering student at the University of Idaho going into my senior year.
+          My education has given me the vocabulary for what I've always done naturally: understand systems,
+          diagnose problems, and build solutions that last.
+        </p>
+        <p class="about-text">
+          My work spans vehicle restoration, precision engine rebuilding, and hands-on fabrication.
+          I bring the same methodical thinking to a frame-off Jeep restoration that I bring to
+          engineering coursework — thorough, detail-oriented, and not done until it's right.
+        </p>
+        <div class="skills-list">
+          <span class="skill-tag">CAD / SolidWorks</span>
+          <span class="skill-tag">FEA</span>
+          <span class="skill-tag">Engine Rebuilding</span>
+          <span class="skill-tag">Fabrication</span>
+          <span class="skill-tag">Diesel Systems</span>
+          <span class="skill-tag">Welding</span>
+          <span class="skill-tag">Diagnostics</span>
+          <span class="skill-tag">Materials Science</span>
+        </div>
+      </div>
+      <div class="about-stats">
+        <div class="stat-item">
+          <div class="stat-number">4+</div>
+          <div class="stat-label">Years hands-on mechanical work</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number">7.3L</div>
+          <div class="stat-label">Powerstroke rebuilds — inside and out</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number">'73</div>
+          <div class="stat-label">Jeep CJ5 — frame-off restoration in progress</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number">U of I</div>
+          <div class="stat-label">B.S. Mechanical Engineering, Senior Year</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROJECTS -->
+  <section id="projects">
+    <p class="section-label">Projects</p>
+    <div class="projects-grid">
+
+      <div class="project-card">
+        <p class="project-num">01</p>
+        <h3 class="project-title">1973 Jeep CJ5 Frame-Off Restoration</h3>
+        <p class="project-desc">
+          A complete ground-up restoration of a 1973 Jeep CJ5. Every system has been touched:
+          frame inspection and repair, suspension rebuild, drivetrain overhaul, bodywork, and engine work.
+          This project demands knowledge across mechanical, structural, and electrical systems simultaneously —
+          and the patience to do each one right.
+        </p>
+        <div class="project-tags">
+          <span class="project-tag">Fabrication</span>
+          <span class="project-tag">Drivetrain</span>
+          <span class="project-tag">Suspension</span>
+          <span class="project-tag">Bodywork</span>
+          <span class="project-tag">Electrical</span>
+        </div>
+      </div>
+
+      <div class="project-card">
+        <p class="project-num">02</p>
+        <h3 class="project-title">7.3L Powerstroke Diesel Engine Rebuilds</h3>
+        <p class="project-desc">
+          Multiple full rebuilds of Ford's 7.3L Powerstroke diesel — one of the most durable
+          diesel engines ever produced, and unforgiving if the details aren't right. Work includes
+          precision measurement and machining tolerances, injector service, head gasket replacement,
+          turbocharger inspection, and full reassembly to factory spec.
+        </p>
+        <div class="project-tags">
+          <span class="project-tag">Diesel Systems</span>
+          <span class="project-tag">Precision Measurement</span>
+          <span class="project-tag">Fuel Systems</span>
+          <span class="project-tag">Turbocharging</span>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact">
+    <p class="section-label">Contact</p>
+    <div class="contact-layout">
+      <div>
+        <h2 class="contact-headline">Let's talk engineering.</h2>
+        <p class="contact-sub">
+          Open to internship opportunities, co-ops, and conversations about mechanical
+          engineering roles. Based in Idaho — willing to relocate.
+        </p>
+        <div class="contact-links">
+          <a href="mailto:your@email.com" class="contact-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 7 10-7"/></svg>
+            your@email.com
+          </a>
+          <a href="https://linkedin.com/in/yourprofile" target="_blank" class="contact-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+            LinkedIn
+          </a>
+          <a href="https://github.com/yourusername" target="_blank" class="contact-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+            GitHub
+          </a>
+        </div>
+      </div>
+      <div>
+        <form class="contact-form" onsubmit="handleSubmit(event)">
+          <div class="form-group">
+            <label for="name">Name</label>
+            <input type="text" id="name" placeholder="Your name" />
+          </div>
+          <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" placeholder="your@email.com" />
+          </div>
+          <div class="form-group">
+            <label for="message">Message</label>
+            <textarea id="message" rows="5" placeholder="Tell me about the opportunity..."></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary" style="align-self: flex-start;">Send Message</button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <p>© 2025 Kristian Felten — Mechanical Engineering, University of Idaho</p>
+  </footer>
+
+  <script>
+    function handleSubmit(e) {
+      e.preventDefault();
+      const btn = e.target.querySelector('button[type="submit"]');
+      btn.textContent = 'Message sent!';
+      btn.style.background = '#1D9E75';
+      setTimeout(() => {
+        btn.textContent = 'Send Message';
+        btn.style.background = '';
+        e.target.reset();
+      }, 3000);
+    }
+  </script>
+
+</body>
+</html>
