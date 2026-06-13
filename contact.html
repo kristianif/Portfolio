@@ -70,18 +70,18 @@
     </div>
     <div>
       <p class="section-label">Send a Message</p>
-      <form onsubmit="handleSubmit(event)">
+      <form action="https://formspree.io/f/mrevrzyy" method="POST" onsubmit="handleSubmit(event)">
         <div class="form-group">
           <label class="form-label" for="name">Name</label>
-          <input class="form-input" type="text" id="name" placeholder="Your name" required>
+          <input class="form-input" type="text" id="name" name="name" placeholder="Your name" required>
         </div>
         <div class="form-group">
           <label class="form-label" for="email">Email</label>
-          <input class="form-input" type="email" id="email" placeholder="your@email.com" required>
+          <input class="form-input" type="email" id="email" name="email" placeholder="your@email.com" required>
         </div>
         <div class="form-group">
           <label class="form-label" for="message">Message</label>
-          <textarea class="form-textarea" id="message" rows="5" placeholder="Tell me about the opportunity..." required></textarea>
+          <textarea class="form-textarea" id="message" name="message" rows="5" placeholder="Tell me about the opportunity..." required></textarea>
         </div>
         <button type="submit" class="btn btn-primary" id="submitBtn">Send Message</button>
       </form>
