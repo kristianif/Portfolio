@@ -4,23 +4,4 @@
 //  category: "3d-print" | "cad" | "rendering" | "fea" | "drawing" | "coursework"
 // ─────────────────────────────────────────────────────────────
 
-const designItems = [
-  {
-    "file": "photos/airhammer.jpg",
-    "title": "hammer",
-    "category": "3d-print",
-    "description": "hammer",
-    "tags": [
-      "matco"
-    ]
-  },
-  {
-    "file": "photos/airhammer.jpg",
-    "title": "hammer",
-    "category": "3d-print",
-    "description": "hammer",
-    "tags": [
-      "matco"
-    ]
-  }
-];
+const designItems = [];
