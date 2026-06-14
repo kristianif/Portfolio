@@ -13,5 +13,14 @@ const designItems = [
     "tags": [
       "matco"
     ]
+  },
+  {
+    "file": "photos/airhammer.jpg",
+    "title": "hammer",
+    "category": "3d-print",
+    "description": "hammer",
+    "tags": [
+      "matco"
+    ]
   }
 ];
