@@ -472,10 +472,12 @@ async function loadDesignItems() {
     const content = b64dec(f.content);
     const m = content.match(/const designItems\s*=\s*(\[[\s\S]*?\]);/);
     dItems = m ? JSON.parse(m[1]) : [];
-    renderDesignList();
   } catch(e) {
-    document.getElementById('dList').innerHTML = `<div class="err-text">${e.message}</div>`;
+    // File doesn't exist yet — start fresh, it will be created on first save
+    dSha = null;
+    dItems = [];
   }
+  renderDesignList();
 }
 
 function renderDesignList() {
@@ -502,7 +504,8 @@ async function saveDesignData() {
 // ─────────────────────────────────────────────────────────────
 
 const designItems = ${JSON.stringify(dItems, null, 2)};\n`;
-  await ghPutText('design-data.js', header, 'Update design items via admin', dSha);
+  // dSha is null when file doesn't exist yet — GitHub API creates it fresh
+  await ghPutText('design-data.js', header, 'Update design items via admin', dSha || undefined);
   const updated = await ghGet('design-data.js');
   dSha = updated.sha;
 }
