@@ -476,12 +476,16 @@ let dSha = null, dItems = [];
 async function loadDesignItems() {
   try {
     const f = await ghGet('design-data.js');
-    dSha = f.sha;
-    const content = b64dec(f.content);
-    const m = content.match(/const designItems\s*=\s*(\[[\s\S]*?\]);/);
-    dItems = m ? JSON.parse(m[1]) : [];
+    dSha = f.sha; // always store SHA first
+    try {
+      const content = b64dec(f.content);
+      const m = content.match(/const designItems\s*=\s*(\[[\s\S]*?\]);/);
+      dItems = m ? JSON.parse(m[1]) : [];
+    } catch(_) {
+      dItems = []; // content parse failed but SHA is still valid
+    }
   } catch(e) {
-    // File doesn't exist yet — start fresh, it will be created on first save
+    // File doesn't exist yet — will be created on first save
     dSha = null;
     dItems = [];
   }
