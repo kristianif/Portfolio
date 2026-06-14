@@ -141,6 +141,7 @@ function initTheme() {
     padding:1rem 1.25rem; width:220px;
     display:none; box-shadow:0 8px 24px rgba(0,0,0,0.3);
   `;
+  const cbSaved = localStorage.getItem('kf-cb') === '1';
   panel.innerHTML = `
     <div style="font-family:var(--mono);font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:var(--fg-muted);margin-bottom:0.85rem;">Brightness</div>
     <div style="display:flex;align-items:center;gap:0.75rem;">
@@ -152,6 +153,12 @@ function initTheme() {
       ${[['Dark','0'],['Default','25'],['Mid','50'],['Light','75'],['White','100']].map(([label,val])=>`
         <button onclick="setThemePreset(${val})" style="flex:1;padding:0.3rem 0;font-size:10px;font-family:var(--mono);background:var(--bg-3);border:1px solid var(--border);color:var(--fg-muted);cursor:pointer;transition:border-color 0.15s;" onmouseenter="this.style.borderColor='var(--amber)'" onmouseleave="this.style.borderColor='var(--border)'">${label}</button>
       `).join('')}
+    </div>
+    <div style="margin-top:1rem;padding-top:1rem;border-top:1px solid var(--border);">
+      <div style="font-family:var(--mono);font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:var(--fg-muted);margin-bottom:0.6rem;">Accessibility</div>
+      <button id="cbToggle" onclick="toggleColorblind()" style="width:100%;padding:0.35rem 0;font-size:10px;font-family:var(--mono);background:${cbSaved?'var(--cb-blue,#3A7FD4)':'var(--bg-3)'};border:1px solid ${cbSaved?'var(--cb-blue,#3A7FD4)':'var(--border)'};color:${cbSaved?'#fff':'var(--fg-muted)'};cursor:pointer;transition:all 0.15s;letter-spacing:0.1em;">
+        ${cbSaved ? '✓ COLORBLIND MODE ON' : 'COLORBLIND MODE'}
+      </button>
     </div>
   `;
   document.body.appendChild(panel);
@@ -177,11 +184,42 @@ window.setThemePreset = function(val) {
   localStorage.setItem('kf-theme', val);
 };
 
+// ── COLORBLIND MODE ──────────────────────────────────────────
+// Swaps amber (hard for red-green colorblind) → blue (#3A7FD4)
+// which is distinguishable across deuteranopia, protanopia & tritanopia.
+function applyColorblindMode(enabled) {
+  const r = document.documentElement;
+  if (enabled) {
+    r.style.setProperty('--amber',    '#3A7FD4');
+    r.style.setProperty('--amber-hi', '#5A9AEF');
+    r.style.setProperty('--cb-blue',  '#3A7FD4');
+  } else {
+    r.style.removeProperty('--amber');
+    r.style.removeProperty('--amber-hi');
+  }
+}
+
+window.toggleColorblind = function() {
+  const enabled = localStorage.getItem('kf-cb') !== '1';
+  localStorage.setItem('kf-cb', enabled ? '1' : '0');
+  applyColorblindMode(enabled);
+  // Update button appearance
+  const btn = document.getElementById('cbToggle');
+  if (btn) {
+    btn.textContent = enabled ? '✓ COLORBLIND MODE ON' : 'COLORBLIND MODE';
+    btn.style.background  = enabled ? 'var(--amber)' : 'var(--bg-3)';
+    btn.style.borderColor = enabled ? 'var(--amber)' : 'var(--border)';
+    btn.style.color       = enabled ? '#fff' : 'var(--fg-muted)';
+  }
+};
+
 // Run as early as possible to avoid flash
 if (document.readyState === 'loading') {
   const v = parseInt(localStorage.getItem('kf-theme') || '25');
   applyTheme(v);
+  if (localStorage.getItem('kf-cb') === '1') applyColorblindMode(true);
   document.addEventListener('DOMContentLoaded', initTheme);
 } else {
+  if (localStorage.getItem('kf-cb') === '1') applyColorblindMode(true);
   initTheme();
 }
