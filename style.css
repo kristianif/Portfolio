@@ -195,16 +195,16 @@ nav {
 .hero-name {
   font-size: clamp(4rem, 10vw, 9rem);
   font-weight: 600; letter-spacing: -0.04em; line-height: 0.92;
-  color: var(--fg); margin-bottom: 2rem;
-  text-shadow: 0 2px 20px rgba(0,0,0,0.6);
+  color: #EEEAE4; margin-bottom: 2rem;
+  text-shadow: 0 2px 24px rgba(0,0,0,0.7), 0 1px 4px rgba(0,0,0,0.5);
 }
-.hero-name .dim { color: var(--fg-muted); font-weight: 300; }
+.hero-name .dim { color: rgba(238,234,228,0.65); font-weight: 300; }
 
 .hero-sub {
   font-size: clamp(1rem, 1.8vw, 1.2rem);
-  color: var(--fg-muted); max-width: 480px; line-height: 1.75;
+  color: rgba(238,234,228,0.82); max-width: 480px; line-height: 1.75;
   margin-bottom: 2.5rem;
-  text-shadow: 0 1px 8px rgba(0,0,0,0.5);
+  text-shadow: 0 1px 10px rgba(0,0,0,0.6);
 }
 
 .hero-actions { display: flex; gap: 1rem; flex-wrap: wrap; }

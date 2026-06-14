@@ -15,11 +15,11 @@ const THEMES = [
     fg:'#EEEAE4', fgMuted:'#8A8A84', fgDim:'#4A4A52',
     nav:'rgba(34,36,42,0.92)'
   },
-  { // 50 — mid grey
-    bg:'#686A72', bg2:'#70727A', bg3:'#787A82',
-    border:'#888A94', border2:'#9A9CA8',
-    fg:'#F0EDE8', fgMuted:'#C8C6C0', fgDim:'#505058',
-    nav:'rgba(104,106,114,0.92)'
+  { // 50 — warm light
+    bg:'#D4D2CC', bg2:'#CCC9C3', bg3:'#C4C1BB',
+    border:'#B4B2AC', border2:'#A4A29C',
+    fg:'#1A1A1E', fgMuted:'#686864', fgDim:'#CECCC6',
+    nav:'rgba(212,210,204,0.94)'
   },
   { // 75 — light
     bg:'#E8E6E0', bg2:'#DEDAD4', bg3:'#D4D0CA',
@@ -34,6 +34,14 @@ const THEMES = [
     nav:'rgba(245,244,240,0.96)'
   }
 ];
+
+function relativeLuminance(hex) {
+  const [r,g,b] = hexToRgb(hex).map(c => {
+    c /= 255;
+    return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
+  });
+  return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+}
 
 function hexToRgb(hex) {
   const r = parseInt(hex.slice(1,3),16);
@@ -73,14 +81,27 @@ function applyTheme(value) { // value 0–100
   const A = THEMES[lo], B = THEMES[hi];
 
   const r = document.documentElement;
-  r.style.setProperty('--bg',        lerpHex(A.bg,       B.bg,       t));
-  r.style.setProperty('--bg-2',      lerpHex(A.bg2,      B.bg2,      t));
-  r.style.setProperty('--bg-3',      lerpHex(A.bg3,      B.bg3,      t));
-  r.style.setProperty('--border',    lerpHex(A.border,   B.border,   t));
-  r.style.setProperty('--border-2',  lerpHex(A.border2,  B.border2,  t));
-  r.style.setProperty('--fg',        lerpHex(A.fg,       B.fg,       t));
-  r.style.setProperty('--fg-muted',  lerpHex(A.fgMuted,  B.fgMuted,  t));
-  r.style.setProperty('--fg-dim',    lerpHex(A.fgDim,    B.fgDim,    t));
+
+  // Background — always lerp smoothly
+  const bg = lerpHex(A.bg, B.bg, t);
+  r.style.setProperty('--bg',       bg);
+  r.style.setProperty('--bg-2',     lerpHex(A.bg2,     B.bg2,     t));
+  r.style.setProperty('--bg-3',     lerpHex(A.bg3,     B.bg3,     t));
+  r.style.setProperty('--border',   lerpHex(A.border,  B.border,  t));
+  r.style.setProperty('--border-2', lerpHex(A.border2, B.border2, t));
+
+  // Foreground — snap based on bg luminance to avoid unreadable mid-grey zone
+  if (relativeLuminance(bg) > 0.18) {
+    // Light bg → dark text
+    r.style.setProperty('--fg',       '#1A1A1E');
+    r.style.setProperty('--fg-muted', '#686864');
+    r.style.setProperty('--fg-dim',   '#CECCC6');
+  } else {
+    // Dark bg → light text
+    r.style.setProperty('--fg',       '#EEEAE4');
+    r.style.setProperty('--fg-muted', '#8A8A84');
+    r.style.setProperty('--fg-dim',   '#4A4A52');
+  }
 
   // Update nav blur colour
   const navBg = lerpNav(A.nav, B.nav, t);
