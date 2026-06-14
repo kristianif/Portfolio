@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin — KF Portfolio</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg:      #16181e;
+      --bg2:     #1e2028;
+      --bg3:     #24262e;
+      --border:  #2e3140;
+      --fg:      #eeeae4;
+      --muted:   #7a7a74;
+      --amber:   #d4880c;
+      --green:   #1d9e75;
+      --red:     #c0392b;
+      --mono:    'JetBrains Mono', 'Courier New', monospace;
+    }
+    body { font-family: 'Inter', -apple-system, sans-serif; background: var(--bg); color: var(--fg); min-height: 100vh; font-size: 14px; }
+
+    /* ── LOGIN ── */
+    .login-wrap { display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 2rem; }
+    .login-box  { background: var(--bg2); border: 1px solid var(--border); padding: 2.5rem; width: 100%; max-width: 420px; }
+    .login-logo { font-family: var(--mono); font-size: 20px; font-weight: 600; margin-bottom: 0.35rem; }
+    .login-logo span { color: var(--amber); }
+    .login-sub  { color: var(--muted); font-size: 13px; margin-bottom: 2rem; }
+    .login-hint { font-size: 11px; color: var(--muted); margin: 0.5rem 0 1.5rem; line-height: 1.6; }
+    .login-hint a { color: var(--amber); }
+
+    /* ── SHARED ── */
+    label, .lbl { display: block; font-size: 11px; font-family: var(--mono); letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.4rem; }
+    input[type=text], input[type=password], select, textarea {
+      width: 100%; background: var(--bg3); border: 1px solid var(--border); color: var(--fg);
+      padding: 0.65rem 0.85rem; font-size: 13px; font-family: inherit; outline: none; resize: vertical;
+    }
+    input:focus, select:focus, textarea:focus { border-color: var(--amber); }
+    select option { background: var(--bg3); }
+    .field { margin-bottom: 1.1rem; }
+    .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+
+    .btn { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.65rem 1.2rem; font-size: 12px; font-family: var(--mono); letter-spacing: 0.06em; cursor: pointer; border: 1px solid transparent; transition: opacity 0.15s; white-space: nowrap; }
+    .btn:hover { opacity: 0.82; }
+    .btn-primary { background: var(--amber); color: #000; border-color: var(--amber); }
+    .btn-outline  { background: transparent; border-color: var(--border); color: var(--fg); }
+    .btn-red      { background: var(--red); color: #fff; border-color: var(--red); }
+    .btn-green    { background: var(--green); color: #fff; border-color: var(--green); }
+    .btn-sm       { padding: 0.35rem 0.65rem; font-size: 11px; }
+    .btn-full     { width: 100%; justify-content: center; }
+
+    /* ── ADMIN SHELL ── */
+    #adminWrap { display: none; }
+    .admin-header { background: var(--bg2); border-bottom: 1px solid var(--border); height: 52px; padding: 0 1.5rem; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; }
+    .admin-logo  { font-family: var(--mono); font-size: 15px; font-weight: 600; }
+    .admin-logo span { color: var(--amber); }
+    .admin-user  { font-size: 11px; color: var(--muted); font-family: var(--mono); }
+
+    /* ── TABS ── */
+    .tab-bar { background: var(--bg2); border-bottom: 1px solid var(--border); display: flex; padding: 0 1.5rem; overflow-x: auto; gap: 0; }
+    .tab { padding: 0.8rem 1.1rem; font-size: 11px; font-family: var(--mono); letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); cursor: pointer; border-bottom: 2px solid transparent; white-space: nowrap; transition: color 0.15s; }
+    .tab:hover  { color: var(--fg); }
+    .tab.active { color: var(--amber); border-bottom-color: var(--amber); }
+
+    /* ── PANELS ── */
+    .panel { display: none; padding: 2rem 1.5rem; max-width: 860px; }
+    .panel.active { display: block; }
+    .panel-title { font-size: 17px; font-weight: 600; margin-bottom: 0.3rem; }
+    .panel-desc  { color: var(--muted); font-size: 13px; margin-bottom: 2rem; line-height: 1.6; }
+
+    /* ── FORM SECTIONS ── */
+    .card { background: var(--bg2); border: 1px solid var(--border); padding: 1.5rem; margin-bottom: 1.25rem; }
+    .card-title { font-size: 11px; font-family: var(--mono); letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 1.25rem; }
+
+    /* ── UPLOAD AREA ── */
+    .drop-zone { border: 2px dashed var(--border); padding: 2.5rem 2rem; text-align: center; cursor: pointer; transition: border-color 0.15s; position: relative; }
+    .drop-zone:hover { border-color: var(--amber); }
+    .drop-zone input[type=file] { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
+    .drop-icon { font-size: 2rem; margin-bottom: 0.6rem; }
+    .drop-text { font-family: var(--mono); font-size: 11px; color: var(--muted); letter-spacing: 0.1em; }
+    .drop-preview { max-width: 100%; max-height: 240px; object-fit: contain; margin-top: 1rem; border: 1px solid var(--border); display: none; }
+
+    /* ── ITEM ROWS ── */
+    .item-list { display: flex; flex-direction: column; gap: 0.4rem; margin-top: 0.75rem; }
+    .item-row  { background: var(--bg3); border: 1px solid var(--border); padding: 0.75rem 0.85rem; display: flex; align-items: center; gap: 0.85rem; }
+    .item-thumb { width: 54px; height: 38px; object-fit: cover; background: var(--bg); flex-shrink: 0; }
+    .item-info  { flex: 1; min-width: 0; }
+    .item-title { font-size: 13px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .item-meta  { font-size: 11px; color: var(--muted); font-family: var(--mono); margin-top: 0.15rem; }
+
+    /* ── GALLERY GRID ── */
+    .gal-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(90px,1fr)); gap: 0.4rem; margin-top: 0.75rem; }
+    .gal-thumb { aspect-ratio: 4/3; overflow: hidden; background: var(--bg3); }
+    .gal-thumb img { width: 100%; height: 100%; object-fit: cover; }
+
+    /* ── TOAST ── */
+    .toast { position: fixed; bottom: 1.5rem; right: 1.5rem; background: var(--bg2); border: 1px solid var(--border); padding: 0.75rem 1.1rem; font-size: 12px; font-family: var(--mono); z-index: 9999; opacity: 0; transition: opacity 0.2s; pointer-events: none; max-width: 300px; }
+    .toast.show    { opacity: 1; }
+    .toast.success { border-color: var(--green); color: var(--green); }
+    .toast.error   { border-color: var(--red);   color: var(--red); }
+
+    /* ── SPINNER ── */
+    .spin { display: inline-block; width: 12px; height: 12px; border: 2px solid rgba(255,255,255,0.3); border-top-color: #fff; border-radius: 50%; animation: s 0.6s linear infinite; }
+    @keyframes s { to { transform: rotate(360deg); } }
+
+    .err-text { color: var(--red); font-size: 12px; font-family: var(--mono); margin-top: 0.5rem; }
+    .empty    { color: var(--muted); font-size: 12px; font-family: var(--mono); }
+  </style>
+</head>
+<body>
+
+<!-- ── LOGIN ──────────────────────────────────────────────── -->
+<div class="login-wrap" id="loginWrap">
+  <div class="login-box">
+    <div class="login-logo">KF<span>.</span> Admin</div>
+    <div class="login-sub">Portfolio management panel</div>
+    <div class="field">
+      <label>GitHub Personal Access Token</label>
+      <input type="password" id="tokenInput" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx">
+    </div>
+    <div class="login-hint">
+      Create one at <a href="https://github.com/settings/tokens/new" target="_blank">github.com/settings/tokens</a> — select <strong>Classic</strong>, check the <strong>repo</strong> scope.<br>
+      Your token is only stored in this browser session and never sent anywhere except GitHub.
+    </div>
+    <button class="btn btn-primary btn-full" onclick="login()">Connect to GitHub</button>
+    <div class="err-text" id="loginErr"></div>
+  </div>
+</div>
+
+<!-- ── ADMIN ──────────────────────────────────────────────── -->
+<div id="adminWrap">
+
+  <div class="admin-header">
+    <div class="admin-logo">KF<span>.</span> Admin</div>
+    <div style="display:flex;align-items:center;gap:1rem;">
+      <div class="admin-user" id="adminUser"></div>
+      <button class="btn btn-outline btn-sm" onclick="logout()">Sign Out</button>
+    </div>
+  </div>
+
+  <div class="tab-bar">
+    <div class="tab active" data-tab="photos"      onclick="switchTab(this,'photos')">📸 Upload Photo</div>
+    <div class="tab"        data-tab="design"      onclick="switchTab(this,'design')">🎨 Design Page</div>
+    <div class="tab"        data-tab="jeep"        onclick="switchTab(this,'jeep')">🚙 Jeep CJ5</div>
+    <div class="tab"        data-tab="powerstroke" onclick="switchTab(this,'powerstroke')">🔧 Powerstroke</div>
+  </div>
+
+  <!-- PHOTOS ───────────────────────────────────────────────── -->
+  <div class="panel active" id="tab-photos">
+    <div class="panel-title">Upload Photo</div>
+    <div class="panel-desc">Upload any image directly into your <code>photos/</code> folder on GitHub. Do this first before adding items to the Design page or project galleries.</div>
+
+    <div class="card">
+      <div class="card-title">Select &amp; Upload</div>
+      <div class="drop-zone" id="dropZone">
+        <input type="file" id="photoFile" accept="image/*" onchange="onPhotoSelected(this)">
+        <div class="drop-icon">📷</div>
+        <div class="drop-text">CLICK OR DRAG A PHOTO HERE</div>
+        <img class="drop-preview" id="photoPreview">
+      </div>
+      <div class="field" style="margin-top:1rem;">
+        <label>Save as filename</label>
+        <input type="text" id="photoFilename" placeholder="e.g. jeep-engine-bay.jpg">
+      </div>
+      <button class="btn btn-primary" onclick="uploadPhoto()"><span id="uploadBtnLbl">Upload to photos/</span></button>
+    </div>
+  </div>
+
+  <!-- DESIGN ───────────────────────────────────────────────── -->
+  <div class="panel" id="tab-design">
+    <div class="panel-title">Design Page</div>
+    <div class="panel-desc">Add or remove items from the Design page. Upload the photo first, then fill in the details below.</div>
+
+    <div class="card">
+      <div class="card-title">Add New Item</div>
+      <div class="field-row">
+        <div class="field">
+          <label>Photo path</label>
+          <input type="text" id="d-file" placeholder="photos/my-part.jpg">
+        </div>
+        <div class="field">
+          <label>Category</label>
+          <select id="d-cat">
+            <option value="3d-print">3D Print</option>
+            <option value="cad">CAD Model</option>
+            <option value="rendering">Rendering</option>
+            <option value="fea">FEA / Analysis</option>
+            <option value="drawing">Technical Drawing</option>
+            <option value="coursework">Coursework</option>
+          </select>
+        </div>
+      </div>
+      <div class="field">
+        <label>Title</label>
+        <input type="text" id="d-title" placeholder="Custom Engine Bracket">
+      </div>
+      <div class="field">
+        <label>Description</label>
+        <textarea id="d-desc" rows="2" placeholder="What is this part and what does it demonstrate?"></textarea>
+      </div>
+      <div class="field">
+        <label>Tags <span style="text-transform:none;letter-spacing:0;">(comma separated)</span></label>
+        <input type="text" id="d-tags" placeholder="SolidWorks, 3D Print, PETG">
+      </div>
+      <button class="btn btn-primary" onclick="addDesignItem()"><span id="dAddLbl">Add to Design Page</span></button>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Current Items <span id="dCount" style="color:var(--muted);font-weight:400;"></span></div>
+      <div class="item-list" id="dList"><div class="empty">Loading…</div></div>
+    </div>
+  </div>
+
+  <!-- JEEP ─────────────────────────────────────────────────── -->
+  <div class="panel" id="tab-jeep">
+    <div class="panel-title">Jeep CJ5 Gallery</div>
+    <div class="panel-desc">Add photos to the main scrolling gallery or to a category section below it.</div>
+
+    <div class="card">
+      <div class="card-title">Add to Main Gallery</div>
+      <div class="field-row">
+        <div class="field">
+          <label>Photo path</label>
+          <input type="text" id="j-m-file" placeholder="photos/jeep-frame.jpg">
+        </div>
+        <div class="field">
+          <label>Caption / alt text</label>
+          <input type="text" id="j-m-alt" placeholder="Frame inspection">
+        </div>
+      </div>
+      <button class="btn btn-primary" onclick="addToGallery('jeep','main')"><span id="jMainLbl">Add to Main Gallery</span></button>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Add to Category Gallery</div>
+      <div class="field-row">
+        <div class="field">
+          <label>Photo path</label>
+          <input type="text" id="j-c-file" placeholder="photos/jeep-axle.jpg">
+        </div>
+        <div class="field">
+          <label>Caption / alt text</label>
+          <input type="text" id="j-c-alt" placeholder="Front axle">
+        </div>
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label>Category</label>
+          <select id="j-c-cat" onchange="toggleNewCat('j')">
+            <option value="Exterior">Exterior</option>
+            <option value="Interior">Interior</option>
+            <option value="Fabrication &amp; Electrical">Fabrication &amp; Electrical</option>
+            <option value="__new__">+ New category…</option>
+          </select>
+        </div>
+        <div class="field" id="j-c-new-wrap" style="display:none;">
+          <label>New category name</label>
+          <input type="text" id="j-c-new" placeholder="Drivetrain">
+        </div>
+      </div>
+      <button class="btn btn-primary" onclick="addToGallery('jeep','cat')"><span id="jCatLbl">Add to Category</span></button>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Current Main Gallery</div>
+      <div class="gal-grid" id="jeepPreview"><div class="empty">Loading…</div></div>
+    </div>
+  </div>
+
+  <!-- POWERSTROKE ──────────────────────────────────────────── -->
+  <div class="panel" id="tab-powerstroke">
+    <div class="panel-title">Powerstroke Gallery</div>
+    <div class="panel-desc">Add photos to the main scrolling gallery or to a category section below it.</div>
+
+    <div class="card">
+      <div class="card-title">Add to Main Gallery</div>
+      <div class="field-row">
+        <div class="field">
+          <label>Photo path</label>
+          <input type="text" id="p-m-file" placeholder="photos/ps-injector.jpg">
+        </div>
+        <div class="field">
+          <label>Caption / alt text</label>
+          <input type="text" id="p-m-alt" placeholder="Injector removal">
+        </div>
+      </div>
+      <button class="btn btn-primary" onclick="addToGallery('ps','main')"><span id="psMainLbl">Add to Main Gallery</span></button>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Add to Category Gallery</div>
+      <div class="field-row">
+        <div class="field">
+          <label>Photo path</label>
+          <input type="text" id="p-c-file" placeholder="photos/ps-turbo.jpg">
+        </div>
+        <div class="field">
+          <label>Caption / alt text</label>
+          <input type="text" id="p-c-alt" placeholder="Turbocharger">
+        </div>
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label>Category</label>
+          <select id="p-c-cat" onchange="toggleNewCat('p')">
+            <option value="Engine">Engine</option>
+            <option value="__new__">+ New category…</option>
+          </select>
+        </div>
+        <div class="field" id="p-c-new-wrap" style="display:none;">
+          <label>New category name</label>
+          <input type="text" id="p-c-new" placeholder="Injectors">
+        </div>
+      </div>
+      <button class="btn btn-primary" onclick="addToGallery('ps','cat')"><span id="psCatLbl">Add to Category</span></button>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Current Main Gallery</div>
+      <div class="gal-grid" id="psPreview"><div class="empty">Loading…</div></div>
+    </div>
+  </div>
+
+</div><!-- /adminWrap -->
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ── CONFIG ────────────────────────────────────────────────────
+const OWNER  = 'kristian24908';
+const REPO   = 'Portfolio';
+const BRANCH = 'main';
+const SUB    = 'Portfolio/'; // subfolder within repo where HTML files live
+let TOKEN = '';
+
+// ── AUTH ──────────────────────────────────────────────────────
+async function login() {
+  TOKEN = document.getElementById('tokenInput').value.trim();
+  if (!TOKEN) return;
+  try {
+    const r = await fetch(`https://api.github.com/repos/${OWNER}/${REPO}`, {
+      headers: auth()
+    });
+    if (!r.ok) throw new Error('Token invalid or repo not found. Check username/repo and token scope.');
+    const d = await r.json();
+    sessionStorage.setItem('ghToken', TOKEN);
+    document.getElementById('loginWrap').style.display = 'none';
+    document.getElementById('adminWrap').style.display = 'block';
+    document.getElementById('adminUser').textContent = d.full_name;
+    loadDesignItems();
+    loadGalleryPreview('jeep');
+    loadGalleryPreview('ps');
+  } catch(e) {
+    document.getElementById('loginErr').textContent = e.message;
+  }
+}
+
+function logout() {
+  sessionStorage.removeItem('ghToken');
+  TOKEN = '';
+  document.getElementById('adminWrap').style.display = 'none';
+  document.getElementById('loginWrap').style.display = 'flex';
+  document.getElementById('loginErr').textContent = '';
+  document.getElementById('tokenInput').value = '';
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+  const saved = sessionStorage.getItem('ghToken');
+  if (saved) { document.getElementById('tokenInput').value = saved; login(); }
+  document.getElementById('tokenInput').addEventListener('keydown', e => { if (e.key === 'Enter') login(); });
+});
+
+// ── HELPERS ───────────────────────────────────────────────────
+const auth = () => ({ Authorization: `token ${TOKEN}`, 'Content-Type': 'application/json' });
+const apiUrl = path => `https://api.github.com/repos/${OWNER}/${REPO}/contents/${SUB}${path}`;
+
+function b64enc(str) { return btoa(unescape(encodeURIComponent(str))); }
+function b64dec(str) { return decodeURIComponent(escape(atob(str.replace(/\n/g,'')))); }
+
+async function ghGet(path) {
+  const r = await fetch(`${apiUrl(path)}?ref=${BRANCH}`, { headers: auth() });
+  if (!r.ok) throw new Error(`Could not read ${path} (${r.status})`);
+  return r.json();
+}
+
+async function ghPutText(path, content, message, sha) {
+  const body = { message, content: b64enc(content), branch: BRANCH };
+  if (sha) body.sha = sha;
+  const r = await fetch(apiUrl(path), { method:'PUT', headers: auth(), body: JSON.stringify(body) });
+  if (!r.ok) { const e = await r.json(); throw new Error(e.message || 'Save failed'); }
+  return r.json();
+}
+
+async function ghPutBinary(path, base64, message, sha) {
+  const body = { message, content: base64, branch: BRANCH };
+  if (sha) body.sha = sha;
+  const r = await fetch(apiUrl(path), { method:'PUT', headers: auth(), body: JSON.stringify(body) });
+  if (!r.ok) { const e = await r.json(); throw new Error(e.message || 'Upload failed'); }
+  return r.json();
+}
+
+function fileToB64(file) {
+  return new Promise((res, rej) => {
+    const fr = new FileReader();
+    fr.onload = () => res(fr.result.split(',')[1]);
+    fr.onerror = rej;
+    fr.readAsDataURL(file);
+  });
+}
+
+function rawUrl(file) {
+  return `https://raw.githubusercontent.com/${OWNER}/${REPO}/${BRANCH}/${SUB}${file}`;
+}
+
+function toast(msg, type='success') {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.className = `toast ${type} show`;
+  clearTimeout(el._t);
+  el._t = setTimeout(() => el.classList.remove('show'), 3500);
+}
+
+function setLoading(id, loading, defaultText) {
+  document.getElementById(id).innerHTML = loading ? '<span class="spin"></span> Saving…' : defaultText;
+}
+
+// ── TABS ──────────────────────────────────────────────────────
+function switchTab(el, name) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById(`tab-${name}`).classList.add('active');
+}
+
+// ── PHOTO UPLOAD ──────────────────────────────────────────────
+function onPhotoSelected(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const prev = document.getElementById('photoPreview');
+  prev.src = URL.createObjectURL(file);
+  prev.style.display = 'block';
+  if (!document.getElementById('photoFilename').value)
+    document.getElementById('photoFilename').value = file.name.replace(/\s+/g,'-').toLowerCase();
+}
+
+async function uploadPhoto() {
+  const file     = document.getElementById('photoFile').files[0];
+  const filename = document.getElementById('photoFilename').value.trim();
+  if (!file || !filename) { toast('Select a photo and enter a filename','error'); return; }
+  setLoading('uploadBtnLbl', true);
+  try {
+    const b64 = await fileToB64(file);
+    let sha;
+    try { const ex = await ghGet(`photos/${filename}`); sha = ex.sha; } catch(_) {}
+    await ghPutBinary(`photos/${filename}`, b64, `Add photo: ${filename}`, sha);
+    toast(`✓ ${filename} uploaded`);
+    document.getElementById('photoFile').value = '';
+    document.getElementById('photoFilename').value = '';
+    document.getElementById('photoPreview').style.display = 'none';
+  } catch(e) { toast(e.message,'error'); }
+  finally { setLoading('uploadBtnLbl', false, 'Upload to photos/'); }
+}
+
+// ── DESIGN ITEMS ──────────────────────────────────────────────
+let dSha = null, dItems = [];
+
+async function loadDesignItems() {
+  try {
+    const f = await ghGet('design-data.js');
+    dSha = f.sha;
+    const content = b64dec(f.content);
+    const m = content.match(/const designItems\s*=\s*(\[[\s\S]*?\]);/);
+    dItems = m ? JSON.parse(m[1]) : [];
+    renderDesignList();
+  } catch(e) {
+    document.getElementById('dList').innerHTML = `<div class="err-text">${e.message}</div>`;
+  }
+}
+
+function renderDesignList() {
+  document.getElementById('dCount').textContent = `(${dItems.length})`;
+  const list = document.getElementById('dList');
+  if (!dItems.length) { list.innerHTML = '<div class="empty">No items yet — add one above.</div>'; return; }
+  const catLabel = { '3d-print':'3D Print','cad':'CAD','rendering':'Rendering','fea':'FEA','drawing':'Drawing','coursework':'Coursework' };
+  list.innerHTML = dItems.map((item,i) => `
+    <div class="item-row">
+      <img class="item-thumb" src="${rawUrl(item.file)}" onerror="this.style.opacity='0.2'">
+      <div class="item-info">
+        <div class="item-title">${item.title}</div>
+        <div class="item-meta">${catLabel[item.category]||item.category} · ${item.tags.join(', ')}</div>
+      </div>
+      <button class="btn btn-red btn-sm" onclick="removeDesignItem(${i})">Remove</button>
+    </div>`).join('');
+}
+
+async function saveDesignData() {
+  const header = `// ─────────────────────────────────────────────────────────────
+//  DESIGN PAGE DATA — managed via admin.html
+//
+//  category: "3d-print" | "cad" | "rendering" | "fea" | "drawing" | "coursework"
+// ─────────────────────────────────────────────────────────────
+
+const designItems = ${JSON.stringify(dItems, null, 2)};\n`;
+  await ghPutText('design-data.js', header, 'Update design items via admin', dSha);
+  const updated = await ghGet('design-data.js');
+  dSha = updated.sha;
+}
+
+async function addDesignItem() {
+  const file  = document.getElementById('d-file').value.trim();
+  const cat   = document.getElementById('d-cat').value;
+  const title = document.getElementById('d-title').value.trim();
+  const desc  = document.getElementById('d-desc').value.trim();
+  const tags  = document.getElementById('d-tags').value.split(',').map(t=>t.trim()).filter(Boolean);
+  if (!file||!title||!desc) { toast('Fill in all fields','error'); return; }
+  setLoading('dAddLbl', true);
+  try {
+    dItems.push({ file, title, category: cat, description: desc, tags });
+    await saveDesignData();
+    renderDesignList();
+    toast('✓ Added to Design page — live in ~30s');
+    ['d-file','d-title','d-desc','d-tags'].forEach(id => document.getElementById(id).value='');
+  } catch(e) { dItems.pop(); toast(e.message,'error'); }
+  finally { setLoading('dAddLbl', false, 'Add to Design Page'); }
+}
+
+async function removeDesignItem(i) {
+  if (!confirm(`Remove "${dItems[i].title}"?`)) return;
+  const removed = dItems.splice(i,1)[0];
+  try {
+    await saveDesignData();
+    renderDesignList();
+    toast('✓ Removed');
+  } catch(e) { dItems.splice(i,0,removed); toast(e.message,'error'); }
+}
+
+// ── PROJECT GALLERIES ─────────────────────────────────────────
+const projectCfg = {
+  jeep: { htmlFile:'project-jeep-cj5.html',  galleryId:'jeepGallery', labelId:'jeepLabel' },
+  ps:   { htmlFile:'project-powerstroke.html', galleryId:'psGallery',  labelId:'psLabel'  }
+};
+let pShas = {}, pHtml = {};
+
+function toggleNewCat(prefix) {
+  const val  = document.getElementById(`${prefix}-c-cat`).value;
+  document.getElementById(`${prefix}-c-new-wrap`).style.display = val === '__new__' ? 'block' : 'none';
+}
+
+async function loadGalleryPreview(proj) {
+  const cfg       = projectCfg[proj];
+  const previewEl = document.getElementById(proj === 'jeep' ? 'jeepPreview' : 'psPreview');
+  try {
+    const f = await ghGet(cfg.htmlFile);
+    pShas[proj] = f.sha;
+    pHtml[proj] = b64dec(f.content);
+
+    // Extract src paths from inside the gallery scroll div
+    const html = pHtml[proj];
+    const galStart = html.indexOf(`id="${cfg.galleryId}"`);
+    const galEnd   = html.indexOf('class="gallery-counter"', galStart);
+    const galSlice = html.slice(galStart, galEnd);
+    const imgs     = [...galSlice.matchAll(/src="(photos\/[^"]+)"/g)];
+
+    if (!imgs.length) { previewEl.innerHTML = '<div class="empty">No photos yet</div>'; return; }
+    previewEl.innerHTML = imgs.map(m=>`
+      <div class="gal-thumb">
+        <img src="${rawUrl(m[1])}" onerror="this.style.opacity='0.15'">
+      </div>`).join('');
+  } catch(e) {
+    previewEl.innerHTML = `<div class="err-text">${e.message}</div>`;
+  }
+}
+
+async function addToGallery(proj, type) {
+  const p   = proj === 'jeep' ? 'j' : 'p';
+  const cfg = projectCfg[proj];
+  const btnId = proj === 'jeep'
+    ? (type==='main' ? 'jMainLbl' : 'jCatLbl')
+    : (type==='main' ? 'psMainLbl' : 'psCatLbl');
+
+  const filename = document.getElementById(`${p}-${type==='main'?'m':'c'}-file`).value.trim();
+  const altText  = document.getElementById(`${p}-${type==='main'?'m':'c'}-alt`).value.trim();
+  if (!filename||!altText) { toast('Enter filename and caption','error'); return; }
+
+  setLoading(btnId, true);
+  try {
+    let html = pHtml[proj];
+
+    if (type === 'main') {
+      // Insert new gallery-item before the closing </div> of the gallery-scroll
+      const galId    = cfg.galleryId;
+      const galStart = html.indexOf(`id="${galId}"`);
+      const galEnd   = html.indexOf('</div>', html.indexOf('class="gallery-counter"', galStart) - 50);
+      // Actually find the </div> that closes the gallery-scroll div
+      // The gallery-scroll div starts right after id="jeepGallery"
+      const scrollStart = html.indexOf('>', html.indexOf(`id="${galId}"`)) + 1;
+      // Find where it closes — look for the next </div> before gallery-counter
+      const counterPos  = html.indexOf(`id="${cfg.labelId}"`);
+      const closePos    = html.lastIndexOf('</div>', counterPos - 10);
+
+      const newItem = `\n    <div class="gallery-item"><img src="${filename}" alt="${altText}"></div>`;
+      html = html.slice(0, closePos) + newItem + '\n  ' + html.slice(closePos);
+
+      // Update "Photo 1 of N" counter
+      const total = (html.match(/class="gallery-item"/g)||[]).length;
+      html = html.replace(/Photo \d+ of \d+/, `Photo 1 of ${total}`);
+
+    } else {
+      // Category gallery
+      let catName = document.getElementById(`${p}-c-cat`).value;
+      if (catName === '__new__') {
+        catName = document.getElementById(`${p}-c-new`).value.trim();
+        if (!catName) { toast('Enter a category name','error'); setLoading(btnId,false,'Add to Category'); return; }
+
+        // Build new cat section and inject before the closing </div> of cat-galleries
+        const newSection = `
+  <div class="cat-section">
+    <div class="cat-header">
+      <span class="cat-header-label">${catName}</span>
+      <div class="cat-header-line"></div>
+      <span class="cat-header-count">1 photo</span>
+    </div>
+    <div class="cat-gallery">
+      <div class="cat-item"><img src="${filename}" alt="${altText}"></div>
+    </div>
+  </div>\n`;
+
+        const overviewPos = html.indexOf('<!-- OVERVIEW -->');
+        html = html.slice(0, overviewPos) + newSection + '\n' + html.slice(overviewPos);
+
+        // Update dropdown on this same tab if it's jeep or ps
+        const sel = document.getElementById(`${p}-c-cat`);
+        const opt = document.createElement('option');
+        opt.value = catName; opt.textContent = catName;
+        sel.insertBefore(opt, sel.lastElementChild);
+
+      } else {
+        // Add to existing category
+        const catLabelIdx  = html.indexOf(`>${catName}<`);
+        if (catLabelIdx === -1) throw new Error(`Category "${catName}" not found in HTML`);
+        const catGalStart  = html.indexOf('class="cat-gallery"', catLabelIdx);
+        const catGalClose  = html.indexOf('</div>', catGalStart + 20);
+
+        const newItem = `\n      <div class="cat-item"><img src="${filename}" alt="${altText}"></div>`;
+        html = html.slice(0, catGalClose) + newItem + '\n    ' + html.slice(catGalClose);
+
+        // Update photo count
+        const cntIdx   = html.indexOf('cat-header-count', catLabelIdx);
+        const cntMatch = html.slice(cntIdx).match(/(\d+) photo/);
+        if (cntMatch) {
+          html = html.slice(0, cntIdx) + html.slice(cntIdx).replace(`${cntMatch[1]} photo`, `${parseInt(cntMatch[1])+1} photo`);
+        }
+      }
+    }
+
+    pHtml[proj] = html;
+    await ghPutText(cfg.htmlFile, html, `Add photo to ${proj} gallery via admin`, pShas[proj]);
+    const updated = await ghGet(cfg.htmlFile);
+    pShas[proj]   = updated.sha;
+    pHtml[proj]   = b64dec(updated.content);
+
+    toast('✓ Photo added — live in ~30s');
+    document.getElementById(`${p}-${type==='main'?'m':'c'}-file`).value = '';
+    document.getElementById(`${p}-${type==='main'?'m':'c'}-alt`).value  = '';
+    await loadGalleryPreview(proj);
+
+  } catch(e) { toast(e.message,'error'); }
+  finally { setLoading(btnId, false, type==='main'?'Add to Main Gallery':'Add to Category'); }
+}
+</script>
+</body>
+</html>
