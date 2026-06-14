@@ -13,5 +13,25 @@ const designItems = [
     "tags": [
       "hammer"
     ]
+  },
+  {
+    "file": "photos/jet1.png",
+    "title": "jet",
+    "category": "3d-print",
+    "description": "jet",
+    "tags": [
+      "render"
+    ],
+    "project": "jet"
+  },
+  {
+    "file": "photos/jet2.png",
+    "title": "jet2",
+    "category": "3d-print",
+    "description": "jet2",
+    "tags": [
+      "section"
+    ],
+    "project": "jet"
   }
 ];
