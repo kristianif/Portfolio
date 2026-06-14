@@ -73,19 +73,19 @@
 <!-- ── STATS ─────────────────────────────────────────────────── -->
 <div class="container">
   <div class="stats-strip">
-    <div class="stat-cell">
+    <div class="stat-cell reveal">
       <div class="stat-val">4+</div>
       <div class="stat-key">Years hands-on<br>mechanical work</div>
     </div>
-    <div class="stat-cell">
+    <div class="stat-cell reveal">
       <div class="stat-val">7.3L</div>
       <div class="stat-key">Powerstroke<br>rebuilt inside &amp; out</div>
     </div>
-    <div class="stat-cell">
+    <div class="stat-cell reveal">
       <div class="stat-val">'73</div>
       <div class="stat-key">Jeep CJ5<br>frame-off restoration</div>
     </div>
-    <div class="stat-cell">
+    <div class="stat-cell reveal">
       <div class="stat-val">U of I</div>
       <div class="stat-key">B.S. Mechanical<br>Engineering, Senior Year</div>
     </div>
@@ -94,10 +94,10 @@
 
 <!-- ── FEATURED PROJECTS ──────────────────────────────────────── -->
 <section class="section">
-  <p class="section-label">Featured Projects</p>
+  <p class="section-label reveal">Featured Projects</p>
   <div class="project-grid">
 
-    <a href="project-jeep-cj5.html" class="project-card">
+    <a href="project-jeep-cj5.html" class="project-card reveal">
       <div class="project-card-cover">
         <img src="photos/jeep-cover.jpeg" alt="1973 Jeep CJ5">
       </div>
@@ -120,7 +120,7 @@
       </span>
     </a>
 
-    <a href="project-powerstroke.html" class="project-card">
+    <a href="project-powerstroke.html" class="project-card reveal">
       <div class="project-card-cover">
         <img src="photos/ps-side.jpg" alt="7.3L Powerstroke">
       </div>
@@ -147,8 +147,8 @@
 
 <!-- ── ABOUT TEASER ───────────────────────────────────────────── -->
 <section class="section">
-  <p class="section-label">About</p>
-  <div style="display:grid; grid-template-columns:1fr 1fr; gap:4rem; align-items:end;">
+  <p class="section-label reveal">About</p>
+  <div class="reveal" style="display:grid; grid-template-columns:1fr 1fr; gap:4rem; align-items:end;">
     <div>
       <h2 class="about-headline">Built things before I could name what I was doing.</h2>
       <p class="about-text" style="margin-top:1.25rem;">
@@ -175,6 +175,27 @@
   function toggleMobileNav() {
     document.getElementById('mobileNav').classList.toggle('open');
   }
+
+  // ── SCROLL REVEAL ────────────────────────────────────────────
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('is-visible');
+        observer.unobserve(entry.target); // fire once
+      }
+    });
+  }, { threshold: 0.12 });
+
+  // Stagger sibling .reveal elements within a parent
+  document.querySelectorAll('.reveal').forEach((el, i) => {
+    // Check if siblings share a parent — stagger them
+    const siblings = el.parentElement.querySelectorAll('.reveal');
+    if (siblings.length > 1) {
+      const idx = Array.from(siblings).indexOf(el);
+      el.style.setProperty('--reveal-delay', `${idx * 80}ms`);
+    }
+    observer.observe(el);
+  });
 </script>
 
 <script src="theme.js"></script>
