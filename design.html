@@ -142,14 +142,21 @@
     color: var(--fg);
   }
   .dp-images {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    gap: 0;
   }
+  .dp-images::-webkit-scrollbar { display: none; }
   .dp-img-wrap {
     position: relative;
+    flex: 0 0 clamp(260px, 38%, 480px);
     aspect-ratio: 4/3;
     overflow: hidden;
     cursor: pointer;
+    scroll-snap-align: start;
     border-right: 1px solid var(--border);
   }
   .dp-img-wrap:last-child { border-right: none; }
@@ -330,6 +337,35 @@
 
   // Initial render — wait for data fetch to complete
   _loadData.then(() => renderCards('all'));
+
+  // ── Drag-to-scroll for project image strips ───────────────────
+  function enableDragScroll(el) {
+    let isDown = false, startX, scrollLeft;
+    el.addEventListener('mousedown', e => {
+      isDown = true;
+      el.style.cursor = 'grabbing';
+      startX = e.pageX - el.offsetLeft;
+      scrollLeft = el.scrollLeft;
+    });
+    el.addEventListener('mouseleave', () => { isDown = false; el.style.cursor = 'grab'; });
+    el.addEventListener('mouseup',    () => { isDown = false; el.style.cursor = 'grab'; });
+    el.addEventListener('mousemove',  e => {
+      if (!isDown) return;
+      e.preventDefault();
+      const x = e.pageX - el.offsetLeft;
+      el.scrollLeft = scrollLeft - (x - startX) * 1.2;
+    });
+    el.style.cursor = 'grab';
+  }
+
+  // Apply to all current and future .dp-images strips
+  const dpObs = new MutationObserver(() => {
+    document.querySelectorAll('.dp-images:not([data-drag])').forEach(el => {
+      el.setAttribute('data-drag', '1');
+      enableDragScroll(el);
+    });
+  });
+  dpObs.observe(document.getElementById('designGrid'), { childList: true, subtree: true });
 </script>
 
 <script src="theme.js"></script>
