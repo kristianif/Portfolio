@@ -186,9 +186,10 @@ nav {
 .home-hero::after  { bottom: 2rem; right: 2rem; border-width: 0 1px 1px 0; }
 
 .hero-eyebrow {
-  font-family: var(--mono); font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase;
-  color: var(--amber); margin-bottom: 1.75rem;
+  font-family: var(--mono); font-size: 13px; letter-spacing: 0.15em; text-transform: uppercase;
+  color: rgba(238,234,228,0.88); margin-bottom: 1.75rem;
   display: flex; align-items: center; gap: 1rem;
+  text-shadow: 0 1px 8px rgba(0,0,0,0.6);
 }
 .hero-eyebrow::before { content: ''; width: 32px; height: 1px; background: var(--amber); }
 
