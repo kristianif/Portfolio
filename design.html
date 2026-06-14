@@ -48,9 +48,9 @@
 <div class="page-hero">
   <div class="page-hero-inner">
     <p class="page-label">Design &amp; Engineering</p>
-    <h1 class="page-title">CAD. Renderings.<br>Technical Work.</h1>
+    <h1 class="page-title">CAD. Prints.<br>Technical Work.</h1>
     <p class="page-desc">
-      SolidWorks models, FEA analysis, technical drawings, and engineering coursework.
+      3D printed parts, SolidWorks models, FEA analysis, and technical drawings.
       Click any card to view full size.
     </p>
   </div>
@@ -61,6 +61,7 @@
 
   <div class="filter-bar">
     <button class="filter-btn active" data-filter="all">All</button>
+    <button class="filter-btn" data-filter="3d-print">3D Prints</button>
     <button class="filter-btn" data-filter="cad">CAD Models</button>
     <button class="filter-btn" data-filter="rendering">Renderings</button>
     <button class="filter-btn" data-filter="fea">FEA / Analysis</button>
@@ -69,122 +70,12 @@
   </div>
 
   <div class="design-grid" id="designGrid">
-
-    <!--
-    ════════════════════════════════════════════════════════════
-    HOW TO ADD A DESIGN CARD:
-
-    Copy this block and fill in the details:
-
-    <div class="design-card" data-cat="cad">
-      <div class="design-card-img">
-        <img src="photos/your-image.jpg" alt="Description">
-      </div>
-      <div class="design-card-body">
-        <p class="design-card-cat">CAD Model</p>
-        <h3 class="design-card-title">Part or Assembly Name</h3>
-        <p class="design-card-desc">Brief description of what this is and what it demonstrates.</p>
-      </div>
-      <div class="design-card-footer">
-        <span class="tag">SolidWorks</span>
-        <span class="tag">Sheet Metal</span>
-      </div>
-    </div>
-
-    data-cat options: cad | rendering | fea | drawing | coursework
-    ════════════════════════════════════════════════════════════
-    -->
-
-    <!-- PLACEHOLDER CARDS — replace with real work as you add it -->
-
-    <div class="design-card" data-cat="cad">
-      <div class="design-card-img ph">
-        <!-- <img src="photos/design-cad-1.jpg" alt="CAD Model"> -->
-      </div>
-      <div class="design-card-body">
-        <p class="design-card-cat">CAD Model</p>
-        <h3 class="design-card-title">Add your first CAD model</h3>
-        <p class="design-card-desc">Drop an image in the photos/ folder and replace this placeholder.</p>
-      </div>
-      <div class="design-card-footer">
-        <span class="tag">SolidWorks</span>
-      </div>
-    </div>
-
-    <div class="design-card" data-cat="rendering">
-      <div class="design-card-img ph">
-        <!-- <img src="photos/design-render-1.jpg" alt="Rendering"> -->
-      </div>
-      <div class="design-card-body">
-        <p class="design-card-cat">Rendering</p>
-        <h3 class="design-card-title">Add a rendering</h3>
-        <p class="design-card-desc">Visualizations, photo-realistic renders, or presentation images from your models.</p>
-      </div>
-      <div class="design-card-footer">
-        <span class="tag">SolidWorks Visualize</span>
-      </div>
-    </div>
-
-    <div class="design-card" data-cat="fea">
-      <div class="design-card-img ph">
-        <!-- <img src="photos/design-fea-1.jpg" alt="FEA Analysis"> -->
-      </div>
-      <div class="design-card-body">
-        <p class="design-card-cat">FEA / Analysis</p>
-        <h3 class="design-card-title">Add an FEA study</h3>
-        <p class="design-card-desc">Stress analysis, thermal studies, or other simulation results.</p>
-      </div>
-      <div class="design-card-footer">
-        <span class="tag">FEA</span>
-        <span class="tag">Simulation</span>
-      </div>
-    </div>
-
-    <div class="design-card" data-cat="drawing">
-      <div class="design-card-img ph">
-        <!-- <img src="photos/design-drawing-1.jpg" alt="Technical Drawing"> -->
-      </div>
-      <div class="design-card-body">
-        <p class="design-card-cat">Technical Drawing</p>
-        <h3 class="design-card-title">Add a technical drawing</h3>
-        <p class="design-card-desc">GD&T drawings, dimensioned views, or shop drawings from coursework or projects.</p>
-      </div>
-      <div class="design-card-footer">
-        <span class="tag">GD&amp;T</span>
-        <span class="tag">Drafting</span>
-      </div>
-    </div>
-
-    <div class="design-card" data-cat="coursework">
-      <div class="design-card-img ph">
-        <!-- <img src="photos/design-coursework-1.jpg" alt="Coursework"> -->
-      </div>
-      <div class="design-card-body">
-        <p class="design-card-cat">Coursework</p>
-        <h3 class="design-card-title">Add a class project</h3>
-        <p class="design-card-desc">Engineering coursework, senior capstone work, or lab reports with visual outputs.</p>
-      </div>
-      <div class="design-card-footer">
-        <span class="tag">U of I</span>
-      </div>
-    </div>
-
-    <div class="design-card" data-cat="cad">
-      <div class="design-card-img ph">
-        <!-- <img src="photos/design-cad-2.jpg" alt="Assembly"> -->
-      </div>
-      <div class="design-card-body">
-        <p class="design-card-cat">CAD Model</p>
-        <h3 class="design-card-title">Add another model</h3>
-        <p class="design-card-desc">Assemblies, parts, or mechanism designs.</p>
-      </div>
-      <div class="design-card-footer">
-        <span class="tag">SolidWorks</span>
-        <span class="tag">Assembly</span>
-      </div>
-    </div>
-
+    <!-- Cards are injected here by design-data.js -->
+    <p class="empty-state" id="emptyState" style="display:none; grid-column:1/-1; text-align:center; color:var(--fg-muted); font-family:var(--mono); font-size:12px; letter-spacing:0.1em; padding:4rem 0;">
+      NO ITEMS IN THIS CATEGORY YET
+    </p>
   </div>
+
 </section>
 
 <!-- TOOLS STRIP -->
@@ -219,45 +110,80 @@
   <p class="lightbox-caption" id="lightboxCaption"></p>
 </div>
 
+<script src="design-data.js"></script>
 <script>
   function toggleMobileNav() {
     document.getElementById('mobileNav').classList.toggle('open');
   }
 
-  // Filter
+  const catLabels = {
+    '3d-print':  '3D Print',
+    'cad':       'CAD Model',
+    'rendering': 'Rendering',
+    'fea':       'FEA / Analysis',
+    'drawing':   'Technical Drawing',
+    'coursework':'Coursework'
+  };
+
+  const grid = document.getElementById('designGrid');
+  const empty = document.getElementById('emptyState');
+
+  function renderCards(filter) {
+    // Remove existing cards (not the empty state)
+    grid.querySelectorAll('.design-card').forEach(c => c.remove());
+
+    const filtered = filter === 'all'
+      ? designItems
+      : designItems.filter(item => item.category === filter);
+
+    empty.style.display = filtered.length === 0 ? 'block' : 'none';
+
+    filtered.forEach(item => {
+      const card = document.createElement('div');
+      card.className = 'design-card';
+      card.dataset.cat = item.category;
+      card.innerHTML = `
+        <div class="design-card-img">
+          <img src="${item.file}" alt="${item.title}" loading="lazy">
+        </div>
+        <div class="design-card-body">
+          <p class="design-card-cat">${catLabels[item.category] || item.category}</p>
+          <h3 class="design-card-title">${item.title}</h3>
+          <p class="design-card-desc">${item.description}</p>
+        </div>
+        <div class="design-card-footer">
+          ${item.tags.map(t => `<span class="tag">${t}</span>`).join('')}
+        </div>`;
+
+      card.addEventListener('click', () => {
+        const img = card.querySelector('img');
+        if (!img) return;
+        document.getElementById('lightboxImg').src = img.src;
+        document.getElementById('lightboxImg').alt = img.alt;
+        document.getElementById('lightboxCaption').textContent = item.title;
+        document.getElementById('lightbox').classList.add('open');
+      });
+
+      grid.appendChild(card);
+    });
+  }
+
+  // Filter buttons
   document.querySelectorAll('.filter-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
-      const filter = btn.dataset.filter;
-      document.querySelectorAll('.design-card').forEach(card => {
-        const show = filter === 'all' || card.dataset.cat === filter;
-        card.hidden = !show;
-      });
-    });
-  });
-
-  // Lightbox — only open if card has a real image
-  document.querySelectorAll('.design-card').forEach(card => {
-    card.addEventListener('click', () => {
-      const img = card.querySelector('img');
-      if (!img) return;
-      const title = card.querySelector('.design-card-title')?.textContent || '';
-      document.getElementById('lightboxImg').src = img.src;
-      document.getElementById('lightboxImg').alt = img.alt;
-      document.getElementById('lightboxCaption').textContent = title;
-      document.getElementById('lightbox').classList.add('open');
+      renderCards(btn.dataset.filter);
     });
   });
 
   function closeLightbox() {
     document.getElementById('lightbox').classList.remove('open');
   }
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox(); });
 
-  // Close on Escape
-  document.addEventListener('keydown', e => {
-    if (e.key === 'Escape') closeLightbox();
-  });
+  // Initial render
+  renderCards('all');
 </script>
 
 </body>
