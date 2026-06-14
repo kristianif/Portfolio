@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Experience — Kristian Felten</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* ── TIMELINE SECTION ───────────────────────────────────────── */
+    .tl-section {
+      padding: 5rem 0 8rem;
+    }
+
+    /* Outer wrapper: arrows + rail */
+    .tl-outer {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      padding: 0 1rem;
+      max-width: 1100px;
+      margin: 0 auto 0;
+      position: relative;
+    }
+
+    /* Arrow buttons */
+    .tl-btn {
+      flex-shrink: 0;
+      width: 44px; height: 44px;
+      background: var(--bg-2);
+      border: 1px solid var(--border);
+      color: var(--fg-muted);
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: border-color 0.2s, color 0.2s, background 0.2s;
+      z-index: 2;
+    }
+    .tl-btn:hover { border-color: var(--amber); color: var(--amber); background: var(--bg-3); }
+    .tl-btn:disabled { opacity: 0.25; cursor: default; }
+    .tl-btn:disabled:hover { border-color: var(--border); color: var(--fg-muted); background: var(--bg-2); }
+
+    /* The floating rail */
+    .tl-rail {
+      flex: 1;
+      position: relative;
+      padding: 2.5rem 2rem;
+      background: var(--bg-2);
+      border: 1px solid var(--border);
+      border-left: none; border-right: none;
+      box-shadow: 0 16px 64px rgba(0,0,0,0.45), 0 2px 0 rgba(255,255,255,0.03);
+      overflow: hidden;
+    }
+
+    /* Horizontal connecting line */
+    .tl-line {
+      position: absolute;
+      top: 50%; left: 2rem; right: 2rem;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--border) 10%, var(--border) 90%, transparent);
+      transform: translateY(-50%);
+    }
+
+    /* Nodes row */
+    .tl-nodes {
+      display: flex;
+      justify-content: space-between;
+      position: relative;
+      z-index: 1;
+    }
+
+    .tl-node {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0;
+      cursor: pointer;
+      flex: 1;
+      min-width: 0;
+    }
+
+    .tl-node-year {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      color: var(--fg-muted);
+      margin-bottom: 0.6rem;
+      transition: color 0.3s;
+      white-space: nowrap;
+    }
+
+    .tl-node-dot {
+      width: 12px; height: 12px;
+      border-radius: 50%;
+      background: var(--bg-3);
+      border: 2px solid var(--border-2);
+      transition: all 0.35s cubic-bezier(0.16,1,0.3,1);
+      position: relative;
+    }
+    /* Outer ring on active */
+    .tl-node-dot::before {
+      content: '';
+      position: absolute;
+      inset: -5px;
+      border-radius: 50%;
+      border: 1px solid transparent;
+      transition: border-color 0.35s, box-shadow 0.35s;
+    }
+
+    .tl-node-role {
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--fg-muted);
+      margin-top: 0.6rem;
+      text-align: center;
+      max-width: 90px;
+      line-height: 1.35;
+      transition: color 0.3s;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* Active node */
+    .tl-node.active .tl-node-year { color: var(--amber); }
+    .tl-node.active .tl-node-dot {
+      width: 16px; height: 16px;
+      background: var(--amber);
+      border-color: var(--amber);
+      box-shadow: 0 0 0 4px rgba(212,136,12,0.18), 0 0 20px rgba(212,136,12,0.35);
+    }
+    .tl-node.active .tl-node-dot::before {
+      border-color: rgba(212,136,12,0.25);
+    }
+    .tl-node.active .tl-node-role { color: var(--fg); }
+    .tl-node:hover:not(.active) .tl-node-dot {
+      border-color: var(--fg-muted);
+      width: 14px; height: 14px;
+    }
+
+    /* Dot nav indicators */
+    .tl-dots {
+      display: flex;
+      justify-content: center;
+      gap: 0.5rem;
+      margin-top: 1.5rem;
+    }
+    .tl-dot {
+      width: 5px; height: 5px;
+      border-radius: 50%;
+      background: var(--border-2);
+      cursor: pointer;
+      transition: background 0.2s, transform 0.2s;
+    }
+    .tl-dot.active { background: var(--amber); transform: scale(1.4); }
+
+    /* Vertical connector from timeline to card */
+    .tl-connector {
+      width: 1px;
+      height: 2.5rem;
+      background: linear-gradient(to bottom, var(--amber), transparent);
+      margin: 0 auto;
+      opacity: 0.6;
+    }
+
+    /* Floating experience card */
+    .exp-card-wrap {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 0 1rem;
+    }
+
+    .exp-card {
+      background: var(--bg-2);
+      border: 1px solid var(--border);
+      box-shadow: 0 20px 80px rgba(0,0,0,0.5), 0 2px 0 rgba(255,255,255,0.03);
+      padding: 2.5rem 3rem;
+      transition: opacity 0.28s ease, transform 0.28s cubic-bezier(0.16,1,0.3,1);
+      position: relative;
+      overflow: hidden;
+    }
+    .exp-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--amber), transparent);
+      opacity: 0.6;
+    }
+    .exp-card.is-exiting {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    .exp-card.is-entering {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+
+    .exp-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 1.5rem;
+      gap: 2rem;
+    }
+    .exp-card-company {
+      font-size: 11px;
+      font-family: var(--mono);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--amber);
+      margin-bottom: 0.35rem;
+    }
+    .exp-card-role {
+      font-size: 1.5rem;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      line-height: 1.2;
+    }
+    .exp-card-meta {
+      text-align: right;
+      flex-shrink: 0;
+    }
+    .exp-card-duration {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--fg-muted);
+      letter-spacing: 0.08em;
+      margin-bottom: 0.4rem;
+    }
+    .exp-card-type {
+      display: inline-block;
+      font-family: var(--mono);
+      font-size: 9px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      padding: 0.25rem 0.6rem;
+      border: 1px solid var(--border-2);
+      color: var(--fg-muted);
+    }
+
+    .exp-card-divider {
+      height: 1px;
+      background: var(--border);
+      margin-bottom: 1.5rem;
+    }
+
+    .exp-card-desc {
+      color: var(--fg-muted);
+      line-height: 1.8;
+      font-size: 0.95rem;
+      margin-bottom: 1.75rem;
+    }
+    .exp-card-desc p { margin-bottom: 0.75rem; }
+    .exp-card-desc p:last-child { margin-bottom: 0; }
+
+    .exp-card-skills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+    }
+
+    /* Nav within card */
+    .exp-card-nav {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 2rem;
+      padding-top: 1.25rem;
+      border-top: 1px solid var(--border);
+    }
+    .exp-card-nav-btn {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--fg-muted);
+      background: none;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0;
+      transition: color 0.2s;
+    }
+    .exp-card-nav-btn:hover { color: var(--amber); }
+    .exp-card-nav-btn:disabled { opacity: 0.25; cursor: default; }
+    .exp-card-nav-btn:disabled:hover { color: var(--fg-muted); }
+    .exp-card-counter {
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--fg-dim);
+      letter-spacing: 0.1em;
+      align-self: center;
+    }
+
+    /* Mobile */
+    @media (max-width: 768px) {
+      .tl-node-role { display: none; }
+      .tl-rail { padding: 2rem 1rem; }
+      .exp-card { padding: 1.75rem 1.5rem; }
+      .exp-card-header { flex-direction: column; gap: 0.75rem; }
+      .exp-card-meta { text-align: left; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">KF<span class="dot">.</span></a>
+    <ul class="nav-links">
+      <li><a href="about.html">About</a></li>
+      <li><a href="experience.html" class="active">Experience</a></li>
+      <li>
+        <a href="projects.html">
+          Projects
+          <svg class="nav-chevron" viewBox="0 0 10 6" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 1l4 4 4-4"/></svg>
+        </a>
+        <ul class="nav-dropdown">
+          <li><a href="project-jeep-cj5.html"><span class="dd-num">01</span> 1973 Jeep CJ5</a></li>
+          <li><a href="project-powerstroke.html"><span class="dd-num">02</span> 7.3L Powerstroke</a></li>
+        </ul>
+      </li>
+      <li><a href="design.html">Design</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+    <button class="nav-toggle" onclick="toggleMobileNav()" aria-label="Menu">
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 5h16M2 10h16M2 15h16"/></svg>
+    </button>
+  </div>
+  <div class="nav-mobile" id="mobileNav">
+    <a href="about.html">About</a>
+    <a href="experience.html">Experience</a>
+    <a href="projects.html">Projects</a>
+    <a href="project-jeep-cj5.html" class="sub"><span class="dd-num">01</span>1973 Jeep CJ5</a>
+    <a href="project-powerstroke.html" class="sub"><span class="dd-num">02</span>7.3L Powerstroke</a>
+    <a href="design.html">Design</a>
+    <a href="contact.html">Contact</a>
+  </div>
+</nav>
+
+<!-- PAGE HERO -->
+<div class="page-hero">
+  <div class="page-hero-inner">
+    <p class="page-label">Work History</p>
+    <h1 class="page-title">Experience.</h1>
+    <p class="page-desc">
+      Years of hands-on work across construction, automotive, and engineering —
+      before the degree gave it a name. Click any role to read more.
+    </p>
+  </div>
+</div>
+
+<!-- TIMELINE -->
+<section class="tl-section">
+
+  <div class="tl-outer">
+    <button class="tl-btn" id="tlPrev" aria-label="Previous" onclick="tlGo(-1)">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+        <path d="M10 3L5 8l5 5"/>
+      </svg>
+    </button>
+
+    <div class="tl-rail">
+      <div class="tl-line"></div>
+      <div class="tl-nodes" id="tlNodes"></div>
+    </div>
+
+    <button class="tl-btn" id="tlNext" aria-label="Next" onclick="tlGo(1)">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+        <path d="M6 3l5 5-5 5"/>
+      </svg>
+    </button>
+  </div>
+
+  <div class="tl-dots" id="tlDots"></div>
+  <div class="tl-connector"></div>
+
+  <div class="exp-card-wrap">
+    <div class="exp-card" id="expCard">
+      <div class="exp-card-header">
+        <div>
+          <div class="exp-card-company" id="ecCompany"></div>
+          <div class="exp-card-role" id="ecRole"></div>
+        </div>
+        <div class="exp-card-meta">
+          <div class="exp-card-duration" id="ecDuration"></div>
+          <div class="exp-card-type" id="ecType"></div>
+        </div>
+      </div>
+      <div class="exp-card-divider"></div>
+      <div class="exp-card-desc" id="ecDesc"></div>
+      <div class="exp-card-skills" id="ecSkills"></div>
+      <div class="exp-card-nav">
+        <button class="exp-card-nav-btn" id="cardPrev" onclick="tlGo(-1)">
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 2L4 6l4 4"/></svg>
+          Previous
+        </button>
+        <span class="exp-card-counter" id="ecCounter"></span>
+        <button class="exp-card-nav-btn" id="cardNext" onclick="tlGo(1)">
+          Next
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 2l4 4-4 4"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <span>© 2025 Kristian Felten</span>
+    <span>Mechanical Engineering — University of Idaho</span>
+    <a href="contact.html">Get in Touch</a>
+  </div>
+</footer>
+
+<script>
+// ── EXPERIENCE DATA ────────────────────────────────────────────
+// Fill in your real details here — or update via me.
+const experiences = [
+  {
+    year: '2016',
+    role: 'Construction Laborer',
+    company: 'General Construction',
+    duration: '2016 – 2019',
+    type: 'Construction',
+    description: `
+      <p>Hands-on construction work across residential and commercial projects. Operated heavy equipment, poured and finished concrete, framed structures, and assisted across multiple trades on active job sites.</p>
+      <p>Developed a practical understanding of load paths, structural systems, and site safety that now directly informs how I approach mechanical design.</p>
+    `,
+    skills: ['Concrete', 'Framing', 'Equipment Operation', 'Site Safety', 'Blueprint Reading']
+  },
+  {
+    year: '2018',
+    role: 'Automotive Mechanic',
+    company: 'Independent / Shop Work',
+    duration: '2018 – Present',
+    type: 'Mechanical',
+    description: `
+      <p>Diesel and gasoline engine rebuilds, suspension work, fabrication, and electrical diagnostics. Rebuilt multiple 7.3L Powerstroke diesel engines from bottom-end machine work through injectors, heads, and turbocharging.</p>
+      <p>Frame-off restoration of a 1973 Jeep CJ5 — every system touched including suspension, drivetrain, custom fabrication, and a full electrical rewire.</p>
+    `,
+    skills: ['Engine Rebuilds', 'Diesel Systems', 'Fabrication', 'Welding', 'Electrical Wiring', 'Suspension']
+  },
+  {
+    year: '2019',
+    role: 'Road Work & Field Technician',
+    company: 'Geotechnical / Civil',
+    duration: '2019 – 2021',
+    type: 'Civil / Geotech',
+    description: `
+      <p>Field work in road construction and geotechnical testing. Performed soil compaction testing, aggregate sampling, and site inspections to verify material specifications and construction quality.</p>
+      <p>Operated equipment, read civil drawings, and coordinated with project engineers — an early exposure to applied engineering standards in the field.</p>
+    `,
+    skills: ['Soil Testing', 'Compaction Testing', 'Civil Drawings', 'Field Inspection', 'Equipment Operation']
+  },
+  {
+    year: '2021',
+    role: 'B.S. Mechanical Engineering',
+    company: 'University of Idaho',
+    duration: '2021 – Present',
+    type: 'Education',
+    description: `
+      <p>Senior-year mechanical engineering student at the University of Idaho. Coursework covers thermodynamics, fluid mechanics, machine design, FEA, manufacturing processes, and dynamics.</p>
+      <p>Applying classroom theory directly to real projects — the Jeep restoration and Powerstroke rebuilds evolved from hands-on instinct into documented, engineered work.</p>
+    `,
+    skills: ['SolidWorks', 'FEA / Simulation', 'MATLAB', 'Thermodynamics', 'Machine Design', 'GD&T']
+  }
+];
+
+// ── TIMELINE ENGINE ───────────────────────────────────────────
+let current = 0;
+
+function buildTimeline() {
+  const nodesEl = document.getElementById('tlNodes');
+  const dotsEl  = document.getElementById('tlDots');
+
+  nodesEl.innerHTML = experiences.map((exp, i) => `
+    <div class="tl-node${i === 0 ? ' active' : ''}" data-i="${i}" onclick="tlSet(${i})">
+      <div class="tl-node-year">${exp.year}</div>
+      <div class="tl-node-dot"></div>
+      <div class="tl-node-role">${exp.role.split(' ').slice(0,2).join(' ')}</div>
+    </div>
+  `).join('');
+
+  dotsEl.innerHTML = experiences.map((_, i) => `
+    <div class="tl-dot${i === 0 ? ' active' : ''}" onclick="tlSet(${i})"></div>
+  `).join('');
+
+  renderCard(0, false);
+}
+
+function renderCard(i, animate = true) {
+  const exp  = experiences[i];
+  const card = document.getElementById('expCard');
+
+  const doUpdate = () => {
+    document.getElementById('ecCompany').textContent  = exp.company;
+    document.getElementById('ecRole').textContent     = exp.role;
+    document.getElementById('ecDuration').textContent = exp.duration;
+    document.getElementById('ecType').textContent     = exp.type;
+    document.getElementById('ecDesc').innerHTML       = exp.description;
+    document.getElementById('ecCounter').textContent  = `${i + 1} / ${experiences.length}`;
+    document.getElementById('ecSkills').innerHTML     =
+      exp.skills.map(s => `<span class="tag">${s}</span>`).join('');
+
+    document.getElementById('tlPrev').disabled  = i === 0;
+    document.getElementById('tlNext').disabled  = i === experiences.length - 1;
+    document.getElementById('cardPrev').disabled = i === 0;
+    document.getElementById('cardNext').disabled = i === experiences.length - 1;
+
+    if (animate) {
+      card.classList.remove('is-exiting');
+      card.classList.add('is-entering');
+      requestAnimationFrame(() => {
+        card.classList.remove('is-entering');
+      });
+    }
+  };
+
+  if (animate) {
+    card.classList.add('is-exiting');
+    setTimeout(doUpdate, 280);
+  } else {
+    doUpdate();
+  }
+
+  // Update active node & dot
+  document.querySelectorAll('.tl-node').forEach((n, idx) => {
+    n.classList.toggle('active', idx === i);
+  });
+  document.querySelectorAll('.tl-dot').forEach((d, idx) => {
+    d.classList.toggle('active', idx === i);
+  });
+}
+
+function tlSet(i) {
+  if (i === current) return;
+  current = i;
+  renderCard(i, true);
+}
+
+function tlGo(dir) {
+  const next = current + dir;
+  if (next < 0 || next >= experiences.length) return;
+  tlSet(next);
+}
+
+// Keyboard navigation
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowLeft')  tlGo(-1);
+  if (e.key === 'ArrowRight') tlGo(1);
+});
+
+// Touch swipe
+let touchStartX = 0;
+document.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; }, { passive: true });
+document.addEventListener('touchend',   e => {
+  const dx = e.changedTouches[0].clientX - touchStartX;
+  if (Math.abs(dx) > 50) tlGo(dx < 0 ? 1 : -1);
+}, { passive: true });
+
+function toggleMobileNav() {
+  document.getElementById('mobileNav').classList.toggle('open');
+}
+
+buildTimeline();
+</script>
+
+<script src="theme.js"></script>
+<script src="effects.js"></script>
+</body>
+</html>
