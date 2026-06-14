@@ -188,7 +188,7 @@
   if (heroWrap) {
     window.addEventListener('scroll', () => {
       heroWrap.style.backgroundPositionY =
-        `calc(center + ${window.scrollY * 0.25}px)`;
+        `calc(50% + ${window.scrollY * 0.25}px)`;
     }, { passive: true });
   }
 
