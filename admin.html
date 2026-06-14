@@ -330,7 +330,7 @@
 // ── CONFIG ────────────────────────────────────────────────────
 const OWNER  = 'kristian24908';
 const REPO   = 'Portfolio';
-const SUB    = 'Portfolio/'; // subfolder within repo where HTML files live
+const SUB    = ''; // files are at repo root
 let TOKEN  = '';
 let BRANCH = 'main'; // auto-detected on login
 
@@ -348,14 +348,7 @@ async function login() {
     sessionStorage.setItem('ghToken', TOKEN);
     sessionStorage.setItem('ghBranch', BRANCH);
 
-    // Verify we can actually reach the Portfolio subfolder
-    const testR = await fetch(`https://api.github.com/repos/${OWNER}/${REPO}/contents/${SUB}?ref=${BRANCH}`, { headers: auth() });
-    if (!testR.ok) {
-      const testD = await testR.json();
-      throw new Error(`Repo found but can't read Portfolio/ subfolder (${testR.status}): ${testD.message}. Branch: ${BRANCH}`);
-    }
-
-    document.getElementById('loginWrap').style.display = 'none';
+document.getElementById('loginWrap').style.display = 'none';
     document.getElementById('adminWrap').style.display = 'block';
     document.getElementById('adminUser').textContent = `${d.full_name} · ${BRANCH}`;
     loadDesignItems();
