@@ -33,15 +33,5 @@ const designItems = [
       "section"
     ],
     "project": "jet"
-  },
-  {
-    "file": "photos/jet.png",
-    "title": "1",
-    "category": "3d-print",
-    "description": "1",
-    "tags": [
-      "1"
-    ],
-    "project": "jet"
   }
 ];
