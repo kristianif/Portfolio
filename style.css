@@ -196,6 +196,7 @@ nav {
   font-size: clamp(4rem, 10vw, 9rem);
   font-weight: 600; letter-spacing: -0.04em; line-height: 0.92;
   color: var(--fg); margin-bottom: 2rem;
+  text-shadow: 0 2px 20px rgba(0,0,0,0.6);
 }
 .hero-name .dim { color: var(--fg-muted); font-weight: 300; }
 
@@ -203,6 +204,7 @@ nav {
   font-size: clamp(1rem, 1.8vw, 1.2rem);
   color: var(--fg-muted); max-width: 480px; line-height: 1.75;
   margin-bottom: 2.5rem;
+  text-shadow: 0 1px 8px rgba(0,0,0,0.5);
 }
 
 .hero-actions { display: flex; gap: 1rem; flex-wrap: wrap; }
