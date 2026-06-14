@@ -209,6 +209,20 @@ nav {
 
 .hero-actions { display: flex; gap: 1rem; flex-wrap: wrap; }
 
+/* Hero buttons always sit over the photo — lock to light palette */
+.hero-actions .btn-primary {
+  background: #EEEAE4; color: #22242A; border-color: #EEEAE4;
+}
+.hero-actions .btn-primary:hover {
+  background: var(--amber); border-color: var(--amber); color: #fff;
+}
+.hero-actions .btn-outline {
+  color: #EEEAE4; border-color: rgba(238,234,228,0.55);
+}
+.hero-actions .btn-outline:hover {
+  border-color: #EEEAE4; background: rgba(238,234,228,0.1);
+}
+
 /* ─── STATS STRIP ─────────────────────────────────────────────── */
 .stats-strip {
   display: grid; grid-template-columns: repeat(4, 1fr);
