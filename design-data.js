@@ -23,5 +23,15 @@ const designItems = [
       "render"
     ],
     "project": "jet"
+  },
+  {
+    "file": "photos/jet2.png",
+    "title": "jet2",
+    "category": "3d-print",
+    "description": "jet2",
+    "tags": [
+      "section"
+    ],
+    "project": "jet"
   }
 ];
