@@ -110,7 +110,17 @@
   <p class="lightbox-caption" id="lightboxCaption"></p>
 </div>
 
-<script src="design-data.js"></script>
+<script>
+  // Load design data fresh every time (no caching)
+  let designItems = [];
+  const _loadData = fetch('design-data.js?v=' + Date.now())
+    .then(r => r.text())
+    .then(text => {
+      const m = text.match(/const designItems\s*=\s*(\[[\s\S]*?\]);/);
+      if (m) designItems = JSON.parse(m[1]);
+    })
+    .catch(() => { designItems = []; });
+</script>
 <script>
   function toggleMobileNav() {
     document.getElementById('mobileNav').classList.toggle('open');
@@ -182,8 +192,8 @@
   }
   document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox(); });
 
-  // Initial render
-  renderCards('all');
+  // Initial render — wait for data fetch to complete
+  _loadData.then(() => renderCards('all'));
 </script>
 
 </body>
