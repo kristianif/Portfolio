@@ -436,6 +436,10 @@ function switchTab(el, name) {
   document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
   el.classList.add('active');
   document.getElementById(`tab-${name}`).classList.add('active');
+  // Reload data whenever a tab is opened so SHA is always fresh
+  if (name === 'design') loadDesignItems();
+  if (name === 'jeep')   loadGalleryPreview('jeep');
+  if (name === 'powerstroke') loadGalleryPreview('ps');
 }
 
 // ── PHOTO UPLOAD ──────────────────────────────────────────────
@@ -509,6 +513,15 @@ function renderDesignList() {
 }
 
 async function saveDesignData() {
+  // Always fetch the latest SHA before writing — prevents stale-SHA conflicts
+  // (e.g. if GitHub Desktop pushed a commit since the admin last loaded)
+  try {
+    const current = await ghGet('design-data.js');
+    dSha = current.sha;
+  } catch(_) {
+    dSha = null; // file doesn't exist yet — GitHub will create it
+  }
+
   const header = `// ─────────────────────────────────────────────────────────────
 //  DESIGN PAGE DATA — managed via admin.html
 //
@@ -516,7 +529,6 @@ async function saveDesignData() {
 // ─────────────────────────────────────────────────────────────
 
 const designItems = ${JSON.stringify(dItems, null, 2)};\n`;
-  // dSha is null when file doesn't exist yet — GitHub API creates it fresh
   await ghPutText('design-data.js', header, 'Update design items via admin', dSha || undefined);
   const updated = await ghGet('design-data.js');
   dSha = updated.sha;
