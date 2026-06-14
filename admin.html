@@ -517,25 +517,35 @@ function renderDesignList() {
 }
 
 async function saveDesignData() {
-  // Always fetch the latest SHA before writing — prevents stale-SHA conflicts
-  // (e.g. if GitHub Desktop pushed a commit since the admin last loaded)
-  try {
-    const current = await ghGet('design-data.js');
-    dSha = current.sha;
-  } catch(_) {
-    dSha = null; // file doesn't exist yet — GitHub will create it
-  }
-
-  const header = `// ─────────────────────────────────────────────────────────────
+  const content = `// ─────────────────────────────────────────────────────────────
 //  DESIGN PAGE DATA — managed via admin.html
 //
 //  category: "3d-print" | "cad" | "rendering" | "fea" | "drawing" | "coursework"
 // ─────────────────────────────────────────────────────────────
 
 const designItems = ${JSON.stringify(dItems, null, 2)};\n`;
-  await ghPutText('design-data.js', header, 'Update design items via admin', dSha || undefined);
-  const updated = await ghGet('design-data.js');
-  dSha = updated.sha;
+
+  // Try up to 2 times — first with a freshly-fetched SHA, retry once if GitHub
+  // returns a 409 (can happen when the API cache lags a recent commit).
+  for (let attempt = 0; attempt < 2; attempt++) {
+    try {
+      const r = await fetch(`${apiUrl('design-data.js')}?ref=${BRANCH}&_=${Date.now()}`,
+        { headers: { ...auth(), 'Cache-Control': 'no-cache' } });
+      dSha = r.ok ? (await r.json()).sha : null;
+    } catch(_) { dSha = null; }
+
+    try {
+      await ghPutText('design-data.js', content, 'Update design items via admin', dSha || undefined);
+      // Store the new SHA so the next save in this session is also clean
+      const updated = await fetch(`${apiUrl('design-data.js')}?ref=${BRANCH}&_=${Date.now()}`,
+        { headers: { ...auth(), 'Cache-Control': 'no-cache' } });
+      if (updated.ok) dSha = (await updated.json()).sha;
+      return; // success
+    } catch(e) {
+      if (attempt === 1) throw e; // second attempt also failed — surface the error
+      // Otherwise loop and retry with a freshly-fetched SHA
+    }
+  }
 }
 
 async function addDesignItem() {
