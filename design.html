@@ -63,6 +63,7 @@
 
   <div class="filter-bar">
     <button class="filter-btn active" data-filter="all">All</button>
+    <button class="filter-btn" data-filter="project">Projects</button>
     <button class="filter-btn" data-filter="3d-print">3D Prints</button>
     <button class="filter-btn" data-filter="cad">CAD Models</button>
     <button class="filter-btn" data-filter="rendering">Renderings</button>
@@ -112,6 +113,84 @@
   <p class="lightbox-caption" id="lightboxCaption"></p>
 </div>
 
+<style>
+  /* ── Project cluster ─────────────────────────────────────────── */
+  .design-project {
+    grid-column: 1 / -1;
+    border: 1px solid var(--border);
+    background: var(--bg-card, #1a1c24);
+    overflow: hidden;
+  }
+  .dp-header {
+    padding: 1rem 1.25rem 0.9rem;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: baseline;
+    gap: 1rem;
+  }
+  .dp-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--amber);
+    flex-shrink: 0;
+  }
+  .dp-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--fg);
+  }
+  .dp-images {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  }
+  .dp-img-wrap {
+    position: relative;
+    aspect-ratio: 4/3;
+    overflow: hidden;
+    cursor: pointer;
+    border-right: 1px solid var(--border);
+  }
+  .dp-img-wrap:last-child { border-right: none; }
+  .dp-img-wrap img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s ease;
+    display: block;
+  }
+  .dp-img-wrap:hover img { transform: scale(1.04); }
+  .dp-img-overlay {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    padding: 0.6rem 0.75rem;
+    background: linear-gradient(transparent, rgba(0,0,0,0.72));
+    opacity: 0;
+    transition: opacity 0.22s;
+  }
+  .dp-img-wrap:hover .dp-img-overlay { opacity: 1; }
+  .dp-img-cat {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--amber);
+  }
+  .dp-img-name {
+    font-size: 11px;
+    color: #fff;
+    margin-top: 0.1rem;
+  }
+  .dp-footer {
+    padding: 0.85rem 1.25rem;
+    border-top: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+  }
+</style>
+
 <script>
   // Load design data fresh every time (no caching)
   let designItems = [];
@@ -137,47 +216,102 @@
     'coursework':'Coursework'
   };
 
-  const grid = document.getElementById('designGrid');
+  const grid  = document.getElementById('designGrid');
   const empty = document.getElementById('emptyState');
 
-  function renderCards(filter) {
-    // Remove existing cards (not the empty state)
-    grid.querySelectorAll('.design-card').forEach(c => c.remove());
+  function openLightbox(src, alt, caption) {
+    document.getElementById('lightboxImg').src = src;
+    document.getElementById('lightboxImg').alt = alt;
+    document.getElementById('lightboxCaption').textContent = caption;
+    document.getElementById('lightbox').classList.add('open');
+  }
 
-    const filtered = filter === 'all'
-      ? designItems
-      : designItems.filter(item => item.category === filter);
-
-    empty.style.display = filtered.length === 0 ? 'block' : 'none';
-
-    filtered.forEach(item => {
-      const card = document.createElement('div');
-      card.className = 'design-card';
-      card.dataset.cat = item.category;
-      card.innerHTML = `
-        <div class="design-card-img">
-          <img src="${item.file}" alt="${item.title}" loading="lazy">
-        </div>
-        <div class="design-card-body">
-          <p class="design-card-cat">${catLabels[item.category] || item.category}</p>
-          <h3 class="design-card-title">${item.title}</h3>
-          <p class="design-card-desc">${item.description}</p>
-        </div>
-        <div class="design-card-footer">
-          ${item.tags.map(t => `<span class="tag">${t}</span>`).join('')}
-        </div>`;
-
-      card.addEventListener('click', () => {
-        const img = card.querySelector('img');
-        if (!img) return;
-        document.getElementById('lightboxImg').src = img.src;
-        document.getElementById('lightboxImg').alt = img.alt;
-        document.getElementById('lightboxCaption').textContent = item.title;
-        document.getElementById('lightbox').classList.add('open');
-      });
-
-      grid.appendChild(card);
+  function renderCard(item) {
+    const card = document.createElement('div');
+    card.className = 'design-card';
+    card.dataset.cat = item.category;
+    card.innerHTML = `
+      <div class="design-card-img">
+        <img src="${item.file}" alt="${item.title}" loading="lazy">
+      </div>
+      <div class="design-card-body">
+        <p class="design-card-cat">${catLabels[item.category] || item.category}</p>
+        <h3 class="design-card-title">${item.title}</h3>
+        <p class="design-card-desc">${item.description}</p>
+      </div>
+      <div class="design-card-footer">
+        ${item.tags.map(t => `<span class="tag">${t}</span>`).join('')}
+      </div>`;
+    card.addEventListener('click', () => {
+      const img = card.querySelector('img');
+      if (img) openLightbox(img.src, img.alt, item.title);
     });
+    grid.appendChild(card);
+  }
+
+  function renderProjectCluster(projectName, items) {
+    const cluster = document.createElement('div');
+    cluster.className = 'design-project';
+    cluster.innerHTML = `
+      <div class="dp-header">
+        <span class="dp-label">Project</span>
+        <span class="dp-title">${projectName}</span>
+      </div>
+      <div class="dp-images">
+        ${items.map(item => `
+          <div class="dp-img-wrap" data-file="${item.file}" data-title="${item.title}">
+            <img src="${item.file}" alt="${item.title}" loading="lazy">
+            <div class="dp-img-overlay">
+              <p class="dp-img-cat">${catLabels[item.category] || item.category}</p>
+              <p class="dp-img-name">${item.title}</p>
+            </div>
+          </div>`).join('')}
+      </div>
+      <div class="dp-footer">
+        ${[...new Set(items.flatMap(i => i.tags))].map(t => `<span class="tag">${t}</span>`).join('')}
+      </div>`;
+
+    cluster.querySelectorAll('.dp-img-wrap').forEach(wrap => {
+      const item = items.find(i => i.file === wrap.dataset.file);
+      if (!item) return;
+      wrap.addEventListener('click', () =>
+        openLightbox(item.file, item.title, `${projectName} — ${item.title}`)
+      );
+    });
+
+    grid.appendChild(cluster);
+  }
+
+  function renderCards(filter) {
+    grid.querySelectorAll('.design-card, .design-project').forEach(c => c.remove());
+
+    // Determine visible items
+    let visible;
+    if (filter === 'all') {
+      visible = designItems;
+    } else if (filter === 'project') {
+      visible = designItems.filter(i => i.project);
+    } else {
+      visible = designItems.filter(i => i.category === filter);
+    }
+
+    empty.style.display = visible.length === 0 ? 'block' : 'none';
+
+    // For 'all' and 'project' filters: render project clusters first, then solo items
+    if (filter === 'all' || filter === 'project') {
+      const projectMap = {};
+      visible.filter(i => i.project).forEach(i => {
+        (projectMap[i.project] = projectMap[i.project] || []).push(i);
+      });
+      Object.entries(projectMap).forEach(([name, items]) => renderProjectCluster(name, items));
+
+      if (filter === 'all') {
+        visible.filter(i => !i.project).forEach(renderCard);
+      }
+    } else {
+      // Category filter — show individual cards regardless of project grouping
+      visible.forEach(renderCard);
+    }
   }
 
   // Filter buttons

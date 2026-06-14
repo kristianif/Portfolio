@@ -203,6 +203,10 @@
         <label>Tags <span style="text-transform:none;letter-spacing:0;">(comma separated)</span></label>
         <input type="text" id="d-tags" placeholder="SolidWorks, 3D Print, PETG">
       </div>
+      <div class="field">
+        <label>Project group <span style="text-transform:none;letter-spacing:0;color:var(--muted);">(optional — groups related items together)</span></label>
+        <input type="text" id="d-project" placeholder="e.g. Pond Aerator Nozzle">
+      </div>
       <button class="btn btn-primary" onclick="addDesignItem()"><span id="dAddLbl">Add to Design Page</span></button>
     </div>
 
@@ -505,7 +509,7 @@ function renderDesignList() {
     <div class="item-row">
       <img class="item-thumb" src="${rawUrl(item.file)}" onerror="this.style.opacity='0.2'">
       <div class="item-info">
-        <div class="item-title">${item.title}</div>
+        <div class="item-title">${item.title}${item.project ? ` <span style="color:var(--amber);font-size:10px;font-family:var(--mono);">[${item.project}]</span>` : ''}</div>
         <div class="item-meta">${catLabel[item.category]||item.category} · ${item.tags.join(', ')}</div>
       </div>
       <button class="btn btn-red btn-sm" onclick="removeDesignItem(${i})">Remove</button>
@@ -535,19 +539,22 @@ const designItems = ${JSON.stringify(dItems, null, 2)};\n`;
 }
 
 async function addDesignItem() {
-  const file  = document.getElementById('d-file').value.trim();
-  const cat   = document.getElementById('d-cat').value;
-  const title = document.getElementById('d-title').value.trim();
-  const desc  = document.getElementById('d-desc').value.trim();
-  const tags  = document.getElementById('d-tags').value.split(',').map(t=>t.trim()).filter(Boolean);
+  const file    = document.getElementById('d-file').value.trim();
+  const cat     = document.getElementById('d-cat').value;
+  const title   = document.getElementById('d-title').value.trim();
+  const desc    = document.getElementById('d-desc').value.trim();
+  const tags    = document.getElementById('d-tags').value.split(',').map(t=>t.trim()).filter(Boolean);
+  const project = document.getElementById('d-project').value.trim();
   if (!file||!title||!desc) { toast('Fill in all fields','error'); return; }
   setLoading('dAddLbl', true);
   try {
-    dItems.push({ file, title, category: cat, description: desc, tags });
+    const item = { file, title, category: cat, description: desc, tags };
+    if (project) item.project = project;
+    dItems.push(item);
     await saveDesignData();
     renderDesignList();
     toast('✓ Added to Design page — live in ~30s');
-    ['d-file','d-title','d-desc','d-tags'].forEach(id => document.getElementById(id).value='');
+    ['d-file','d-title','d-desc','d-tags','d-project'].forEach(id => document.getElementById(id).value='');
   } catch(e) { dItems.pop(); toast(e.message,'error'); }
   finally { setLoading('dAddLbl', false, 'Add to Design Page'); }
 }
