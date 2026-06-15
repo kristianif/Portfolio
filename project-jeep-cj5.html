@@ -66,10 +66,6 @@
 
 <!-- PHOTO GALLERY -->
 <div class="gallery-wrap">
-  <div class="gallery-hint">
-    <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 7h12M8 2l5 5-5 5"/></svg>
-    Drag to scroll
-  </div>
   <div class="gallery-scroll" id="jeepGallery">
     <div class="gallery-item"><img src="photos/jeep-cover.jpeg" alt="Jeep CJ5 in paint booth"></div>
     <div class="gallery-item"><img src="photos/jeep-hero.jpg" alt="Jeep CJ5"></div>
@@ -82,8 +78,18 @@
     <div class="gallery-item"><img src="photos/jeep-fenderwell-notches.jpg" alt="Fenderwell notches"></div>
   </div>
   <div class="gallery-counter">
-    <span id="jeepLabel" style="font-family:var(--mono); font-size:10px; letter-spacing:0.14em; text-transform:uppercase; color:var(--fg-muted);">Photo 1 of 9</span>
-    <div class="gallery-dots" id="jeepDots"></div>
+    <span id="jeepLabel">Photo 1 of 9</span>
+    <div style="display:flex; align-items:center; gap:1rem;">
+      <div class="gallery-dots" id="jeepDots"></div>
+      <div class="gallery-arrows">
+        <button class="gallery-arrow" id="jeepPrev" aria-label="Previous" disabled>
+          <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 2L4 7l5 5"/></svg>
+        </button>
+        <button class="gallery-arrow" id="jeepNext" aria-label="Next">
+          <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 2l5 5-5 5"/></svg>
+        </button>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -273,31 +279,51 @@
     document.getElementById('mobileNav').classList.toggle('open');
   }
 
-  // Gallery drag scroll + dot indicators
+  // Gallery — Apple-style carousel
   (function() {
     const gallery = document.getElementById('jeepGallery');
     const dotsEl  = document.getElementById('jeepDots');
     const label   = document.getElementById('jeepLabel');
+    const btnPrev = document.getElementById('jeepPrev');
+    const btnNext = document.getElementById('jeepNext');
     const items   = gallery.querySelectorAll('.gallery-item');
     const total   = items.length;
+    let current   = 0;
 
     // Build dots
     items.forEach((_, i) => {
       const d = document.createElement('div');
       d.className = 'gallery-dot' + (i === 0 ? ' active' : '');
+      d.addEventListener('click', () => goTo(i));
       dotsEl.appendChild(d);
     });
 
-    // Update active dot on scroll
+    function goTo(i) {
+      current = Math.max(0, Math.min(i, total - 1));
+      items[current].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'start' });
+      update();
+    }
+
+    function update() {
+      dotsEl.querySelectorAll('.gallery-dot').forEach((d, i) => d.classList.toggle('active', i === current));
+      label.textContent = `Photo ${current + 1} of ${total}`;
+      btnPrev.disabled = current === 0;
+      btnNext.disabled = current === total - 1;
+    }
+
+    btnPrev.addEventListener('click', () => goTo(current - 1));
+    btnNext.addEventListener('click', () => goTo(current + 1));
+
+    // Sync on manual scroll/drag
+    let scrollTimer;
     gallery.addEventListener('scroll', () => {
-      const scrollLeft = gallery.scrollLeft;
-      const width = gallery.offsetWidth;
-      const idx = Math.round(scrollLeft / width);
-      const clamped = Math.max(0, Math.min(idx, total - 1));
-      dotsEl.querySelectorAll('.gallery-dot').forEach((d, i) => {
-        d.classList.toggle('active', i === clamped);
-      });
-      label.textContent = `Photo ${clamped + 1} of ${total}`;
+      clearTimeout(scrollTimer);
+      scrollTimer = setTimeout(() => {
+        const itemW = items[0].offsetWidth + 16; // 16px = 1rem gap
+        current = Math.round((gallery.scrollLeft) / itemW);
+        current = Math.max(0, Math.min(current, total - 1));
+        update();
+      }, 80);
     });
 
     // Mouse drag scroll
@@ -305,14 +331,16 @@
     gallery.addEventListener('mousedown', e => {
       isDown = true; startX = e.pageX - gallery.offsetLeft;
       scrollLeftStart = gallery.scrollLeft;
+      gallery.style.scrollBehavior = 'auto';
     });
-    document.addEventListener('mouseup', () => { isDown = false; });
+    document.addEventListener('mouseup', () => { isDown = false; gallery.style.scrollBehavior = ''; });
     document.addEventListener('mousemove', e => {
       if (!isDown) return;
       e.preventDefault();
-      const x = e.pageX - gallery.offsetLeft;
-      gallery.scrollLeft = scrollLeftStart - (x - startX);
+      gallery.scrollLeft = scrollLeftStart - (e.pageX - gallery.offsetLeft - startX);
     });
+
+    update();
   })();
 
   // (lightbox HTML is below the script tag — see #lightbox div)

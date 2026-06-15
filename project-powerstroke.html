@@ -65,17 +65,23 @@
 
 <!-- PHOTO GALLERY -->
 <div class="gallery-wrap">
-  <div class="gallery-hint">
-    <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 7h12M8 2l5 5-5 5"/></svg>
-    Drag to scroll
-  </div>
   <div class="gallery-scroll" id="psGallery">
     <div class="gallery-item"><img src="photos/ps-side.jpg" alt="7.3L Powerstroke"></div>
     <div class="gallery-item"><img src="photos/ps-top.jpg" alt="7.3L Powerstroke top view"></div>
   </div>
   <div class="gallery-counter">
-    <span id="psLabel" style="font-family:var(--mono); font-size:10px; letter-spacing:0.14em; text-transform:uppercase; color:var(--fg-muted);">Photo 1 of 2</span>
-    <div class="gallery-dots" id="psDots"></div>
+    <span id="psLabel">Photo 1 of 2</span>
+    <div style="display:flex; align-items:center; gap:1rem;">
+      <div class="gallery-dots" id="psDots"></div>
+      <div class="gallery-arrows">
+        <button class="gallery-arrow" id="psPrev" aria-label="Previous" disabled>
+          <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 2L4 7l5 5"/></svg>
+        </button>
+        <button class="gallery-arrow" id="psNext" aria-label="Next">
+          <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 2l5 5-5 5"/></svg>
+        </button>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -245,38 +251,60 @@
     const gallery = document.getElementById('psGallery');
     const dotsEl  = document.getElementById('psDots');
     const label   = document.getElementById('psLabel');
+    const btnPrev = document.getElementById('psPrev');
+    const btnNext = document.getElementById('psNext');
     const items   = gallery.querySelectorAll('.gallery-item');
     const total   = items.length;
+    let current   = 0;
 
     items.forEach((_, i) => {
       const d = document.createElement('div');
       d.className = 'gallery-dot' + (i === 0 ? ' active' : '');
+      d.addEventListener('click', () => goTo(i));
       dotsEl.appendChild(d);
     });
 
+    function goTo(i) {
+      current = Math.max(0, Math.min(i, total - 1));
+      items[current].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'start' });
+      update();
+    }
+
+    function update() {
+      dotsEl.querySelectorAll('.gallery-dot').forEach((d, i) => d.classList.toggle('active', i === current));
+      label.textContent = `Photo ${current + 1} of ${total}`;
+      btnPrev.disabled = current === 0;
+      btnNext.disabled = current === total - 1;
+    }
+
+    btnPrev.addEventListener('click', () => goTo(current - 1));
+    btnNext.addEventListener('click', () => goTo(current + 1));
+
+    let scrollTimer;
     gallery.addEventListener('scroll', () => {
-      const scrollLeft = gallery.scrollLeft;
-      const width = gallery.offsetWidth;
-      const idx = Math.round(scrollLeft / width);
-      const clamped = Math.max(0, Math.min(idx, total - 1));
-      dotsEl.querySelectorAll('.gallery-dot').forEach((d, i) => {
-        d.classList.toggle('active', i === clamped);
-      });
-      label.textContent = `Photo ${clamped + 1} of ${total}`;
+      clearTimeout(scrollTimer);
+      scrollTimer = setTimeout(() => {
+        const itemW = items[0].offsetWidth + 16;
+        current = Math.round(gallery.scrollLeft / itemW);
+        current = Math.max(0, Math.min(current, total - 1));
+        update();
+      }, 80);
     });
 
     let isDown = false, startX, scrollLeftStart;
     gallery.addEventListener('mousedown', e => {
       isDown = true; startX = e.pageX - gallery.offsetLeft;
       scrollLeftStart = gallery.scrollLeft;
+      gallery.style.scrollBehavior = 'auto';
     });
-    document.addEventListener('mouseup', () => { isDown = false; });
+    document.addEventListener('mouseup', () => { isDown = false; gallery.style.scrollBehavior = ''; });
     document.addEventListener('mousemove', e => {
       if (!isDown) return;
       e.preventDefault();
-      const x = e.pageX - gallery.offsetLeft;
-      gallery.scrollLeft = scrollLeftStart - (x - startX);
+      gallery.scrollLeft = scrollLeftStart - (e.pageX - gallery.offsetLeft - startX);
     });
+
+    update();
   })();
 
   // Category gallery drag scroll
