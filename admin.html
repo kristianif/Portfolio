@@ -850,6 +850,36 @@ async function loadBulkPhotos() {
   }
 }
 
+// Parse existing category names out of a project's HTML
+function getProjectCategories(proj) {
+  const html = pHtml[proj] || '';
+  return [...html.matchAll(/<div class="cat-header">\s*<span>([^<]+)<\/span>/g)]
+    .map(m => m[1].trim()).filter(Boolean);
+}
+
+// Build the gallery section HTML for a given project — called dynamically on dest switch
+function buildGalOptsHtml(path, proj) {
+  const eid  = CSS.escape(path);
+  const cats = getProjectCategories(proj);
+  return `
+    <div>
+      <div class="bulk-section-lbl">Section</div>
+      <div class="bulk-btns" id="galtype-${eid}">
+        <button class="bulk-btn active" onclick="selectGalType('${path}','main',this)">★ Main Carousel</button>
+        <button class="bulk-btn" onclick="selectGalType('${path}','cat',this)">Category Section</button>
+      </div>
+    </div>
+    <div id="galcat-wrap-${eid}" style="display:none; margin-top:0.5rem;">
+      <div class="bulk-section-lbl">Category</div>
+      <div class="bulk-btns" id="galcats-${eid}">
+        ${cats.map(c=>`<button class="bulk-btn" onclick="selectGalCat('${path}','${c}',this)">${c}</button>`).join('')}
+        <button class="bulk-btn" onclick="showNewGalCat('${path}',this)">+ New category…</button>
+      </div>
+      <input class="new-project-input" id="newgalcat-${eid}" placeholder="New category name…" style="display:none;"
+        oninput="bulkState['${path}'].galleryCategory=this.value.trim()">
+    </div>`;
+}
+
 function buildBulkCard(path, filename) {
   const card = document.createElement('div');
   card.className = 'bulk-card';
@@ -862,8 +892,9 @@ function buildBulkCard(path, filename) {
     <div class="bulk-body">
       <div class="bulk-filename">${filename}</div>
 
+      <!-- Step 1: Page -->
       <div>
-        <div class="bulk-section-lbl">Add to</div>
+        <div class="bulk-section-lbl">Page</div>
         <div class="bulk-btns" id="dest-${eid}">
           <button class="bulk-btn active" onclick="selectDest('${path}','design',this)">Design Page</button>
           <button class="bulk-btn" onclick="selectDest('${path}','jeep',this)">Jeep CJ5</button>
@@ -871,7 +902,7 @@ function buildBulkCard(path, filename) {
         </div>
       </div>
 
-      <!-- Design options -->
+      <!-- Design options (step 2 for design) -->
       <div id="design-opts-${eid}">
         <div>
           <div class="bulk-section-lbl">Category</div>
@@ -891,24 +922,12 @@ function buildBulkCard(path, filename) {
         </div>
       </div>
 
-      <!-- Gallery options -->
-      <div id="gal-opts-${eid}" style="display:none;">
-        <div>
-          <div class="bulk-section-lbl">Gallery</div>
-          <div class="bulk-btns" id="galtype-${eid}">
-            <button class="bulk-btn active" onclick="selectGalType('${path}','main',this)">Main Gallery</button>
-            <button class="bulk-btn" onclick="selectGalType('${path}','cat',this)">Category</button>
-          </div>
-        </div>
-        <div id="galcat-wrap-${eid}" style="display:none; margin-top:0.4rem;">
-          <div class="bulk-section-lbl">Category name</div>
-          <input class="bulk-input" placeholder="e.g. Exterior, Engine…"
-            oninput="bulkState['${path}'].galleryCategory=this.value.trim()">
-        </div>
-      </div>
+      <!-- Gallery options (step 2 for project pages — rebuilt dynamically) -->
+      <div id="gal-opts-${eid}" style="display:none;"></div>
 
+      <!-- Caption always shown -->
       <div>
-        <div class="bulk-section-lbl" id="title-lbl-${eid}">Title / Caption</div>
+        <div class="bulk-section-lbl">Title / Caption</div>
         <input class="bulk-input" placeholder="Short title or caption…"
           oninput="bulkState['${path}'].title=this.value.trim()">
       </div>
@@ -922,20 +941,46 @@ function buildBulkCard(path, filename) {
 }
 
 function selectDest(path, dest, btn) {
-  bulkState[path].dest = dest;
+  const s = bulkState[path];
+  s.dest = dest; s.galleryType = 'main'; s.galleryCategory = '';
   const eid = CSS.escape(path);
   document.querySelectorAll(`#dest-${eid} .bulk-btn`).forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
-  document.getElementById(`design-opts-${eid}`).style.display = dest === 'design' ? '' : 'none';
-  document.getElementById(`gal-opts-${eid}`).style.display   = dest !== 'design' ? '' : 'none';
+  const isDesign = dest === 'design';
+  document.getElementById(`design-opts-${eid}`).style.display = isDesign ? '' : 'none';
+  const galEl = document.getElementById(`gal-opts-${eid}`);
+  if (!isDesign) {
+    galEl.style.display = '';
+    galEl.innerHTML = buildGalOptsHtml(path, dest);
+  } else {
+    galEl.style.display = 'none';
+  }
 }
 
 function selectGalType(path, type, btn) {
   bulkState[path].galleryType = type;
+  bulkState[path].galleryCategory = '';
   const eid = CSS.escape(path);
   document.querySelectorAll(`#galtype-${eid} .bulk-btn`).forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
   document.getElementById(`galcat-wrap-${eid}`).style.display = type === 'cat' ? '' : 'none';
+}
+
+function selectGalCat(path, cat, btn) {
+  bulkState[path].galleryCategory = cat;
+  const eid = CSS.escape(path);
+  document.getElementById(`newgalcat-${eid}`).style.display = 'none';
+  document.querySelectorAll(`#galcats-${eid} .bulk-btn`).forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+function showNewGalCat(path, btn) {
+  const eid = CSS.escape(path);
+  document.querySelectorAll(`#galcats-${eid} .bulk-btn`).forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  const inp = document.getElementById(`newgalcat-${eid}`);
+  inp.style.display = 'block'; inp.focus();
+  bulkState[path].galleryCategory = inp.value.trim();
 }
 
 function selectCat(path, val, btn) {
