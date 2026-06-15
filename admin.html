@@ -614,7 +614,7 @@ const designItems = ${JSON.stringify(dItems, null, 2)};\n`;
   for (let attempt = 0; attempt < 2; attempt++) {
     try {
       const r = await fetch(`${apiUrl('design-data.js')}?ref=${BRANCH}&_=${Date.now()}`,
-        { headers: { ...auth(), 'Cache-Control': 'no-cache' } });
+        { headers: auth() });
       dSha = r.ok ? (await r.json()).sha : null;
     } catch(_) { dSha = null; }
 
@@ -622,7 +622,7 @@ const designItems = ${JSON.stringify(dItems, null, 2)};\n`;
       await ghPutText('design-data.js', content, 'Update design items via admin', dSha || undefined);
       // Store the new SHA so the next save in this session is also clean
       const updated = await fetch(`${apiUrl('design-data.js')}?ref=${BRANCH}&_=${Date.now()}`,
-        { headers: { ...auth(), 'Cache-Control': 'no-cache' } });
+        { headers: auth() });
       if (updated.ok) dSha = (await updated.json()).sha;
       return; // success
     } catch(e) {
@@ -824,7 +824,7 @@ async function loadBulkPhotos() {
 
   try {
     const r = await fetch(`${apiUrl('photos')}?ref=${BRANCH}&_=${Date.now()}`,
-      { headers: { ...auth(), 'Cache-Control': 'no-cache' } });
+      { headers: auth() });
     if (!r.ok) throw new Error('Could not read photos/ folder');
     const files = await r.json();
 
