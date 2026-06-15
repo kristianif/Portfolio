@@ -853,7 +853,7 @@ async function loadBulkPhotos() {
 // Parse existing category names out of a project's HTML
 function getProjectCategories(proj) {
   const html = pHtml[proj] || '';
-  return [...html.matchAll(/<div class="cat-header">\s*<span>([^<]+)<\/span>/g)]
+  return [...html.matchAll(/<span class="cat-header-label">([^<]+)<\/span>/g)]
     .map(m => m[1].trim()).filter(Boolean);
 }
 
@@ -984,6 +984,11 @@ function showNewGalCat(path, btn) {
 }
 
 function selectCat(path, val, btn) {
+  if (btn.classList.contains('active')) {
+    btn.classList.remove('active');
+    bulkState[path].category = null;
+    return;
+  }
   bulkState[path].category = val;
   document.querySelectorAll(`#cats-${CSS.escape(path)} .bulk-btn`).forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
@@ -1039,18 +1044,22 @@ function injectIntoGalleryHtml(html, proj, type, filename, altText, catName) {
     const newItem    = `\n    <div class="gallery-item"><img src="${filename}" alt="${altText}"></div>`;
     return html.slice(0, closePos) + newItem + '\n    ' + html.slice(closePos);
   } else {
-    // Category
+    // Find the cat-galleries container close — look for </div> just before <!-- OVERVIEW -->
+    const overviewPos   = html.indexOf('<!-- OVERVIEW -->');
+    const catGalClose   = html.lastIndexOf('</div>', overviewPos - 1);
+
     const catLabelIdx = html.indexOf(`>${catName}<`);
     if (catLabelIdx === -1) {
-      // New category — append before closing section tag
-      const newCat = `\n  <div class="cat-section">\n    <div class="cat-header"><span>${catName}</span><span class="cat-header-count">1 photo</span></div>\n    <div class="cat-gallery">\n      <div class="cat-item"><img src="${filename}" alt="${altText}"></div>\n    </div>\n  </div>`;
-      const sectionClose = html.lastIndexOf('</section>');
-      return html.slice(0, sectionClose) + newCat + '\n' + html.slice(sectionClose);
+      // New category — insert inside cat-galleries before its closing </div>
+      const newCat = `\n  <div class="cat-section">\n    <div class="cat-header">\n      <span class="cat-header-label">${catName}</span>\n      <div class="cat-header-line"></div>\n      <span class="cat-header-count">1 photo</span>\n    </div>\n    <div class="cat-gallery">\n      <div class="cat-item"><img src="${filename}" alt="${altText}"></div>\n    </div>\n  </div>`;
+      return html.slice(0, catGalClose) + newCat + '\n\n' + html.slice(catGalClose);
     } else {
+      // Existing category — insert into its cat-gallery div
       const catGalStart = html.indexOf('class="cat-gallery"', catLabelIdx);
-      const catGalClose = html.indexOf('</div>', catGalStart + 20);
-      const newItem     = `\n      <div class="cat-item"><img src="${filename}" alt="${altText}"></div>`;
-      let updated = html.slice(0, catGalClose) + newItem + '\n    ' + html.slice(catGalClose);
+      const catItemClose = html.indexOf('</div>', catGalStart + 20);
+      const newItem      = `\n      <div class="cat-item"><img src="${filename}" alt="${altText}"></div>`;
+      let updated = html.slice(0, catItemClose) + newItem + '\n    ' + html.slice(catItemClose);
+      // Update photo count
       const cntIdx   = updated.indexOf('cat-header-count', catLabelIdx);
       const cntMatch = updated.slice(cntIdx).match(/(\d+) photo/);
       if (cntMatch) updated = updated.slice(0, cntIdx) + updated.slice(cntIdx).replace(`${cntMatch[1]} photo`, `${parseInt(cntMatch[1])+1} photo`);
