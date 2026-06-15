@@ -3,1118 +3,709 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Admin — KF Portfolio</title>
-  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <title>Admin — Portfolio CMS</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
-      --bg:      #16181e;
-      --bg2:     #1e2028;
-      --bg3:     #24262e;
-      --border:  #2e3140;
-      --fg:      #eeeae4;
-      --muted:   #7a7a74;
-      --amber:   #d4880c;
-      --green:   #1d9e75;
-      --red:     #c0392b;
-      --mono:    'JetBrains Mono', 'Courier New', monospace;
+      --bg:     #0e0f14;
+      --bg2:    #13141a;
+      --bg3:    #1a1c24;
+      --border: rgba(255,255,255,0.08);
+      --fg:     #e8e8e8;
+      --muted:  #6b7280;
+      --amber:  #f5a623;
+      --red:    #ef4444;
+      --mono:   'JetBrains Mono', monospace;
     }
-    body { font-family: 'Inter', -apple-system, sans-serif; background: var(--bg); color: var(--fg); min-height: 100vh; font-size: 14px; }
+    body { background: var(--bg); color: var(--fg); font-family: Inter, sans-serif; display: flex; min-height: 100vh; }
 
-    /* ── LOGIN ── */
-    .login-wrap { display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 2rem; }
-    .login-box  { background: var(--bg2); border: 1px solid var(--border); padding: 2.5rem; width: 100%; max-width: 420px; }
-    .login-logo { font-family: var(--mono); font-size: 20px; font-weight: 600; margin-bottom: 0.35rem; }
-    .login-logo span { color: var(--amber); }
-    .login-sub  { color: var(--muted); font-size: 13px; margin-bottom: 2rem; }
-    .login-hint { font-size: 11px; color: var(--muted); margin: 0.5rem 0 1.5rem; line-height: 1.6; }
-    .login-hint a { color: var(--amber); }
-
-    /* ── SHARED ── */
-    label, .lbl { display: block; font-size: 11px; font-family: var(--mono); letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.4rem; }
-    input[type=text], input[type=password], select, textarea {
-      width: 100%; background: var(--bg3); border: 1px solid var(--border); color: var(--fg);
-      padding: 0.65rem 0.85rem; font-size: 13px; font-family: inherit; outline: none; resize: vertical;
+    /* ── Sidebar ── */
+    .sidebar {
+      width: 210px; flex-shrink: 0;
+      background: var(--bg2); border-right: 1px solid var(--border);
+      position: sticky; top: 0; height: 100vh; overflow-y: auto;
+      display: flex; flex-direction: column;
     }
-    input:focus, select:focus, textarea:focus { border-color: var(--amber); }
-    select option { background: var(--bg3); }
-    .field { margin-bottom: 1.1rem; }
-    .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .sidebar-logo {
+      padding: 1.25rem 1.25rem 1rem;
+      font-family: var(--mono); font-size: 13px; color: var(--muted);
+      border-bottom: 1px solid var(--border); flex-shrink: 0;
+    }
+    .sidebar-logo span { color: var(--amber); }
+    .nav-group { padding: 1rem 0 0.5rem; }
+    .nav-label {
+      padding: 0 1.25rem 0.4rem;
+      font-family: var(--mono); font-size: 10px; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--muted);
+    }
+    .nav-link {
+      display: block; padding: 0.45rem 1.25rem;
+      font-size: 13px; color: var(--muted);
+      cursor: pointer; transition: color 0.15s, background 0.15s;
+      border: none; background: none; width: 100%; text-align: left;
+    }
+    .nav-link:hover { color: var(--fg); background: rgba(255,255,255,0.03); }
+    .nav-link.active { color: var(--amber); background: rgba(245,166,35,0.06); }
+    .sidebar-footer { margin-top: auto; padding: 1rem 1.25rem; border-top: 1px solid var(--border); }
 
-    .btn { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.65rem 1.2rem; font-size: 12px; font-family: var(--mono); letter-spacing: 0.06em; cursor: pointer; border: 1px solid transparent; transition: opacity 0.15s; white-space: nowrap; }
-    .btn:hover { opacity: 0.82; }
-    .btn-primary { background: var(--amber); color: #000; border-color: var(--amber); }
-    .btn-outline  { background: transparent; border-color: var(--border); color: var(--fg); }
-    .btn-red      { background: var(--red); color: #fff; border-color: var(--red); }
-    .btn-green    { background: var(--green); color: #fff; border-color: var(--green); }
-    .btn-sm       { padding: 0.35rem 0.65rem; font-size: 11px; }
-    .btn-full     { width: 100%; justify-content: center; }
+    /* ── Main ── */
+    .main { flex: 1; padding: 2rem 2.5rem; max-width: 860px; }
+    .topbar {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-bottom: 2rem; padding-bottom: 1.25rem; border-bottom: 1px solid var(--border);
+    }
+    .topbar-title { font-size: 18px; font-weight: 500; }
+    .topbar-subtitle { font-size: 12px; color: var(--muted); font-family: var(--mono); margin-top: 2px; }
+    .btn-row { display: flex; gap: 0.6rem; }
 
-    /* ── ADMIN SHELL ── */
-    #adminWrap { display: none; }
-    .admin-header { background: var(--bg2); border-bottom: 1px solid var(--border); height: 52px; padding: 0 1.5rem; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; }
-    .admin-logo  { font-family: var(--mono); font-size: 15px; font-weight: 600; }
-    .admin-logo span { color: var(--amber); }
-    .admin-user  { font-size: 11px; color: var(--muted); font-family: var(--mono); }
+    /* ── Buttons ── */
+    .btn {
+      padding: 0.45rem 1.1rem; border-radius: 6px;
+      font-size: 13px; font-weight: 500; cursor: pointer; border: none;
+      transition: background 0.18s, color 0.18s;
+    }
+    .btn-primary { background: var(--amber); color: #000; }
+    .btn-primary:hover { background: #fbbf24; }
+    .btn-ghost { background: var(--bg3); color: var(--fg); border: 1px solid var(--border); }
+    .btn-ghost:hover { border-color: rgba(255,255,255,0.18); }
+    .btn-danger { background: transparent; color: var(--red); border: 1px solid rgba(239,68,68,0.25); }
+    .btn-danger:hover { background: rgba(239,68,68,0.08); }
+    .btn-sm { padding: 0.3rem 0.7rem; font-size: 12px; }
 
-    /* ── TABS ── */
-    .tab-bar { background: var(--bg2); border-bottom: 1px solid var(--border); display: flex; padding: 0 1.5rem; overflow-x: auto; gap: 0; }
-    .tab { padding: 0.8rem 1.1rem; font-size: 11px; font-family: var(--mono); letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); cursor: pointer; border-bottom: 2px solid transparent; white-space: nowrap; transition: color 0.15s; }
-    .tab:hover  { color: var(--fg); }
-    .tab.active { color: var(--amber); border-bottom-color: var(--amber); }
-
-    /* ── PANELS ── */
-    .panel { display: none; padding: 2rem 1.5rem; max-width: 860px; }
+    /* ── Panels ── */
+    .panel { display: none; }
     .panel.active { display: block; }
-    .panel-title { font-size: 17px; font-weight: 600; margin-bottom: 0.3rem; }
-    .panel-desc  { color: var(--muted); font-size: 13px; margin-bottom: 2rem; line-height: 1.6; }
+    .panel-title {
+      font-size: 15px; font-weight: 500; margin-bottom: 1.5rem;
+      padding-bottom: 0.75rem; border-bottom: 1px solid var(--border);
+    }
 
-    /* ── FORM SECTIONS ── */
-    .card { background: var(--bg2); border: 1px solid var(--border); padding: 1.5rem; margin-bottom: 1.25rem; }
-    .card-title { font-size: 11px; font-family: var(--mono); letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 1.25rem; }
+    /* ── Cards ── */
+    .card {
+      background: var(--bg2); border: 1px solid var(--border);
+      border-radius: 10px; padding: 1.25rem; margin-bottom: 1rem;
+    }
+    .card-label {
+      font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em;
+      text-transform: uppercase; color: var(--amber); margin-bottom: 1rem;
+    }
 
-    /* ── UPLOAD AREA ── */
-    .drop-zone { border: 2px dashed var(--border); padding: 2.5rem 2rem; text-align: center; cursor: pointer; transition: border-color 0.15s; position: relative; }
-    .drop-zone:hover { border-color: var(--amber); }
-    .drop-zone input[type=file] { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
-    .drop-icon { font-size: 2rem; margin-bottom: 0.6rem; }
-    .drop-text { font-family: var(--mono); font-size: 11px; color: var(--muted); letter-spacing: 0.1em; }
-    .drop-preview { max-width: 100%; max-height: 240px; object-fit: contain; margin-top: 1rem; border: 1px solid var(--border); display: none; }
+    /* ── Fields ── */
+    .field { margin-bottom: 0.9rem; }
+    .field:last-child { margin-bottom: 0; }
+    .field label { display: block; font-size: 12px; color: var(--muted); margin-bottom: 0.35rem; }
+    .field input[type=text],
+    .field input[type=email],
+    .field input[type=url],
+    .field textarea {
+      width: 100%; background: var(--bg3); border: 1px solid var(--border);
+      border-radius: 6px; padding: 0.55rem 0.75rem;
+      color: var(--fg); font-family: inherit; font-size: 13px; outline: none;
+      transition: border-color 0.18s;
+    }
+    .field input:focus, .field textarea:focus { border-color: var(--amber); }
+    .field textarea { resize: vertical; min-height: 72px; line-height: 1.55; }
+    .hint { font-size: 11px; color: var(--muted); font-family: var(--mono); margin-top: 0.3rem; }
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+    .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.6rem; }
 
-    /* ── ITEM ROWS ── */
-    .item-list { display: flex; flex-direction: column; gap: 0.4rem; margin-top: 0.75rem; }
-    .item-row  { background: var(--bg3); border: 1px solid var(--border); padding: 0.75rem 0.85rem; display: flex; align-items: center; gap: 0.85rem; }
-    .item-thumb { width: 54px; height: 38px; object-fit: cover; background: var(--bg); flex-shrink: 0; }
-    .item-info  { flex: 1; min-width: 0; }
-    .item-title { font-size: 13px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .item-meta  { font-size: 11px; color: var(--muted); font-family: var(--mono); margin-top: 0.15rem; }
+    /* ── Stats pairs ── */
+    .stat-pair { display: grid; grid-template-columns: 90px 1fr; gap: 0.5rem; align-items: end; margin-bottom: 0.75rem; }
 
-    /* ── GALLERY GRID ── */
-    .gal-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(90px,1fr)); gap: 0.4rem; margin-top: 0.75rem; }
-    .gal-thumb { aspect-ratio: 4/3; overflow: hidden; background: var(--bg3); }
-    .gal-thumb img { width: 100%; height: 100%; object-fit: cover; }
+    /* ── Photo manager ── */
+    .photo-list { display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 0.6rem; }
+    .photo-row {
+      display: flex; align-items: center; gap: 0.6rem;
+      background: var(--bg3); border: 1px solid var(--border);
+      border-radius: 8px; padding: 0.45rem 0.6rem;
+    }
+    .drag-handle { color: var(--muted); cursor: grab; font-size: 15px; flex-shrink: 0; }
+    .photo-thumb {
+      width: 72px; height: 48px; object-fit: cover;
+      border-radius: 5px; flex-shrink: 0; background: var(--bg);
+    }
+    .photo-thumb-ph {
+      width: 72px; height: 48px; border-radius: 5px; flex-shrink: 0;
+      background: var(--bg); border: 1px dashed var(--border);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px; color: var(--muted);
+    }
+    .photo-path {
+      flex: 1; background: var(--bg); border: 1px solid var(--border);
+      border-radius: 5px; padding: 0.45rem 0.6rem;
+      color: var(--fg); font-family: var(--mono); font-size: 11px; outline: none;
+    }
+    .photo-path:focus { border-color: var(--amber); }
+    .rm-btn {
+      background: none; border: none; color: var(--muted);
+      cursor: pointer; font-size: 18px; flex-shrink: 0; padding: 0;
+      transition: color 0.15s; line-height: 1;
+    }
+    .rm-btn:hover { color: var(--red); }
 
-    /* ── TOAST ── */
-    .toast { position: fixed; bottom: 1.5rem; right: 1.5rem; background: var(--bg2); border: 1px solid var(--border); padding: 0.75rem 1.1rem; font-size: 12px; font-family: var(--mono); z-index: 9999; opacity: 0; transition: opacity 0.2s; pointer-events: none; max-width: 300px; }
-    .toast.show    { opacity: 1; }
-    .toast.success { border-color: var(--green); color: var(--green); }
-    .toast.error   { border-color: var(--red);   color: var(--red); }
+    /* ── Tags ── */
+    .tags-wrap {
+      display: flex; flex-wrap: wrap; gap: 0.35rem; align-items: center;
+      background: var(--bg3); border: 1px solid var(--border);
+      border-radius: 6px; padding: 0.45rem 0.6rem; min-height: 40px;
+    }
+    .tag-chip {
+      display: flex; align-items: center; gap: 0.25rem;
+      background: rgba(245,166,35,0.12); border: 1px solid rgba(245,166,35,0.25);
+      border-radius: 4px; padding: 0.15rem 0.45rem;
+      font-size: 12px; color: var(--amber);
+    }
+    .tag-chip button { background: none; border: none; color: var(--amber); cursor: pointer; font-size: 13px; line-height: 1; padding: 0; opacity: 0.7; }
+    .tag-chip button:hover { opacity: 1; }
+    .tag-input { flex: 1; min-width: 80px; background: none; border: none; outline: none; color: var(--fg); font-size: 12px; }
 
-    /* ── SPINNER ── */
-    .spin { display: inline-block; width: 12px; height: 12px; border: 2px solid rgba(255,255,255,0.3); border-top-color: #fff; border-radius: 50%; animation: s 0.6s linear infinite; }
-    @keyframes s { to { transform: rotate(360deg); } }
+    /* ── Spec rows ── */
+    .spec-row { display: grid; grid-template-columns: 1fr 1fr auto; gap: 0.5rem; align-items: center; margin-bottom: 0.4rem; }
+    .mini-input {
+      background: var(--bg3); border: 1px solid var(--border);
+      border-radius: 5px; padding: 0.45rem 0.6rem;
+      color: var(--fg); font-family: inherit; font-size: 12px; outline: none;
+      width: 100%;
+    }
+    .mini-input:focus { border-color: var(--amber); }
 
-    .err-text { color: var(--red); font-size: 12px; font-family: var(--mono); margin-top: 0.5rem; }
-    .empty    { color: var(--muted); font-size: 12px; font-family: var(--mono); }
+    /* ── Exp entries ── */
+    .exp-card {
+      background: var(--bg3); border: 1px solid var(--border);
+      border-radius: 8px; padding: 1rem; margin-bottom: 0.6rem;
+    }
+    .exp-card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem; }
+    .exp-card-num { font-family: var(--mono); font-size: 11px; color: var(--muted); }
+
+    /* ── Color picker row ── */
+    .color-row { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.6rem; }
+    .color-row label { font-size: 13px; color: var(--muted); width: 180px; flex-shrink: 0; }
+    input[type=color] {
+      width: 40px; height: 34px; padding: 2px;
+      background: var(--bg3); border: 1px solid var(--border);
+      border-radius: 5px; cursor: pointer;
+    }
+    .color-hex {
+      width: 90px; background: var(--bg3); border: 1px solid var(--border);
+      border-radius: 5px; padding: 0.4rem 0.6rem;
+      color: var(--fg); font-family: var(--mono); font-size: 12px; outline: none;
+    }
+
+    /* ── Phase blocks ── */
+    .phase-block {
+      background: var(--bg3); border: 1px solid var(--border);
+      border-radius: 8px; padding: 1rem; margin-bottom: 0.6rem;
+    }
+    .phase-block-label {
+      font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em;
+      text-transform: uppercase; color: var(--amber); margin-bottom: 0.75rem;
+    }
+
+    /* ── Modal ── */
+    .modal-bg {
+      display: none; position: fixed; inset: 0;
+      background: rgba(0,0,0,0.75); z-index: 200;
+      align-items: center; justify-content: center;
+    }
+    .modal-bg.open { display: flex; }
+    .modal {
+      background: var(--bg2); border: 1px solid var(--border);
+      border-radius: 12px; padding: 1.5rem; width: 640px; max-height: 85vh;
+      display: flex; flex-direction: column; gap: 1rem;
+    }
+    .modal h2 { font-size: 15px; font-weight: 500; }
+    .modal p { font-size: 13px; color: var(--muted); }
+    .modal textarea {
+      flex: 1; min-height: 280px; width: 100%;
+      background: var(--bg3); border: 1px solid var(--border);
+      border-radius: 6px; padding: 0.75rem;
+      color: var(--fg); font-family: var(--mono); font-size: 11px;
+      resize: none; outline: none;
+    }
+    .modal-footer { display: flex; gap: 0.6rem; justify-content: flex-end; }
+
+    /* ── Toast ── */
+    .toast {
+      position: fixed; bottom: 2rem; right: 2rem;
+      background: var(--amber); color: #000;
+      padding: 0.65rem 1.2rem; border-radius: 8px;
+      font-size: 13px; font-weight: 500;
+      transform: translateY(80px); opacity: 0;
+      transition: transform 0.3s, opacity 0.3s; z-index: 300;
+    }
+    .toast.show { transform: translateY(0); opacity: 1; }
+
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 3px; }
   </style>
 </head>
 <body>
 
-<!-- ── LOGIN ──────────────────────────────────────────────── -->
-<div class="login-wrap" id="loginWrap">
-  <div class="login-box">
-    <div class="login-logo">KF<span>.</span> Admin</div>
-    <div class="login-sub">Portfolio management panel</div>
-    <div class="field">
-      <label>GitHub Personal Access Token</label>
-      <input type="password" id="tokenInput" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx">
+<!-- ═══ SIDEBAR ═══ -->
+<nav class="sidebar">
+  <div class="sidebar-logo">KF<span>.</span> Admin</div>
+
+  <div class="nav-group">
+    <div class="nav-label">Global</div>
+    <button class="nav-link active" onclick="show('settings',this)">Site Settings</button>
+    <button class="nav-link" onclick="show('design',this)">Design &amp; Colors</button>
+  </div>
+
+  <div class="nav-group">
+    <div class="nav-label">Pages</div>
+    <button class="nav-link" onclick="show('home',this)">Home</button>
+    <button class="nav-link" onclick="show('about',this)">About</button>
+    <button class="nav-link" onclick="show('experience',this)">Experience</button>
+    <button class="nav-link" onclick="show('contact',this)">Contact</button>
+  </div>
+
+  <div class="nav-group">
+    <div class="nav-label">Projects</div>
+    <button class="nav-link" onclick="show('jeep',this)">1973 Jeep CJ5</button>
+    <button class="nav-link" onclick="show('ps',this)">7.3L Powerstroke</button>
+  </div>
+
+  <div class="sidebar-footer">
+    <button class="nav-link" style="padding:0;color:var(--muted);" onclick="openExport()">⬇ Export Config</button>
+    <button class="nav-link" style="padding:0;margin-top:0.5rem;color:rgba(239,68,68,0.5);" onclick="resetAll()">↺ Reset All</button>
+  </div>
+</nav>
+
+<!-- ═══ MAIN ═══ -->
+<div class="main">
+
+  <div class="topbar">
+    <div>
+      <div class="topbar-title">Portfolio Admin</div>
+      <div class="topbar-subtitle">Save Preview → locally visible · Export Config → paste to Claude to apply permanently</div>
     </div>
-    <div class="login-hint">
-      Create one at <a href="https://github.com/settings/tokens/new" target="_blank">github.com/settings/tokens</a> — select <strong>Classic</strong>, check the <strong>repo</strong> scope.<br>
-      Your token is only stored in this browser session and never sent anywhere except GitHub.
+    <div class="btn-row">
+      <button class="btn btn-ghost" onclick="openExport()">Export Config</button>
+      <button class="btn btn-primary" onclick="saveAll()">Save Preview</button>
     </div>
-    <button class="btn btn-primary btn-full" onclick="login()">Connect to GitHub</button>
-    <div class="err-text" id="loginErr"></div>
+  </div>
+
+  <!-- SITE SETTINGS -->
+  <div class="panel active" id="panel-settings">
+    <div class="panel-title">Site Settings</div>
+    <div class="card">
+      <div class="card-label">Identity</div>
+      <div class="field"><label>Your Name</label><input type="text" id="s-name" placeholder="Kristian Felten"></div>
+      <div class="grid-2">
+        <div class="field"><label>Degree / Field</label><input type="text" id="s-degree" placeholder="Mechanical Engineering"></div>
+        <div class="field"><label>University</label><input type="text" id="s-university" placeholder="University of Idaho"></div>
+      </div>
+      <div class="field"><label>Copyright Year</label><input type="text" id="s-year" placeholder="2025" style="max-width:100px;"></div>
+    </div>
+    <div class="card">
+      <div class="card-label">Contact Links</div>
+      <div class="field"><label>Email</label><input type="email" id="s-email" placeholder="you@email.com"></div>
+      <div class="field"><label>LinkedIn URL</label><input type="url" id="s-linkedin" placeholder="linkedin.com/in/yourprofile"></div>
+      <div class="field"><label>GitHub URL (optional)</label><input type="url" id="s-github" placeholder="github.com/yourusername"></div>
+    </div>
+  </div>
+
+  <!-- DESIGN -->
+  <div class="panel" id="panel-design">
+    <div class="panel-title">Design &amp; Colors</div>
+    <div class="card">
+      <div class="card-label">Color Palette</div>
+      <div class="color-row"><label>Accent (amber highlight)</label><input type="color" id="d-accent" value="#f5a623" oninput="syncHex(this,'d-accent-hex')"><input class="color-hex" id="d-accent-hex" value="#f5a623" oninput="syncPicker(this,'d-accent')"></div>
+      <div class="color-row"><label>Page Background</label><input type="color" id="d-bg" value="#0e0f14" oninput="syncHex(this,'d-bg-hex')"><input class="color-hex" id="d-bg-hex" value="#0e0f14" oninput="syncPicker(this,'d-bg')"></div>
+      <div class="color-row"><label>Card / Panel Background</label><input type="color" id="d-bg2" value="#13141a" oninput="syncHex(this,'d-bg2-hex')"><input class="color-hex" id="d-bg2-hex" value="#13141a" oninput="syncPicker(this,'d-bg2')"></div>
+      <div class="color-row"><label>Input / Surface Background</label><input type="color" id="d-bg3" value="#1a1c24" oninput="syncHex(this,'d-bg3-hex')"><input class="color-hex" id="d-bg3-hex" value="#1a1c24" oninput="syncPicker(this,'d-bg3')"></div>
+    </div>
+    <div class="card">
+      <div class="card-label">Typography</div>
+      <div class="field"><label>Hero Font Size (CSS)</label><input type="text" id="d-hero-size" placeholder="clamp(2.5rem, 6vw, 5rem)"></div>
+      <div class="field"><label>Body Font Size</label><input type="text" id="d-body-size" placeholder="16px"></div>
+    </div>
+    <div class="card">
+      <div class="card-label">Borders &amp; Radius</div>
+      <div class="grid-2">
+        <div class="field"><label>Card Border Radius</label><input type="text" id="d-radius" placeholder="12px"></div>
+        <div class="field"><label>Gallery Image Radius</label><input type="text" id="d-gallery-radius" placeholder="14px"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- HOME -->
+  <div class="panel" id="panel-home">
+    <div class="panel-title">Home Page</div>
+    <div class="card">
+      <div class="card-label">Hero Section</div>
+      <div class="field"><label>Headline — Line 1</label><input type="text" id="h-h1" placeholder="Building things"></div>
+      <div class="field"><label>Headline — Line 2</label><input type="text" id="h-h2" placeholder="that work."></div>
+      <div class="field"><label>Tagline</label><input type="text" id="h-tag" placeholder="Mechanical engineering student at University of Idaho."></div>
+    </div>
+    <div class="card">
+      <div class="card-label">Stats Bar (4 blocks)</div>
+      <div class="grid-2">
+        <div>
+          <div class="stat-pair"><div><label style="font-size:12px;color:var(--muted);display:block;margin-bottom:0.3rem;">Value</label><input type="text" id="h-s1v" placeholder="4+"></div><div><label style="font-size:12px;color:var(--muted);display:block;margin-bottom:0.3rem;">Label</label><input type="text" id="h-s1l" placeholder="Years of builds"></div></div>
+          <div class="stat-pair"><div><label style="font-size:12px;color:var(--muted);display:block;margin-bottom:0.3rem;">Value</label><input type="text" id="h-s2v" placeholder="7.3L"></div><div><label style="font-size:12px;color:var(--muted);display:block;margin-bottom:0.3rem;">Label</label><input type="text" id="h-s2l" placeholder="Diesel rebuilt"></div></div>
+        </div>
+        <div>
+          <div class="stat-pair"><div><label style="font-size:12px;color:var(--muted);display:block;margin-bottom:0.3rem;">Value</label><input type="text" id="h-s3v" placeholder="'73"></div><div><label style="font-size:12px;color:var(--muted);display:block;margin-bottom:0.3rem;">Label</label><input type="text" id="h-s3l" placeholder="Jeep CJ5 resto"></div></div>
+          <div class="stat-pair"><div><label style="font-size:12px;color:var(--muted);display:block;margin-bottom:0.3rem;">Value</label><input type="text" id="h-s4v" placeholder="U of I"></div><div><label style="font-size:12px;color:var(--muted);display:block;margin-bottom:0.3rem;">Label</label><input type="text" id="h-s4l" placeholder="Mech. Eng."></div></div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-label">About Teaser</div>
+      <div class="field"><label>Headline</label><input type="text" id="h-ah" placeholder="Who I am."></div>
+      <div class="field"><label>Body</label><textarea id="h-ab" placeholder="Short paragraph..."></textarea></div>
+    </div>
+  </div>
+
+  <!-- ABOUT -->
+  <div class="panel" id="panel-about">
+    <div class="panel-title">About Page</div>
+    <div class="card">
+      <div class="card-label">Hero</div>
+      <div class="field"><label>3-Word Headline  (e.g. "Builder. Engineer. Tinkerer.")</label><input type="text" id="a-hero" placeholder="Builder. Engineer. Tinkerer."></div>
+      <div class="field"><label>Description</label><textarea id="a-desc"></textarea></div>
+    </div>
+    <div class="card">
+      <div class="card-label">Bio</div>
+      <div class="field"><label>Paragraph 1</label><textarea id="a-b1"></textarea></div>
+      <div class="field"><label>Paragraph 2</label><textarea id="a-b2"></textarea></div>
+      <div class="field"><label>Paragraph 3</label><textarea id="a-b3"></textarea></div>
+    </div>
+    <div class="card">
+      <div class="card-label">Stats (5 blocks)</div>
+      <div style="display:grid;grid-template-columns:12px 1fr 1fr;gap:0.5rem;margin-bottom:0.4rem;">
+        <div></div><span style="font-size:11px;color:var(--muted);">Value</span><span style="font-size:11px;color:var(--muted);">Label</span>
+      </div>
+      <div id="a-stats-list"></div>
+    </div>
+    <div class="card">
+      <div class="card-label">Skills Grid (12 cells)</div>
+      <div class="grid-3" id="a-skills-grid"></div>
+    </div>
+  </div>
+
+  <!-- EXPERIENCE -->
+  <div class="panel" id="panel-experience">
+    <div class="panel-title">Experience</div>
+    <div id="exp-list"></div>
+    <button class="btn btn-ghost btn-sm" onclick="addExp()" style="margin-top:0.25rem;">+ Add Entry</button>
+  </div>
+
+  <!-- CONTACT -->
+  <div class="panel" id="panel-contact">
+    <div class="panel-title">Contact Page</div>
+    <div class="card">
+      <div class="card-label">Content</div>
+      <div class="field"><label>Headline</label><input type="text" id="c-hero" placeholder="Let's connect."></div>
+      <div class="field"><label>Description</label><textarea id="c-desc" placeholder="One or two lines."></textarea></div>
+    </div>
+    <p class="hint">Email and LinkedIn are set in Site Settings.</p>
+  </div>
+
+  <!-- JEEP -->
+  <div class="panel" id="panel-jeep">
+    <div class="panel-title">Project — 1973 Jeep CJ5</div>
+    <div class="card">
+      <div class="card-label">Header</div>
+      <div class="field"><label>Project Title</label><input type="text" id="j-title" placeholder="1973 Jeep CJ5"></div>
+      <div class="field"><label>Category Label</label><input type="text" id="j-cat" placeholder="Restoration / Fabrication"></div>
+      <div class="field"><label>Description</label><textarea id="j-desc"></textarea></div>
+      <div class="field">
+        <label>Tags — press Enter to add</label>
+        <div class="tags-wrap" id="j-tags-wrap"><input class="tag-input" id="j-tag-in" placeholder="Add tag…" onkeydown="tagKey('j',event)"></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-label">Main Carousel Photos</div>
+      <div class="photo-list" id="j-photos"></div>
+      <button class="btn btn-ghost btn-sm" onclick="addPhotoRow('j','')">+ Add Photo</button>
+      <p class="hint" style="margin-top:0.5rem;">Path relative to Portfolio folder — e.g. <code style="color:var(--fg);">photos/Jeep CJ5/IMG_5203.JPG</code></p>
+    </div>
+    <div class="card">
+      <div class="card-label">Overview</div>
+      <div class="field"><label>Paragraph 1</label><textarea id="j-ov1"></textarea></div>
+      <div class="field"><label>Paragraph 2</label><textarea id="j-ov2"></textarea></div>
+    </div>
+    <div class="card">
+      <div class="card-label">Specs Table</div>
+      <div id="j-specs"></div>
+      <button class="btn btn-ghost btn-sm" onclick="addSpecRow('j')" style="margin-top:0.4rem;">+ Add Row</button>
+    </div>
+    <div class="card">
+      <div class="card-label">Build Phases</div>
+      <div id="j-phases"></div>
+    </div>
+  </div>
+
+  <!-- POWERSTROKE -->
+  <div class="panel" id="panel-ps">
+    <div class="panel-title">Project — 7.3L Powerstroke</div>
+    <div class="card">
+      <div class="card-label">Header</div>
+      <div class="field"><label>Project Title</label><input type="text" id="p-title" placeholder="7.3L Powerstroke Diesel"></div>
+      <div class="field"><label>Category Label</label><input type="text" id="p-cat" placeholder="Engine Rebuild"></div>
+      <div class="field"><label>Description</label><textarea id="p-desc"></textarea></div>
+      <div class="field">
+        <label>Tags — press Enter to add</label>
+        <div class="tags-wrap" id="p-tags-wrap"><input class="tag-input" id="p-tag-in" placeholder="Add tag…" onkeydown="tagKey('p',event)"></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-label">Main Carousel Photos</div>
+      <div class="photo-list" id="p-photos"></div>
+      <button class="btn btn-ghost btn-sm" onclick="addPhotoRow('p','')">+ Add Photo</button>
+      <p class="hint" style="margin-top:0.5rem;">Path relative to Portfolio folder — e.g. <code style="color:var(--fg);">photos/ps-side.jpg</code></p>
+    </div>
+    <div class="card">
+      <div class="card-label">Overview</div>
+      <div class="field"><label>Paragraph 1</label><textarea id="p-ov1"></textarea></div>
+      <div class="field"><label>Paragraph 2</label><textarea id="p-ov2"></textarea></div>
+    </div>
+    <div class="card">
+      <div class="card-label">Specs Table</div>
+      <div id="p-specs"></div>
+      <button class="btn btn-ghost btn-sm" onclick="addSpecRow('p')" style="margin-top:0.4rem;">+ Add Row</button>
+    </div>
+    <div class="card">
+      <div class="card-label">Build Steps</div>
+      <div id="p-phases"></div>
+    </div>
+  </div>
+
+</div><!-- .main -->
+
+<!-- EXPORT MODAL -->
+<div class="modal-bg" id="exportModal">
+  <div class="modal">
+    <h2>Export Config</h2>
+    <p>Copy everything below and paste it into a message to Claude — I'll apply every change to your HTML files.</p>
+    <textarea id="export-out" readonly></textarea>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="document.getElementById('exportModal').classList.remove('open')">Close</button>
+      <button class="btn btn-primary" onclick="copyExport()">Copy to Clipboard</button>
+    </div>
   </div>
 </div>
 
-<!-- ── ADMIN ──────────────────────────────────────────────── -->
-<div id="adminWrap">
-
-  <div class="admin-header">
-    <div class="admin-logo">KF<span>.</span> Admin</div>
-    <div style="display:flex;align-items:center;gap:1rem;">
-      <div class="admin-user" id="adminUser"></div>
-      <button class="btn btn-outline btn-sm" onclick="logout()">Sign Out</button>
-    </div>
-  </div>
-
-  <div class="tab-bar">
-    <div class="tab active" data-tab="photos"      onclick="switchTab(this,'photos')">📸 Upload Photo</div>
-    <div class="tab"        data-tab="bulk"        onclick="switchTab(this,'bulk')">⚡ Bulk Import</div>
-    <div class="tab"        data-tab="design"      onclick="switchTab(this,'design')">🎨 Design Page</div>
-    <div class="tab"        data-tab="jeep"        onclick="switchTab(this,'jeep')">🚙 Jeep CJ5</div>
-    <div class="tab"        data-tab="powerstroke" onclick="switchTab(this,'powerstroke')">🔧 Powerstroke</div>
-  </div>
-
-  <!-- PHOTOS ───────────────────────────────────────────────── -->
-  <div class="panel active" id="tab-photos">
-    <div class="panel-title">Upload Photo</div>
-    <div class="panel-desc">Upload any image directly into your <code>photos/</code> folder on GitHub. Do this first before adding items to the Design page or project galleries.</div>
-
-    <div class="card">
-      <div class="card-title">Select &amp; Upload</div>
-      <div class="drop-zone" id="dropZone">
-        <input type="file" id="photoFile" accept="image/*" onchange="onPhotoSelected(this)">
-        <div class="drop-icon">📷</div>
-        <div class="drop-text">CLICK OR DRAG A PHOTO HERE</div>
-        <img class="drop-preview" id="photoPreview">
-      </div>
-      <div class="field" style="margin-top:1rem;">
-        <label>Save as filename</label>
-        <input type="text" id="photoFilename" placeholder="e.g. jeep-engine-bay.jpg">
-      </div>
-      <button class="btn btn-primary" onclick="uploadPhoto()"><span id="uploadBtnLbl">Upload to photos/</span></button>
-    </div>
-  </div>
-
-  <!-- DESIGN ───────────────────────────────────────────────── -->
-  <div class="panel" id="tab-design">
-    <div class="panel-title">Design Page</div>
-    <div class="panel-desc">Add or remove items from the Design page. Upload the photo first, then fill in the details below.</div>
-
-    <div class="card">
-      <div class="card-title">Add New Item</div>
-      <div class="field-row">
-        <div class="field">
-          <label>Photo path</label>
-          <input type="text" id="d-file" placeholder="photos/my-part.jpg">
-        </div>
-        <div class="field">
-          <label>Category</label>
-          <select id="d-cat">
-            <option value="3d-print">3D Print</option>
-            <option value="cad">CAD Model</option>
-            <option value="rendering">Rendering</option>
-            <option value="fea">FEA / Analysis</option>
-            <option value="drawing">Technical Drawing</option>
-            <option value="coursework">Coursework</option>
-          </select>
-        </div>
-      </div>
-      <div class="field">
-        <label>Title</label>
-        <input type="text" id="d-title" placeholder="Custom Engine Bracket">
-      </div>
-      <div class="field">
-        <label>Description</label>
-        <textarea id="d-desc" rows="2" placeholder="What is this part and what does it demonstrate?"></textarea>
-      </div>
-      <div class="field">
-        <label>Tags <span style="text-transform:none;letter-spacing:0;">(comma separated)</span></label>
-        <input type="text" id="d-tags" placeholder="SolidWorks, 3D Print, PETG">
-      </div>
-      <div class="field">
-        <label>Project group <span style="text-transform:none;letter-spacing:0;color:var(--muted);">(optional — groups related items together)</span></label>
-        <input type="text" id="d-project" placeholder="e.g. Pond Aerator Nozzle">
-      </div>
-      <button class="btn btn-primary" onclick="addDesignItem()"><span id="dAddLbl">Add to Design Page</span></button>
-    </div>
-
-    <div class="card">
-      <div class="card-title">Current Items <span id="dCount" style="color:var(--muted);font-weight:400;"></span></div>
-      <div class="item-list" id="dList"><div class="empty">Loading…</div></div>
-    </div>
-  </div>
-
-  <!-- JEEP ─────────────────────────────────────────────────── -->
-  <div class="panel" id="tab-jeep">
-    <div class="panel-title">Jeep CJ5 Gallery</div>
-    <div class="panel-desc">Add photos to the main scrolling gallery or to a category section below it.</div>
-
-    <div class="card">
-      <div class="card-title">Add to Main Gallery</div>
-      <div class="field-row">
-        <div class="field">
-          <label>Photo path</label>
-          <input type="text" id="j-m-file" placeholder="photos/jeep-frame.jpg">
-        </div>
-        <div class="field">
-          <label>Caption / alt text</label>
-          <input type="text" id="j-m-alt" placeholder="Frame inspection">
-        </div>
-      </div>
-      <button class="btn btn-primary" onclick="addToGallery('jeep','main')"><span id="jMainLbl">Add to Main Gallery</span></button>
-    </div>
-
-    <div class="card">
-      <div class="card-title">Add to Category Gallery</div>
-      <div class="field-row">
-        <div class="field">
-          <label>Photo path</label>
-          <input type="text" id="j-c-file" placeholder="photos/jeep-axle.jpg">
-        </div>
-        <div class="field">
-          <label>Caption / alt text</label>
-          <input type="text" id="j-c-alt" placeholder="Front axle">
-        </div>
-      </div>
-      <div class="field-row">
-        <div class="field">
-          <label>Category</label>
-          <select id="j-c-cat" onchange="toggleNewCat('j')">
-            <option value="Exterior">Exterior</option>
-            <option value="Interior">Interior</option>
-            <option value="Fabrication &amp; Electrical">Fabrication &amp; Electrical</option>
-            <option value="__new__">+ New category…</option>
-          </select>
-        </div>
-        <div class="field" id="j-c-new-wrap" style="display:none;">
-          <label>New category name</label>
-          <input type="text" id="j-c-new" placeholder="Drivetrain">
-        </div>
-      </div>
-      <button class="btn btn-primary" onclick="addToGallery('jeep','cat')"><span id="jCatLbl">Add to Category</span></button>
-    </div>
-
-    <div class="card">
-      <div class="card-title">Current Main Gallery</div>
-      <div class="gal-grid" id="jeepPreview"><div class="empty">Loading…</div></div>
-    </div>
-  </div>
-
-  <!-- POWERSTROKE ──────────────────────────────────────────── -->
-  <div class="panel" id="tab-powerstroke">
-    <div class="panel-title">Powerstroke Gallery</div>
-    <div class="panel-desc">Add photos to the main scrolling gallery or to a category section below it.</div>
-
-    <div class="card">
-      <div class="card-title">Add to Main Gallery</div>
-      <div class="field-row">
-        <div class="field">
-          <label>Photo path</label>
-          <input type="text" id="p-m-file" placeholder="photos/ps-injector.jpg">
-        </div>
-        <div class="field">
-          <label>Caption / alt text</label>
-          <input type="text" id="p-m-alt" placeholder="Injector removal">
-        </div>
-      </div>
-      <button class="btn btn-primary" onclick="addToGallery('ps','main')"><span id="psMainLbl">Add to Main Gallery</span></button>
-    </div>
-
-    <div class="card">
-      <div class="card-title">Add to Category Gallery</div>
-      <div class="field-row">
-        <div class="field">
-          <label>Photo path</label>
-          <input type="text" id="p-c-file" placeholder="photos/ps-turbo.jpg">
-        </div>
-        <div class="field">
-          <label>Caption / alt text</label>
-          <input type="text" id="p-c-alt" placeholder="Turbocharger">
-        </div>
-      </div>
-      <div class="field-row">
-        <div class="field">
-          <label>Category</label>
-          <select id="p-c-cat" onchange="toggleNewCat('p')">
-            <option value="Engine">Engine</option>
-            <option value="__new__">+ New category…</option>
-          </select>
-        </div>
-        <div class="field" id="p-c-new-wrap" style="display:none;">
-          <label>New category name</label>
-          <input type="text" id="p-c-new" placeholder="Injectors">
-        </div>
-      </div>
-      <button class="btn btn-primary" onclick="addToGallery('ps','cat')"><span id="psCatLbl">Add to Category</span></button>
-    </div>
-
-    <div class="card">
-      <div class="card-title">Current Main Gallery</div>
-      <div class="gal-grid" id="psPreview"><div class="empty">Loading…</div></div>
-    </div>
-  </div>
-
-  <!-- BULK IMPORT ──────────────────────────────────────────── -->
-  <div class="panel" id="tab-bulk">
-    <div class="panel-title">Bulk Import</div>
-    <div class="panel-desc">Scans your <code>photos/</code> folder and shows images not yet on the Design page. Click the buttons on each card to tag it, then save everything at once.</div>
-
-    <div style="display:flex;align-items:center;gap:1rem;margin-bottom:1.5rem;flex-wrap:wrap;">
-      <button class="btn btn-outline" onclick="loadBulkPhotos()"><span id="bulkScanLbl">Scan photos/ folder</span></button>
-      <button class="btn btn-primary" onclick="saveBulkItems()" id="bulkSaveBtn" style="display:none;"><span id="bulkSaveLbl">Save Tagged Items</span></button>
-      <span id="bulkStatus" style="font-size:12px;font-family:var(--mono);color:var(--muted);"></span>
-    </div>
-
-    <div id="bulkGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1rem;"></div>
-  </div>
-
-</div><!-- /adminWrap -->
-
 <div class="toast" id="toast"></div>
 
-<style>
-  /* ── Bulk import cards ── */
-  .bulk-card {
-    background: var(--bg2);
-    border: 1px solid var(--border);
-    display: flex;
-    flex-direction: column;
-    gap: 0;
-    transition: border-color 0.15s;
-  }
-  .bulk-card.tagged  { border-color: var(--green); }
-  .bulk-card.skipped { opacity: 0.35; }
-
-  .bulk-thumb {
-    width: 100%;
-    aspect-ratio: 4/3;
-    object-fit: cover;
-    display: block;
-    background: var(--bg3);
-  }
-  .bulk-body { padding: 0.75rem; display: flex; flex-direction: column; gap: 0.6rem; }
-  .bulk-filename { font-family: var(--mono); font-size: 10px; color: var(--muted); word-break: break-all; }
-
-  .bulk-section-lbl {
-    font-family: var(--mono); font-size: 9px; letter-spacing: 0.1em;
-    text-transform: uppercase; color: var(--muted); margin-bottom: 0.3rem;
-  }
-  .bulk-btns { display: flex; flex-wrap: wrap; gap: 0.3rem; }
-  .bulk-btn {
-    padding: 0.3rem 0.55rem; font-size: 11px; font-family: var(--mono);
-    border: 1px solid var(--border); background: var(--bg3); color: var(--muted);
-    cursor: pointer; transition: all 0.12s; white-space: nowrap;
-  }
-  .bulk-btn:hover  { border-color: var(--fg); color: var(--fg); }
-  .bulk-btn.active { border-color: var(--amber); color: var(--amber); background: rgba(212,136,12,0.08); }
-  .bulk-btn.project-active { border-color: var(--green); color: var(--green); background: rgba(29,158,117,0.08); }
-
-  .bulk-input {
-    width: 100%; background: var(--bg3); border: 1px solid var(--border);
-    color: var(--fg); padding: 0.45rem 0.65rem; font-size: 12px;
-    font-family: inherit; outline: none;
-  }
-  .bulk-input:focus { border-color: var(--amber); }
-
-  .bulk-actions { display: flex; gap: 0.4rem; margin-top: 0.2rem; }
-  .bulk-skip-btn {
-    flex: 1; padding: 0.4rem; font-size: 11px; font-family: var(--mono);
-    border: 1px solid var(--border); background: transparent; color: var(--muted);
-    cursor: pointer; text-align: center;
-  }
-  .bulk-skip-btn:hover { color: var(--fg); border-color: var(--fg); }
-  .bulk-tag-btn {
-    flex: 2; padding: 0.4rem; font-size: 11px; font-family: var(--mono);
-    border: 1px solid var(--green); background: rgba(29,158,117,0.1); color: var(--green);
-    cursor: pointer; text-align: center;
-  }
-  .bulk-tag-btn:hover { background: rgba(29,158,117,0.2); }
-  .bulk-tagged-badge {
-    text-align: center; padding: 0.5rem; font-family: var(--mono);
-    font-size: 11px; color: var(--green); border-top: 1px solid var(--border);
-  }
-  .new-project-input {
-    width: 100%; background: var(--bg3); border: 1px solid var(--amber);
-    color: var(--fg); padding: 0.35rem 0.55rem; font-size: 11px;
-    font-family: inherit; outline: none; margin-top: 0.3rem;
-  }
-</style>
-
 <script>
-// ── CONFIG ────────────────────────────────────────────────────
-const OWNER  = 'kristian24908';
-const REPO   = 'Portfolio';
-const SUB    = ''; // files are at repo root
-let TOKEN  = '';
-let BRANCH = 'main'; // auto-detected on login
-
-// ── AUTH ──────────────────────────────────────────────────────
-async function login() {
-  TOKEN = document.getElementById('tokenInput').value.trim();
-  if (!TOKEN) return;
-  try {
-    const r = await fetch(`https://api.github.com/repos/${OWNER}/${REPO}`, {
-      headers: auth()
-    });
-    if (!r.ok) throw new Error('Token invalid or repo not found. Check username/repo and token scope.');
-    const d = await r.json();
-    BRANCH = d.default_branch || 'main';
-    sessionStorage.setItem('ghToken', TOKEN);
-    sessionStorage.setItem('ghBranch', BRANCH);
-
-document.getElementById('loginWrap').style.display = 'none';
-    document.getElementById('adminWrap').style.display = 'block';
-    document.getElementById('adminUser').textContent = `${d.full_name} · ${BRANCH}`;
-    loadDesignItems();
-    loadGalleryPreview('jeep');
-    loadGalleryPreview('ps');
-  } catch(e) {
-    document.getElementById('loginErr').textContent = e.message;
+// ── Defaults ──────────────────────────────────────────────────────
+const DEFAULTS = {
+  settings: { name:'Kristian Felten', degree:'Mechanical Engineering', university:'University of Idaho', email:'your@email.com', linkedin:'linkedin.com/in/yourprofile', github:'', year:'2025' },
+  design: { accent:'#f5a623', bg:'#0e0f14', bg2:'#13141a', bg3:'#1a1c24', heroSize:'', bodySize:'', radius:'', galleryRadius:'' },
+  home: { h1:'', h2:'', tag:'', s1v:'4+', s1l:'Years of builds', s2v:'7.3L', s2l:'Diesel rebuilt', s3v:"'73", s3l:'Jeep CJ5 resto', s4v:'U of I', s4l:'Mech. Eng.', ah:'', ab:'' },
+  about: { hero:'', desc:'', b1:'', b2:'', b3:'', stats:[{v:'',l:''},{v:'',l:''},{v:'',l:''},{v:'',l:''},{v:'',l:''}], skills:Array(12).fill('') },
+  experience: [{year:'',title:'',company:'',desc:'',tags:''},{year:'',title:'',company:'',desc:'',tags:''},{year:'',title:'',company:'',desc:'',tags:''},{year:'',title:'',company:'',desc:'',tags:''}],
+  contact: { hero:"Let's connect.", desc:'' },
+  jeep: {
+    title:'1973 Jeep CJ5', cat:'Restoration / Fabrication', desc:'', tags:['Fabrication','Drivetrain','Suspension','Bodywork','Electrical'],
+    photos:['photos/Jeep CJ5/IMG_5203.JPG','photos/Jeep CJ5/IMG_6358.JPG','photos/Jeep CJ5/IMG_0738.jpeg','photos/Jeep CJ5/IMG_1054.jpeg','photos/Jeep CJ5/IMG_0563.JPG','photos/Jeep CJ5/1F2C2C68-FDE4-456D-86EC-9374FF8C0719_1_102_o.jpeg'],
+    ov1:'', ov2:'',
+    specs:[{l:'',v:''},{l:'',v:''},{l:'Status',v:'In Progress'},{l:'',v:''},{l:'',v:''}],
+    phases:[{sub:'Phase 01',title:'',body:''},{sub:'Phase 02',title:'',body:''},{sub:'Phase 03',title:'',body:''},{sub:'Phase 04',title:'',body:''}]
+  },
+  ps: {
+    title:'7.3L Powerstroke Diesel', cat:'Engine Rebuild', desc:'', tags:['Diesel Systems','Precision Measurement','Fuel Systems','Turbocharging'],
+    photos:['photos/ps-side.jpg','photos/ps-top.jpg'],
+    ov1:'', ov2:'',
+    specs:[{l:'',v:''},{l:'',v:''},{l:'',v:''},{l:'',v:''},{l:'',v:''}],
+    phases:[{sub:'Step 01',title:'',body:''},{sub:'Step 02',title:'',body:''},{sub:'Step 03',title:'',body:''},{sub:'Step 04',title:'',body:''}]
   }
+};
+
+function clone(o){ return JSON.parse(JSON.stringify(o)); }
+function load(){ try{ return JSON.parse(localStorage.getItem('kfAdmin')||'null')||clone(DEFAULTS); }catch{ return clone(DEFAULTS); } }
+let D = load();
+
+// ── Nav ───────────────────────────────────────────────────────────
+function show(id, btn){
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-link').forEach(b=>b.classList.remove('active'));
+  document.getElementById('panel-'+id).classList.add('active');
+  btn.classList.add('active');
 }
 
-function logout() {
-  sessionStorage.removeItem('ghToken');
-  TOKEN = '';
-  document.getElementById('adminWrap').style.display = 'none';
-  document.getElementById('loginWrap').style.display = 'flex';
-  document.getElementById('loginErr').textContent = '';
-  document.getElementById('tokenInput').value = '';
+// ── Helpers ───────────────────────────────────────────────────────
+const $ = id => document.getElementById(id);
+const sv = (id,v) => { const e=$(id); if(e) e.value=v||''; };
+const gv = id    => { const e=$(id); return e?e.value:''; };
+function syncHex(p,hId){ $(hId).value=p.value; }
+function syncPicker(h,pId){ $(pId).value=h.value; }
+function esc(s){ return (s||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+// ── Populate ──────────────────────────────────────────────────────
+function populate(){
+  const d=D;
+
+  // Settings
+  sv('s-name',d.settings.name); sv('s-degree',d.settings.degree); sv('s-university',d.settings.university);
+  sv('s-email',d.settings.email); sv('s-linkedin',d.settings.linkedin); sv('s-github',d.settings.github); sv('s-year',d.settings.year);
+
+  // Design
+  const sc=(id,v)=>{const p=$(id),h=$(id+'-hex');if(p)p.value=v||'#000000';if(h)h.value=v||'';};
+  sc('d-accent',d.design.accent); sc('d-bg',d.design.bg); sc('d-bg2',d.design.bg2); sc('d-bg3',d.design.bg3);
+  sv('d-hero-size',d.design.heroSize); sv('d-body-size',d.design.bodySize);
+  sv('d-radius',d.design.radius); sv('d-gallery-radius',d.design.galleryRadius);
+
+  // Home
+  sv('h-h1',d.home.h1); sv('h-h2',d.home.h2); sv('h-tag',d.home.tag);
+  sv('h-s1v',d.home.s1v); sv('h-s1l',d.home.s1l); sv('h-s2v',d.home.s2v); sv('h-s2l',d.home.s2l);
+  sv('h-s3v',d.home.s3v); sv('h-s3l',d.home.s3l); sv('h-s4v',d.home.s4v); sv('h-s4l',d.home.s4l);
+  sv('h-ah',d.home.ah); sv('h-ab',d.home.ab);
+
+  // About
+  sv('a-hero',d.about.hero); sv('a-desc',d.about.desc);
+  sv('a-b1',d.about.b1); sv('a-b2',d.about.b2); sv('a-b3',d.about.b3);
+  buildAboutStats(d.about.stats);
+  buildSkills(d.about.skills);
+
+  // Experience
+  buildExp(d.experience);
+
+  // Contact
+  sv('c-hero',d.contact.hero); sv('c-desc',d.contact.desc);
+
+  // Jeep
+  sv('j-title',d.jeep.title); sv('j-cat',d.jeep.cat); sv('j-desc',d.jeep.desc);
+  buildTags('j',d.jeep.tags); buildPhotos('j',d.jeep.photos);
+  sv('j-ov1',d.jeep.ov1); sv('j-ov2',d.jeep.ov2);
+  buildSpecs('j',d.jeep.specs); buildPhases('j',d.jeep.phases);
+
+  // PS
+  sv('p-title',d.ps.title); sv('p-cat',d.ps.cat); sv('p-desc',d.ps.desc);
+  buildTags('p',d.ps.tags); buildPhotos('p',d.ps.photos);
+  sv('p-ov1',d.ps.ov1); sv('p-ov2',d.ps.ov2);
+  buildSpecs('p',d.ps.specs); buildPhases('p',d.ps.phases);
 }
 
-window.addEventListener('DOMContentLoaded', () => {
-  const saved = sessionStorage.getItem('ghToken');
-  const savedBranch = sessionStorage.getItem('ghBranch');
-  if (savedBranch) BRANCH = savedBranch;
-  if (saved) { document.getElementById('tokenInput').value = saved; login(); }
-  document.getElementById('tokenInput').addEventListener('keydown', e => { if (e.key === 'Enter') login(); });
-});
-
-// ── HELPERS ───────────────────────────────────────────────────
-const auth = () => ({ Authorization: `token ${TOKEN}`, 'Content-Type': 'application/json' });
-const apiUrl = path => `https://api.github.com/repos/${OWNER}/${REPO}/contents/${SUB}${path}`;
-
-function b64enc(str) { return btoa(unescape(encodeURIComponent(str))); }
-function b64dec(str) { return decodeURIComponent(escape(atob(str.replace(/\n/g,'')))); }
-
-async function ghGet(path) {
-  const r = await fetch(`${apiUrl(path)}?ref=${BRANCH}`, { headers: auth() });
-  if (!r.ok) throw new Error(`Could not read ${path} (${r.status})`);
-  return r.json();
+// ── About stats ───────────────────────────────────────────────────
+function buildAboutStats(stats){
+  const el=$('a-stats-list'); el.innerHTML='';
+  stats.forEach(s=>{
+    const row=document.createElement('div'); row.className='spec-row'; row.style.marginBottom='0.4rem';
+    row.innerHTML=`<input class="mini-input" placeholder="Value" value="${esc(s.v)}"><input class="mini-input" placeholder="Label" value="${esc(s.l)}"><div></div>`;
+    el.appendChild(row);
+  });
 }
-
-async function ghPutText(path, content, message, sha) {
-  const body = { message, content: b64enc(content), branch: BRANCH };
-  if (sha) body.sha = sha;
-  const r = await fetch(apiUrl(path), { method:'PUT', headers: auth(), body: JSON.stringify(body) });
-  if (!r.ok) { const e = await r.json(); throw new Error(e.message || 'Save failed'); }
-  return r.json();
-}
-
-async function ghPutBinary(path, base64, message, sha) {
-  const body = { message, content: base64, branch: BRANCH };
-  if (sha) body.sha = sha;
-  const r = await fetch(apiUrl(path), { method:'PUT', headers: auth(), body: JSON.stringify(body) });
-  if (!r.ok) { const e = await r.json(); throw new Error(e.message || 'Upload failed'); }
-  return r.json();
-}
-
-function fileToB64(file) {
-  return new Promise((res, rej) => {
-    const fr = new FileReader();
-    fr.onload = () => res(fr.result.split(',')[1]);
-    fr.onerror = rej;
-    fr.readAsDataURL(file);
+function getAboutStats(){
+  return [...document.querySelectorAll('#a-stats-list .spec-row')].map(r=>{
+    const i=r.querySelectorAll('input'); return{v:i[0]?.value||'',l:i[1]?.value||''};
   });
 }
 
-function rawUrl(file) {
-  return `https://raw.githubusercontent.com/${OWNER}/${REPO}/${BRANCH}/${SUB}${file}`;
+// ── Skills ────────────────────────────────────────────────────────
+function buildSkills(skills){
+  const g=$('a-skills-grid'); g.innerHTML='';
+  skills.forEach((s,i)=>{
+    const inp=document.createElement('input');
+    inp.className='mini-input'; inp.style.width='100%'; inp.placeholder='Skill '+(i+1); inp.value=s;
+    g.appendChild(inp);
+  });
 }
+function getSkills(){ return [...document.querySelectorAll('#a-skills-grid input')].map(i=>i.value); }
 
-function toast(msg, type='success') {
-  const el = document.getElementById('toast');
-  el.textContent = msg;
-  el.className = `toast ${type} show`;
-  clearTimeout(el._t);
-  el._t = setTimeout(() => el.classList.remove('show'), 3500);
-}
-
-function setLoading(id, loading, defaultText) {
-  document.getElementById(id).innerHTML = loading ? '<span class="spin"></span> Saving…' : defaultText;
-}
-
-// ── TABS ──────────────────────────────────────────────────────
-function switchTab(el, name) {
-  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
-  el.classList.add('active');
-  document.getElementById(`tab-${name}`).classList.add('active');
-  // Reload data whenever a tab is opened so SHA is always fresh
-  if (name === 'design') loadDesignItems();
-  if (name === 'bulk')   loadDesignItems(); // ensure dItems is current before scanning
-  if (name === 'jeep')   loadGalleryPreview('jeep');
-  if (name === 'powerstroke') loadGalleryPreview('ps');
-}
-
-// ── PHOTO UPLOAD ──────────────────────────────────────────────
-function onPhotoSelected(input) {
-  const file = input.files[0];
-  if (!file) return;
-  const prev = document.getElementById('photoPreview');
-  prev.src = URL.createObjectURL(file);
-  prev.style.display = 'block';
-  if (!document.getElementById('photoFilename').value)
-    document.getElementById('photoFilename').value = file.name.replace(/\s+/g,'-').toLowerCase();
-}
-
-async function uploadPhoto() {
-  const file     = document.getElementById('photoFile').files[0];
-  const filename = document.getElementById('photoFilename').value.trim();
-  if (!file || !filename) { toast('Select a photo and enter a filename','error'); return; }
-  setLoading('uploadBtnLbl', true);
-  try {
-    const b64 = await fileToB64(file);
-    let sha;
-    try { const ex = await ghGet(`photos/${filename}`); sha = ex.sha; } catch(_) {}
-    await ghPutBinary(`photos/${filename}`, b64, `Add photo: ${filename}`, sha);
-    toast(`✓ ${filename} uploaded`);
-    document.getElementById('photoFile').value = '';
-    document.getElementById('photoFilename').value = '';
-    document.getElementById('photoPreview').style.display = 'none';
-  } catch(e) {
-    toast(`Upload failed: ${e.message}`, 'error');
-    console.error('Upload error:', e);
-  }
-  finally { setLoading('uploadBtnLbl', false, 'Upload to photos/'); }
-}
-
-// ── DESIGN ITEMS ──────────────────────────────────────────────
-let dSha = null, dItems = [];
-
-async function loadDesignItems() {
-  try {
-    const f = await ghGet('design-data.js');
-    dSha = f.sha; // always store SHA first
-    try {
-      const content = b64dec(f.content);
-      const m = content.match(/const designItems\s*=\s*(\[[\s\S]*?\]);/);
-      dItems = m ? JSON.parse(m[1]) : [];
-    } catch(_) {
-      dItems = []; // content parse failed but SHA is still valid
-    }
-  } catch(e) {
-    // File doesn't exist yet — will be created on first save
-    dSha = null;
-    dItems = [];
-  }
-  renderDesignList();
-}
-
-function renderDesignList() {
-  document.getElementById('dCount').textContent = `(${dItems.length})`;
-  const list = document.getElementById('dList');
-  if (!dItems.length) { list.innerHTML = '<div class="empty">No items yet — add one above.</div>'; return; }
-  const catLabel = { '3d-print':'3D Print','cad':'CAD','rendering':'Rendering','fea':'FEA','drawing':'Drawing','coursework':'Coursework' };
-  list.innerHTML = dItems.map((item,i) => `
-    <div class="item-row">
-      <img class="item-thumb" src="${rawUrl(item.file)}" onerror="this.style.opacity='0.2'">
-      <div class="item-info">
-        <div class="item-title">${item.title}${item.project ? ` <span style="color:var(--amber);font-size:10px;font-family:var(--mono);">[${item.project}]</span>` : ''}</div>
-        <div class="item-meta">${catLabel[item.category]||item.category} · ${item.tags.join(', ')}</div>
-      </div>
-      <button class="btn btn-red btn-sm" onclick="removeDesignItem(${i})">Remove</button>
-    </div>`).join('');
-}
-
-async function saveDesignData() {
-  const content = `// ─────────────────────────────────────────────────────────────
-//  DESIGN PAGE DATA — managed via admin.html
-//
-//  category: "3d-print" | "cad" | "rendering" | "fea" | "drawing" | "coursework"
-// ─────────────────────────────────────────────────────────────
-
-const designItems = ${JSON.stringify(dItems, null, 2)};\n`;
-
-  // Try up to 2 times — first with a freshly-fetched SHA, retry once if GitHub
-  // returns a 409 (can happen when the API cache lags a recent commit).
-  for (let attempt = 0; attempt < 2; attempt++) {
-    try {
-      const r = await fetch(`${apiUrl('design-data.js')}?ref=${BRANCH}&_=${Date.now()}`,
-        { headers: auth() });
-      dSha = r.ok ? (await r.json()).sha : null;
-    } catch(_) { dSha = null; }
-
-    try {
-      await ghPutText('design-data.js', content, 'Update design items via admin', dSha || undefined);
-      // Store the new SHA so the next save in this session is also clean
-      const updated = await fetch(`${apiUrl('design-data.js')}?ref=${BRANCH}&_=${Date.now()}`,
-        { headers: auth() });
-      if (updated.ok) dSha = (await updated.json()).sha;
-      return; // success
-    } catch(e) {
-      if (attempt === 1) throw e; // second attempt also failed — surface the error
-      // Otherwise loop and retry with a freshly-fetched SHA
-    }
-  }
-}
-
-async function addDesignItem() {
-  const file    = document.getElementById('d-file').value.trim();
-  const cat     = document.getElementById('d-cat').value;
-  const title   = document.getElementById('d-title').value.trim();
-  const desc    = document.getElementById('d-desc').value.trim();
-  const tags    = document.getElementById('d-tags').value.split(',').map(t=>t.trim()).filter(Boolean);
-  const project = document.getElementById('d-project').value.trim();
-  if (!file||!title||!desc) { toast('Fill in all fields','error'); return; }
-  setLoading('dAddLbl', true);
-  try {
-    const item = { file, title, category: cat, description: desc, tags };
-    if (project) item.project = project;
-    dItems.push(item);
-    await saveDesignData();
-    renderDesignList();
-    toast('✓ Added to Design page — live in ~30s');
-    ['d-file','d-title','d-desc','d-tags','d-project'].forEach(id => document.getElementById(id).value='');
-  } catch(e) { dItems.pop(); toast(e.message,'error'); }
-  finally { setLoading('dAddLbl', false, 'Add to Design Page'); }
-}
-
-async function removeDesignItem(i) {
-  if (!confirm(`Remove "${dItems[i].title}"?`)) return;
-  const removed = dItems.splice(i,1)[0];
-  try {
-    await saveDesignData();
-    renderDesignList();
-    toast('✓ Removed');
-  } catch(e) { dItems.splice(i,0,removed); toast(e.message,'error'); }
-}
-
-// ── PROJECT GALLERIES ─────────────────────────────────────────
-const projectCfg = {
-  jeep: { htmlFile:'project-jeep-cj5.html',  galleryId:'jeepGallery', labelId:'jeepLabel' },
-  ps:   { htmlFile:'project-powerstroke.html', galleryId:'psGallery',  labelId:'psLabel'  }
-};
-let pShas = {}, pHtml = {};
-
-function toggleNewCat(prefix) {
-  const val  = document.getElementById(`${prefix}-c-cat`).value;
-  document.getElementById(`${prefix}-c-new-wrap`).style.display = val === '__new__' ? 'block' : 'none';
-}
-
-async function loadGalleryPreview(proj) {
-  const cfg       = projectCfg[proj];
-  const previewEl = document.getElementById(proj === 'jeep' ? 'jeepPreview' : 'psPreview');
-  try {
-    const f = await ghGet(cfg.htmlFile);
-    pShas[proj] = f.sha;
-    pHtml[proj] = b64dec(f.content);
-
-    // Extract src paths from inside the gallery scroll div
-    const html = pHtml[proj];
-    const galStart = html.indexOf(`id="${cfg.galleryId}"`);
-    const galEnd   = html.indexOf('class="gallery-counter"', galStart);
-    const galSlice = html.slice(galStart, galEnd);
-    const imgs     = [...galSlice.matchAll(/src="(photos\/[^"]+)"/g)];
-
-    if (!imgs.length) { previewEl.innerHTML = '<div class="empty">No photos yet</div>'; return; }
-    previewEl.innerHTML = imgs.map(m=>`
-      <div class="gal-thumb">
-        <img src="${rawUrl(m[1])}" onerror="this.style.opacity='0.15'">
-      </div>`).join('');
-  } catch(e) {
-    previewEl.innerHTML = `<div class="err-text">${e.message}</div>`;
-  }
-}
-
-async function addToGallery(proj, type) {
-  const p   = proj === 'jeep' ? 'j' : 'p';
-  const cfg = projectCfg[proj];
-  const btnId = proj === 'jeep'
-    ? (type==='main' ? 'jMainLbl' : 'jCatLbl')
-    : (type==='main' ? 'psMainLbl' : 'psCatLbl');
-
-  const filename = document.getElementById(`${p}-${type==='main'?'m':'c'}-file`).value.trim();
-  const altText  = document.getElementById(`${p}-${type==='main'?'m':'c'}-alt`).value.trim();
-  if (!filename||!altText) { toast('Enter filename and caption','error'); return; }
-
-  setLoading(btnId, true);
-  try {
-    let html = pHtml[proj];
-
-    if (type === 'main') {
-      // Insert new gallery-item before the closing </div> of the gallery-scroll
-      const galId    = cfg.galleryId;
-      const galStart = html.indexOf(`id="${galId}"`);
-      const galEnd   = html.indexOf('</div>', html.indexOf('class="gallery-counter"', galStart) - 50);
-      // Actually find the </div> that closes the gallery-scroll div
-      // The gallery-scroll div starts right after id="jeepGallery"
-      const scrollStart = html.indexOf('>', html.indexOf(`id="${galId}"`)) + 1;
-      // Find where it closes — look for the next </div> before gallery-counter
-      const counterPos  = html.indexOf(`id="${cfg.labelId}"`);
-      const closePos    = html.lastIndexOf('</div>', counterPos - 10);
-
-      const newItem = `\n    <div class="gallery-item"><img src="${filename}" alt="${altText}"></div>`;
-      html = html.slice(0, closePos) + newItem + '\n  ' + html.slice(closePos);
-
-      // Update "Photo 1 of N" counter
-      const total = (html.match(/class="gallery-item"/g)||[]).length;
-      html = html.replace(/Photo \d+ of \d+/, `Photo 1 of ${total}`);
-
-    } else {
-      // Category gallery
-      let catName = document.getElementById(`${p}-c-cat`).value;
-      if (catName === '__new__') {
-        catName = document.getElementById(`${p}-c-new`).value.trim();
-        if (!catName) { toast('Enter a category name','error'); setLoading(btnId,false,'Add to Category'); return; }
-
-        // Build new cat section and inject before the closing </div> of cat-galleries
-        const newSection = `
-  <div class="cat-section">
-    <div class="cat-header">
-      <span class="cat-header-label">${catName}</span>
-      <div class="cat-header-line"></div>
-      <span class="cat-header-count">1 photo</span>
+// ── Experience ────────────────────────────────────────────────────
+function buildExp(list){ $('exp-list').innerHTML=''; list.forEach((e,i)=>renderExpCard(e,i)); }
+function renderExpCard(e,i){
+  const c=document.createElement('div'); c.className='exp-card';
+  c.innerHTML=`
+    <div class="exp-card-header">
+      <span class="exp-card-num">Entry ${i+1}</span>
+      <button class="btn btn-danger btn-sm" onclick="removeExp(this)">Remove</button>
     </div>
-    <div class="cat-gallery">
-      <div class="cat-item"><img src="${filename}" alt="${altText}"></div>
+    <div style="display:grid;grid-template-columns:80px 1fr 1fr;gap:0.5rem;margin-bottom:0.5rem;">
+      <input class="mini-input" placeholder="Year" value="${esc(e.year)}" style="width:100%">
+      <input class="mini-input" placeholder="Job Title" value="${esc(e.title)}" style="width:100%">
+      <input class="mini-input" placeholder="Company" value="${esc(e.company)}" style="width:100%">
     </div>
-  </div>\n`;
-
-        const overviewPos = html.indexOf('<!-- OVERVIEW -->');
-        html = html.slice(0, overviewPos) + newSection + '\n' + html.slice(overviewPos);
-
-        // Update dropdown on this same tab if it's jeep or ps
-        const sel = document.getElementById(`${p}-c-cat`);
-        const opt = document.createElement('option');
-        opt.value = catName; opt.textContent = catName;
-        sel.insertBefore(opt, sel.lastElementChild);
-
-      } else {
-        // Add to existing category
-        const catLabelIdx  = html.indexOf(`>${catName}<`);
-        if (catLabelIdx === -1) throw new Error(`Category "${catName}" not found in HTML`);
-        const catGalStart  = html.indexOf('class="cat-gallery"', catLabelIdx);
-        const catGalClose  = html.indexOf('</div>', catGalStart + 20);
-
-        const newItem = `\n      <div class="cat-item"><img src="${filename}" alt="${altText}"></div>`;
-        html = html.slice(0, catGalClose) + newItem + '\n    ' + html.slice(catGalClose);
-
-        // Update photo count
-        const cntIdx   = html.indexOf('cat-header-count', catLabelIdx);
-        const cntMatch = html.slice(cntIdx).match(/(\d+) photo/);
-        if (cntMatch) {
-          html = html.slice(0, cntIdx) + html.slice(cntIdx).replace(`${cntMatch[1]} photo`, `${parseInt(cntMatch[1])+1} photo`);
-        }
-      }
-    }
-
-    pHtml[proj] = html;
-    await ghPutText(cfg.htmlFile, html, `Add photo to ${proj} gallery via admin`, pShas[proj]);
-    const updated = await ghGet(cfg.htmlFile);
-    pShas[proj]   = updated.sha;
-    pHtml[proj]   = b64dec(updated.content);
-
-    toast('✓ Photo added — live in ~30s');
-    document.getElementById(`${p}-${type==='main'?'m':'c'}-file`).value = '';
-    document.getElementById(`${p}-${type==='main'?'m':'c'}-alt`).value  = '';
-    await loadGalleryPreview(proj);
-
-  } catch(e) { toast(e.message,'error'); }
-  finally { setLoading(btnId, false, type==='main'?'Add to Main Gallery':'Add to Category'); }
+    <textarea class="mini-input" placeholder="Description" style="width:100%;min-height:60px;resize:vertical;margin-bottom:0.5rem;">${esc(e.desc)}</textarea>
+    <input class="mini-input" placeholder="Tags (comma-separated)" value="${esc(e.tags)}" style="width:100%">`;
+  $('exp-list').appendChild(c);
+}
+function addExp(){ renderExpCard({year:'',title:'',company:'',desc:'',tags:''},document.querySelectorAll('#exp-list .exp-card').length); }
+function removeExp(btn){ btn.closest('.exp-card').remove(); renumberExp(); }
+function renumberExp(){ document.querySelectorAll('#exp-list .exp-card-num').forEach((n,i)=>n.textContent='Entry '+(i+1)); }
+function getExp(){
+  return [...document.querySelectorAll('#exp-list .exp-card')].map(c=>{
+    const ins=c.querySelectorAll('input'); const ta=c.querySelector('textarea');
+    return{year:ins[0]?.value||'',title:ins[1]?.value||'',company:ins[2]?.value||'',desc:ta?.value||'',tags:ins[3]?.value||''};
+  });
 }
 
-// ── BULK IMPORT ───────────────────────────────────────────────
-const CATS = [
-  { value:'rendering', label:'Rendering' },
-  { value:'3d-print',  label:'3D Print'  },
-  { value:'cad',       label:'CAD'       },
-  { value:'fea',       label:'FEA'       },
-  { value:'drawing',   label:'Drawing'   },
-  { value:'coursework',label:'Coursework'},
-];
-const PROJ_CFGS = {
-  jeep: { label:'Jeep CJ5',    galleryId:'jeepGallery', labelId:'jeepLabel',  htmlFile:'project-jeep-cj5.html' },
-  ps:   { label:'Powerstroke', galleryId:'psGallery',   labelId:'psLabel',    htmlFile:'project-powerstroke.html' }
-};
+// ── Tags ──────────────────────────────────────────────────────────
+function buildTags(px,tags){ const w=$(px+'-tags-wrap'),inp=$(px+'-tag-in'); w.querySelectorAll('.tag-chip').forEach(c=>c.remove()); tags.forEach(t=>w.insertBefore(makeChip(t),inp)); }
+function makeChip(tag){ const c=document.createElement('div'); c.className='tag-chip'; c.dataset.tag=tag; c.innerHTML=`${esc(tag)}<button onclick="this.parentElement.remove()">×</button>`; return c; }
+function tagKey(px,e){ if(e.key!=='Enter') return; e.preventDefault(); const inp=$(px+'-tag-in'),v=inp.value.trim(); if(!v) return; $(px+'-tags-wrap').insertBefore(makeChip(v),inp); inp.value=''; }
+function getTags(px){ return [...document.querySelectorAll(`#${px}-tags-wrap .tag-chip`)].map(c=>c.dataset.tag); }
 
-const bulkState = {};
+// ── Photos ────────────────────────────────────────────────────────
+function buildPhotos(px,photos){ $(px+'-photos').innerHTML=''; photos.forEach(p=>addPhotoRow(px,p)); }
+function addPhotoRow(px,path){
+  const list=$(px+'-photos'), row=document.createElement('div'); row.className='photo-row';
+  const hp=path&&path.trim();
+  row.innerHTML=`
+    <span class="drag-handle">⠿</span>
+    <img class="photo-thumb" src="${esc(path)}" style="${hp?'':'display:none'}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+    <div class="photo-thumb-ph" style="${hp?'display:none':''}">🖼</div>
+    <input class="photo-path" value="${esc(path)}" placeholder="photos/folder/file.jpg" oninput="updateThumb(this)">
+    <button class="rm-btn" onclick="this.closest('.photo-row').remove()">×</button>`;
+  list.appendChild(row);
+}
+function updateThumb(inp){
+  const row=inp.closest('.photo-row'),img=row.querySelector('.photo-thumb'),ph=row.querySelector('.photo-thumb-ph');
+  img.src=inp.value; img.style.display='block'; ph.style.display='none';
+  img.onerror=()=>{img.style.display='none';ph.style.display='flex';};
+  img.onload=()=>{img.style.display='block';ph.style.display='none';};
+}
+function getPhotos(px){ return [...document.querySelectorAll(`#${px}-photos .photo-path`)].map(i=>i.value).filter(v=>v.trim()); }
 
-function getExistingProjects() {
-  const seen = new Set();
-  dItems.forEach(i => { if (i.project) seen.add(i.project); });
-  return [...seen];
+// ── Specs ─────────────────────────────────────────────────────────
+function buildSpecs(px,specs){ const el=$(px+'-specs'); el.innerHTML=''; specs.forEach(s=>renderSpec(el,s.l,s.v)); }
+function renderSpec(container,l,v){ const row=document.createElement('div'); row.className='spec-row'; row.innerHTML=`<input class="mini-input" placeholder="Label" value="${esc(l)}"><input class="mini-input" placeholder="Value" value="${esc(v)}"><button class="rm-btn" onclick="this.closest('.spec-row').remove()">×</button>`; container.appendChild(row); }
+function addSpecRow(px){ renderSpec($(px+'-specs'),'',''); }
+function getSpecs(px){ return [...document.querySelectorAll(`#${px}-specs .spec-row`)].map(r=>{const i=r.querySelectorAll('input');return{l:i[0]?.value||'',v:i[1]?.value||''};});}
+
+// ── Phases ────────────────────────────────────────────────────────
+function buildPhases(px,phases){ const el=$(px+'-phases'); el.innerHTML=''; phases.forEach((ph,i)=>renderPhase(el,ph,i)); }
+function renderPhase(container,ph,i){
+  const w=document.createElement('div'); w.className='phase-block';
+  w.innerHTML=`
+    <div class="phase-block-label">${esc(ph.sub)||'Phase '+(i+1)}</div>
+    <div class="field"><label>Sub Label (e.g. "Phase 01")</label><input type="text" class="mini-input ph-sub" style="width:100%" value="${esc(ph.sub)}" oninput="this.closest('.phase-block').querySelector('.phase-block-label').textContent=this.value||'Phase ${i+1}'"></div>
+    <div class="field" style="margin-top:0.5rem;"><label>Title</label><input type="text" class="mini-input ph-title" style="width:100%" value="${esc(ph.title)}"></div>
+    <div class="field" style="margin-top:0.5rem;"><label>Body</label><textarea class="mini-input ph-body" style="width:100%;min-height:72px;resize:vertical;">${esc(ph.body)}</textarea></div>`;
+  container.appendChild(w);
+}
+function getPhases(px){ return [...document.querySelectorAll(`#${px}-phases .phase-block`)].map(w=>({sub:w.querySelector('.ph-sub')?.value||'',title:w.querySelector('.ph-title')?.value||'',body:w.querySelector('.ph-body')?.value||''})); }
+
+// ── Collect ───────────────────────────────────────────────────────
+function collect(){
+  return {
+    settings:{ name:gv('s-name'),degree:gv('s-degree'),university:gv('s-university'),email:gv('s-email'),linkedin:gv('s-linkedin'),github:gv('s-github'),year:gv('s-year') },
+    design:{ accent:gv('d-accent-hex')||gv('d-accent'),bg:gv('d-bg-hex')||gv('d-bg'),bg2:gv('d-bg2-hex')||gv('d-bg2'),bg3:gv('d-bg3-hex')||gv('d-bg3'),heroSize:gv('d-hero-size'),bodySize:gv('d-body-size'),radius:gv('d-radius'),galleryRadius:gv('d-gallery-radius') },
+    home:{ h1:gv('h-h1'),h2:gv('h-h2'),tag:gv('h-tag'),s1v:gv('h-s1v'),s1l:gv('h-s1l'),s2v:gv('h-s2v'),s2l:gv('h-s2l'),s3v:gv('h-s3v'),s3l:gv('h-s3l'),s4v:gv('h-s4v'),s4l:gv('h-s4l'),ah:gv('h-ah'),ab:gv('h-ab') },
+    about:{ hero:gv('a-hero'),desc:gv('a-desc'),b1:gv('a-b1'),b2:gv('a-b2'),b3:gv('a-b3'),stats:getAboutStats(),skills:getSkills() },
+    experience:getExp(),
+    contact:{ hero:gv('c-hero'),desc:gv('c-desc') },
+    jeep:{ title:gv('j-title'),cat:gv('j-cat'),desc:gv('j-desc'),tags:getTags('j'),photos:getPhotos('j'),ov1:gv('j-ov1'),ov2:gv('j-ov2'),specs:getSpecs('j'),phases:getPhases('j') },
+    ps:{ title:gv('p-title'),cat:gv('p-cat'),desc:gv('p-desc'),tags:getTags('p'),photos:getPhotos('p'),ov1:gv('p-ov1'),ov2:gv('p-ov2'),specs:getSpecs('p'),phases:getPhases('p') }
+  };
 }
 
-async function loadBulkPhotos() {
-  setLoading('bulkScanLbl', true);
-  document.getElementById('bulkStatus').textContent = '';
-  document.getElementById('bulkGrid').innerHTML = '';
-  document.getElementById('bulkSaveBtn').style.display = 'none';
-  // Pre-load gallery HTML so we can batch-save later
-  await Promise.all([loadGalleryPreview('jeep'), loadGalleryPreview('ps')]);
-  try {
-    const r = await fetch(`${apiUrl('photos')}?ref=${BRANCH}&_=${Date.now()}`, { headers: auth() });
-    if (!r.ok) throw new Error('Could not read photos/ folder');
-    const files = await r.json();
-    const registered = new Set(dItems.map(i => i.file));
-    const imgs = files.filter(f =>
-      /\.(jpg|jpeg|png|gif|webp)$/i.test(f.name) && !registered.has(`photos/${f.name}`)
-    );
-    if (!imgs.length) { document.getElementById('bulkStatus').textContent = 'All photos are already tagged.'; return; }
-    document.getElementById('bulkStatus').textContent = `${imgs.length} untagged photo${imgs.length>1?'s':''} found`;
-    document.getElementById('bulkSaveBtn').style.display = 'inline-flex';
-    const grid = document.getElementById('bulkGrid');
-    imgs.forEach(f => {
-      const path = `photos/${f.name}`;
-      bulkState[path] = { tagged:false, skipped:false, dest:'design', category:null, project:null, title:'', galleryType:'main', galleryCategory:'' };
-      grid.appendChild(buildBulkCard(path, f.name));
-    });
-  } catch(e) {
-    document.getElementById('bulkStatus').textContent = e.message;
-  } finally {
-    setLoading('bulkScanLbl', false, 'Scan photos/ folder');
-  }
-}
+// ── Save / Export / Reset ─────────────────────────────────────────
+function saveAll(){ D=collect(); localStorage.setItem('kfAdmin',JSON.stringify(D)); toast('Saved! Open any page locally to preview.'); }
+function openExport(){ $('export-out').value=JSON.stringify(collect(),null,2); $('exportModal').classList.add('open'); }
+function copyExport(){ $('export-out').select(); document.execCommand('copy'); toast('Copied! Paste to Claude to apply.'); }
+function resetAll(){ if(!confirm('Reset all data to defaults?')) return; localStorage.removeItem('kfAdmin'); D=clone(DEFAULTS); populate(); toast('Reset to defaults.'); }
 
-// Parse existing category names out of a project's HTML
-function getProjectCategories(proj) {
-  const html = pHtml[proj] || '';
-  return [...html.matchAll(/<span class="cat-header-label">([^<]+)<\/span>/g)]
-    .map(m => m[1].trim()).filter(Boolean);
-}
+// ── Toast ─────────────────────────────────────────────────────────
+function toast(msg){ const t=$('toast'); t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),2800); }
 
-// Build the gallery section HTML for a given project — called dynamically on dest switch
-function buildGalOptsHtml(path, proj) {
-  const eid  = CSS.escape(path);
-  const cats = getProjectCategories(proj);
-  return `
-    <div>
-      <div class="bulk-section-lbl">Section</div>
-      <div class="bulk-btns" id="galtype-${eid}">
-        <button class="bulk-btn active" onclick="selectGalType('${path}','main',this)">★ Main Carousel</button>
-        <button class="bulk-btn" onclick="selectGalType('${path}','cat',this)">Category Section</button>
-      </div>
-    </div>
-    <div id="galcat-wrap-${eid}" style="display:none; margin-top:0.5rem;">
-      <div class="bulk-section-lbl">Category</div>
-      <div class="bulk-btns" id="galcats-${eid}">
-        ${cats.map(c=>`<button class="bulk-btn" onclick="selectGalCat('${path}','${c}',this)">${c}</button>`).join('')}
-        <button class="bulk-btn" onclick="showNewGalCat('${path}',this)">+ New category…</button>
-      </div>
-      <input class="new-project-input" id="newgalcat-${eid}" placeholder="New category name…" style="display:none;"
-        oninput="bulkState['${path}'].galleryCategory=this.value.trim()">
-    </div>`;
-}
-
-function buildBulkCard(path, filename) {
-  const card = document.createElement('div');
-  card.className = 'bulk-card';
-  card.id = `bulk-${CSS.escape(path)}`;
-  const projects = getExistingProjects();
-  const eid = CSS.escape(path);
-
-  card.innerHTML = `
-    <img class="bulk-thumb" src="${rawUrl(path)}" onerror="this.style.opacity='0.15'">
-    <div class="bulk-body">
-      <div class="bulk-filename">${filename}</div>
-
-      <!-- Step 1: Page -->
-      <div>
-        <div class="bulk-section-lbl">Page</div>
-        <div class="bulk-btns" id="dest-${eid}">
-          <button class="bulk-btn active" onclick="selectDest('${path}','design',this)">Design Page</button>
-          <button class="bulk-btn" onclick="selectDest('${path}','jeep',this)">Jeep CJ5</button>
-          <button class="bulk-btn" onclick="selectDest('${path}','ps',this)">Powerstroke</button>
-        </div>
-      </div>
-
-      <!-- Design options (step 2 for design) -->
-      <div id="design-opts-${eid}">
-        <div>
-          <div class="bulk-section-lbl">Category</div>
-          <div class="bulk-btns" id="cats-${eid}">
-            ${CATS.map(c=>`<button class="bulk-btn" onclick="selectCat('${path}','${c.value}',this)">${c.label}</button>`).join('')}
-          </div>
-        </div>
-        <div>
-          <div class="bulk-section-lbl">Project group <span style="text-transform:none;letter-spacing:0;font-size:9px;">(optional)</span></div>
-          <div class="bulk-btns" id="projs-${eid}">
-            ${projects.map(p=>`<button class="bulk-btn" onclick="selectProject('${path}','${p}',this)">${p}</button>`).join('')}
-            <button class="bulk-btn" onclick="showNewProject('${path}',this)">+ New…</button>
-            <button class="bulk-btn project-active" onclick="selectProject('${path}','',this)">None</button>
-          </div>
-          <input class="new-project-input" id="newproj-${eid}" placeholder="Project name…" style="display:none;"
-            oninput="bulkState['${path}'].project=this.value.trim()">
-        </div>
-      </div>
-
-      <!-- Gallery options (step 2 for project pages — rebuilt dynamically) -->
-      <div id="gal-opts-${eid}" style="display:none;"></div>
-
-      <!-- Caption always shown -->
-      <div>
-        <div class="bulk-section-lbl">Title / Caption</div>
-        <input class="bulk-input" placeholder="Short title or caption…"
-          oninput="bulkState['${path}'].title=this.value.trim()">
-      </div>
-
-      <div class="bulk-actions">
-        <button class="bulk-skip-btn" onclick="skipBulk('${path}')">Skip</button>
-        <button class="bulk-tag-btn"  onclick="tagBulk('${path}')">✓ Tag</button>
-      </div>
-    </div>`;
-  return card;
-}
-
-function selectDest(path, dest, btn) {
-  const s = bulkState[path];
-  s.dest = dest; s.galleryType = 'main'; s.galleryCategory = '';
-  const eid = CSS.escape(path);
-  document.querySelectorAll(`#dest-${eid} .bulk-btn`).forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  const isDesign = dest === 'design';
-  document.getElementById(`design-opts-${eid}`).style.display = isDesign ? '' : 'none';
-  const galEl = document.getElementById(`gal-opts-${eid}`);
-  if (!isDesign) {
-    galEl.style.display = '';
-    galEl.innerHTML = buildGalOptsHtml(path, dest);
-  } else {
-    galEl.style.display = 'none';
-  }
-}
-
-function selectGalType(path, type, btn) {
-  bulkState[path].galleryType = type;
-  bulkState[path].galleryCategory = '';
-  const eid = CSS.escape(path);
-  document.querySelectorAll(`#galtype-${eid} .bulk-btn`).forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  document.getElementById(`galcat-wrap-${eid}`).style.display = type === 'cat' ? '' : 'none';
-}
-
-function selectGalCat(path, cat, btn) {
-  bulkState[path].galleryCategory = cat;
-  const eid = CSS.escape(path);
-  document.getElementById(`newgalcat-${eid}`).style.display = 'none';
-  document.querySelectorAll(`#galcats-${eid} .bulk-btn`).forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-}
-
-function showNewGalCat(path, btn) {
-  const eid = CSS.escape(path);
-  document.querySelectorAll(`#galcats-${eid} .bulk-btn`).forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  const inp = document.getElementById(`newgalcat-${eid}`);
-  inp.style.display = 'block'; inp.focus();
-  bulkState[path].galleryCategory = inp.value.trim();
-}
-
-function selectCat(path, val, btn) {
-  if (btn.classList.contains('active')) {
-    btn.classList.remove('active');
-    bulkState[path].category = null;
-    return;
-  }
-  bulkState[path].category = val;
-  document.querySelectorAll(`#cats-${CSS.escape(path)} .bulk-btn`).forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-}
-
-function selectProject(path, val, btn) {
-  bulkState[path].project = val;
-  document.getElementById(`newproj-${CSS.escape(path)}`).style.display = 'none';
-  document.querySelectorAll(`#projs-${CSS.escape(path)} .bulk-btn`).forEach(b => b.classList.remove('project-active'));
-  btn.classList.add('project-active');
-}
-
-function showNewProject(path, btn) {
-  document.querySelectorAll(`#projs-${CSS.escape(path)} .bulk-btn`).forEach(b => b.classList.remove('project-active'));
-  btn.classList.add('project-active');
-  const inp = document.getElementById(`newproj-${CSS.escape(path)}`);
-  inp.style.display = 'block'; inp.focus();
-  bulkState[path].project = inp.value.trim();
-}
-
-function tagBulk(path) {
-  const s = bulkState[path];
-  if (!s.title) { toast('Add a title or caption first', 'error'); return; }
-  if (s.dest === 'design' && !s.category) { toast('Pick a category first', 'error'); return; }
-  if (s.dest !== 'design' && s.galleryType === 'cat' && !s.galleryCategory) { toast('Enter a category name', 'error'); return; }
-  s.tagged = true; s.skipped = false;
-  const card = document.getElementById(`bulk-${CSS.escape(path)}`);
-  card.classList.add('tagged'); card.classList.remove('skipped');
-  const destLabel = s.dest === 'design'
-    ? `Design · ${s.category}${s.project?' · '+s.project:''}`
-    : `${PROJ_CFGS[s.dest].label} · ${s.galleryType === 'main' ? 'Main' : s.galleryCategory}`;
-  card.querySelector('.bulk-actions').outerHTML = `<div class="bulk-tagged-badge">✓ ${destLabel}</div>`;
-  updateBulkSaveLabel();
-}
-
-function skipBulk(path) {
-  bulkState[path].skipped = true; bulkState[path].tagged = false;
-  const card = document.getElementById(`bulk-${CSS.escape(path)}`);
-  card.classList.add('skipped'); card.classList.remove('tagged');
-}
-
-function updateBulkSaveLabel() {
-  const n = Object.values(bulkState).filter(s => s.tagged).length;
-  document.getElementById('bulkSaveLbl').textContent = n ? `Save ${n} Tagged Item${n>1?'s':''}` : 'Save Tagged Items';
-}
-
-// Helper: inject a photo into an in-memory project HTML string
-function injectIntoGalleryHtml(html, proj, type, filename, altText, catName) {
-  const cfg = PROJ_CFGS[proj];
-  if (type === 'main') {
-    const counterPos = html.indexOf(`id="${cfg.labelId}"`);
-    const closePos   = html.lastIndexOf('</div>', counterPos - 10);
-    const newItem    = `\n    <div class="gallery-item"><img src="${filename}" alt="${altText}"></div>`;
-    return html.slice(0, closePos) + newItem + '\n    ' + html.slice(closePos);
-  } else {
-    // Find the cat-galleries container close — look for </div> just before <!-- OVERVIEW -->
-    const overviewPos   = html.indexOf('<!-- OVERVIEW -->');
-    const catGalClose   = html.lastIndexOf('</div>', overviewPos - 1);
-
-    const catLabelIdx = html.indexOf(`>${catName}<`);
-    if (catLabelIdx === -1) {
-      // New category — insert inside cat-galleries before its closing </div>
-      const newCat = `\n  <div class="cat-section">\n    <div class="cat-header">\n      <span class="cat-header-label">${catName}</span>\n      <div class="cat-header-line"></div>\n      <span class="cat-header-count">1 photo</span>\n    </div>\n    <div class="cat-gallery">\n      <div class="cat-item"><img src="${filename}" alt="${altText}"></div>\n    </div>\n  </div>`;
-      return html.slice(0, catGalClose) + newCat + '\n\n' + html.slice(catGalClose);
-    } else {
-      // Existing category — insert into its cat-gallery div
-      const catGalStart = html.indexOf('class="cat-gallery"', catLabelIdx);
-      const catItemClose = html.indexOf('</div>', catGalStart + 20);
-      const newItem      = `\n      <div class="cat-item"><img src="${filename}" alt="${altText}"></div>`;
-      let updated = html.slice(0, catItemClose) + newItem + '\n    ' + html.slice(catItemClose);
-      // Update photo count
-      const cntIdx   = updated.indexOf('cat-header-count', catLabelIdx);
-      const cntMatch = updated.slice(cntIdx).match(/(\d+) photo/);
-      if (cntMatch) updated = updated.slice(0, cntIdx) + updated.slice(cntIdx).replace(`${cntMatch[1]} photo`, `${parseInt(cntMatch[1])+1} photo`);
-      return updated;
-    }
-  }
-}
-
-async function saveBulkItems() {
-  const toSave = Object.entries(bulkState).filter(([,s]) => s.tagged);
-  if (!toSave.length) { toast('Tag at least one photo first', 'error'); return; }
-  setLoading('bulkSaveLbl', true);
-  const designAdded = [];
-  try {
-    // 1. Design page items
-    const designItems_ = toSave.filter(([,s]) => s.dest === 'design');
-    designItems_.forEach(([path, s]) => {
-      const item = { file:path, title:s.title, category:s.category, description:s.title,
-        tags:[s.category==='3d-print'?'3D Print':s.category==='fea'?'FEA':s.category.charAt(0).toUpperCase()+s.category.slice(1)] };
-      if (s.project) item.project = s.project;
-      dItems.push(item); designAdded.push(item);
-    });
-    if (designAdded.length) await saveDesignData();
-
-    // 2. Gallery items — batch by project
-    for (const proj of ['jeep','ps']) {
-      const galItems = toSave.filter(([,s]) => s.dest === proj);
-      if (!galItems.length) continue;
-      if (!pHtml[proj]) await loadGalleryPreview(proj);
-      let html = pHtml[proj];
-      galItems.forEach(([path, s]) => {
-        html = injectIntoGalleryHtml(html, proj, s.galleryType, path, s.title, s.galleryCategory);
-      });
-      const cfg = PROJ_CFGS[proj];
-      await ghPutText(cfg.htmlFile, html, `Add ${galItems.length} photo(s) via bulk import`, pShas[proj]);
-      const updated = await ghGet(cfg.htmlFile);
-      pShas[proj] = updated.sha; pHtml[proj] = b64dec(updated.content);
-    }
-
-    const n = toSave.length;
-    toast(`✓ ${n} item${n>1?'s':''} saved — live in ~30s`);
-    toSave.forEach(([path]) => {
-      delete bulkState[path];
-      const card = document.getElementById(`bulk-${CSS.escape(path)}`);
-      if (card) card.remove();
-    });
-    updateBulkSaveLabel();
-    if (!Object.keys(bulkState).length) document.getElementById('bulkStatus').textContent = 'All done!';
-  } catch(e) {
-    designAdded.forEach(() => dItems.pop());
-    toast(e.message, 'error');
-  } finally {
-    setLoading('bulkSaveLbl', false, 'Save Tagged Items');
-  }
-}
+// ── Init ──────────────────────────────────────────────────────────
+populate();
 </script>
 </body>
 </html>
