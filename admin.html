@@ -806,8 +806,11 @@ const CATS = [
   { value:'drawing',   label:'Drawing'   },
   { value:'coursework',label:'Coursework'},
 ];
+const PROJ_CFGS = {
+  jeep: { label:'Jeep CJ5',    galleryId:'jeepGallery', labelId:'jeepLabel',  htmlFile:'project-jeep-cj5.html' },
+  ps:   { label:'Powerstroke', galleryId:'psGallery',   labelId:'psLabel',    htmlFile:'project-powerstroke.html' }
+};
 
-// State: keyed by photo path
 const bulkState = {};
 
 function getExistingProjects() {
@@ -821,33 +824,25 @@ async function loadBulkPhotos() {
   document.getElementById('bulkStatus').textContent = '';
   document.getElementById('bulkGrid').innerHTML = '';
   document.getElementById('bulkSaveBtn').style.display = 'none';
-
+  // Pre-load gallery HTML so we can batch-save later
+  await Promise.all([loadGalleryPreview('jeep'), loadGalleryPreview('ps')]);
   try {
-    const r = await fetch(`${apiUrl('photos')}?ref=${BRANCH}&_=${Date.now()}`,
-      { headers: auth() });
+    const r = await fetch(`${apiUrl('photos')}?ref=${BRANCH}&_=${Date.now()}`, { headers: auth() });
     if (!r.ok) throw new Error('Could not read photos/ folder');
     const files = await r.json();
-
     const registered = new Set(dItems.map(i => i.file));
     const imgs = files.filter(f =>
       /\.(jpg|jpeg|png|gif|webp)$/i.test(f.name) && !registered.has(`photos/${f.name}`)
     );
-
-    if (!imgs.length) {
-      document.getElementById('bulkStatus').textContent = 'All photos are already tagged.';
-      return;
-    }
-
+    if (!imgs.length) { document.getElementById('bulkStatus').textContent = 'All photos are already tagged.'; return; }
     document.getElementById('bulkStatus').textContent = `${imgs.length} untagged photo${imgs.length>1?'s':''} found`;
     document.getElementById('bulkSaveBtn').style.display = 'inline-flex';
-
     const grid = document.getElementById('bulkGrid');
     imgs.forEach(f => {
       const path = `photos/${f.name}`;
-      bulkState[path] = { tagged: false, skipped: false, category: null, project: null, title: '' };
+      bulkState[path] = { tagged:false, skipped:false, dest:'design', category:null, project:null, title:'', galleryType:'main', galleryCategory:'' };
       grid.appendChild(buildBulkCard(path, f.name));
     });
-
   } catch(e) {
     document.getElementById('bulkStatus').textContent = e.message;
   } finally {
@@ -859,8 +854,8 @@ function buildBulkCard(path, filename) {
   const card = document.createElement('div');
   card.className = 'bulk-card';
   card.id = `bulk-${CSS.escape(path)}`;
-
   const projects = getExistingProjects();
+  const eid = CSS.escape(path);
 
   card.innerHTML = `
     <img class="bulk-thumb" src="${rawUrl(path)}" onerror="this.style.opacity='0.15'">
@@ -868,36 +863,54 @@ function buildBulkCard(path, filename) {
       <div class="bulk-filename">${filename}</div>
 
       <div>
-        <div class="bulk-section-lbl">Category</div>
-        <div class="bulk-btns" id="cats-${CSS.escape(path)}">
-          ${CATS.map(c => `
-            <button class="bulk-btn" data-val="${c.value}"
-              onclick="selectCat('${path}','${c.value}',this)">${c.label}</button>
-          `).join('')}
+        <div class="bulk-section-lbl">Add to</div>
+        <div class="bulk-btns" id="dest-${eid}">
+          <button class="bulk-btn active" onclick="selectDest('${path}','design',this)">Design Page</button>
+          <button class="bulk-btn" onclick="selectDest('${path}','jeep',this)">Jeep CJ5</button>
+          <button class="bulk-btn" onclick="selectDest('${path}','ps',this)">Powerstroke</button>
+        </div>
+      </div>
+
+      <!-- Design options -->
+      <div id="design-opts-${eid}">
+        <div>
+          <div class="bulk-section-lbl">Category</div>
+          <div class="bulk-btns" id="cats-${eid}">
+            ${CATS.map(c=>`<button class="bulk-btn" onclick="selectCat('${path}','${c.value}',this)">${c.label}</button>`).join('')}
+          </div>
+        </div>
+        <div>
+          <div class="bulk-section-lbl">Project group <span style="text-transform:none;letter-spacing:0;font-size:9px;">(optional)</span></div>
+          <div class="bulk-btns" id="projs-${eid}">
+            ${projects.map(p=>`<button class="bulk-btn" onclick="selectProject('${path}','${p}',this)">${p}</button>`).join('')}
+            <button class="bulk-btn" onclick="showNewProject('${path}',this)">+ New…</button>
+            <button class="bulk-btn project-active" onclick="selectProject('${path}','',this)">None</button>
+          </div>
+          <input class="new-project-input" id="newproj-${eid}" placeholder="Project name…" style="display:none;"
+            oninput="bulkState['${path}'].project=this.value.trim()">
+        </div>
+      </div>
+
+      <!-- Gallery options -->
+      <div id="gal-opts-${eid}" style="display:none;">
+        <div>
+          <div class="bulk-section-lbl">Gallery</div>
+          <div class="bulk-btns" id="galtype-${eid}">
+            <button class="bulk-btn active" onclick="selectGalType('${path}','main',this)">Main Gallery</button>
+            <button class="bulk-btn" onclick="selectGalType('${path}','cat',this)">Category</button>
+          </div>
+        </div>
+        <div id="galcat-wrap-${eid}" style="display:none; margin-top:0.4rem;">
+          <div class="bulk-section-lbl">Category name</div>
+          <input class="bulk-input" placeholder="e.g. Exterior, Engine…"
+            oninput="bulkState['${path}'].galleryCategory=this.value.trim()">
         </div>
       </div>
 
       <div>
-        <div class="bulk-section-lbl">Project group <span style="text-transform:none;letter-spacing:0;font-size:9px;">(optional)</span></div>
-        <div class="bulk-btns" id="projs-${CSS.escape(path)}">
-          ${projects.map(p => `
-            <button class="bulk-btn" data-val="${p}"
-              onclick="selectProject('${path}','${p}',this)">${p}</button>
-          `).join('')}
-          <button class="bulk-btn" data-val="__new__"
-            onclick="showNewProject('${path}',this)">+ New…</button>
-          <button class="bulk-btn" data-val=""
-            onclick="selectProject('${path}','',this)">None</button>
-        </div>
-        <input class="new-project-input" id="newproj-${CSS.escape(path)}"
-          placeholder="Project name…" style="display:none;"
-          oninput="bulkState['${path}'].project=this.value.trim()">
-      </div>
-
-      <div>
-        <div class="bulk-section-lbl">Title</div>
-        <input class="bulk-input" placeholder="Short title…"
-          oninput="bulkState['${path}'].title=this.value.trim(); refreshCardState('${path}')">
+        <div class="bulk-section-lbl" id="title-lbl-${eid}">Title / Caption</div>
+        <input class="bulk-input" placeholder="Short title or caption…"
+          oninput="bulkState['${path}'].title=this.value.trim()">
       </div>
 
       <div class="bulk-actions">
@@ -905,15 +918,30 @@ function buildBulkCard(path, filename) {
         <button class="bulk-tag-btn"  onclick="tagBulk('${path}')">✓ Tag</button>
       </div>
     </div>`;
-
   return card;
+}
+
+function selectDest(path, dest, btn) {
+  bulkState[path].dest = dest;
+  const eid = CSS.escape(path);
+  document.querySelectorAll(`#dest-${eid} .bulk-btn`).forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById(`design-opts-${eid}`).style.display = dest === 'design' ? '' : 'none';
+  document.getElementById(`gal-opts-${eid}`).style.display   = dest !== 'design' ? '' : 'none';
+}
+
+function selectGalType(path, type, btn) {
+  bulkState[path].galleryType = type;
+  const eid = CSS.escape(path);
+  document.querySelectorAll(`#galtype-${eid} .bulk-btn`).forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById(`galcat-wrap-${eid}`).style.display = type === 'cat' ? '' : 'none';
 }
 
 function selectCat(path, val, btn) {
   bulkState[path].category = val;
   document.querySelectorAll(`#cats-${CSS.escape(path)} .bulk-btn`).forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
-  refreshCardState(path);
 }
 
 function selectProject(path, val, btn) {
@@ -927,74 +955,107 @@ function showNewProject(path, btn) {
   document.querySelectorAll(`#projs-${CSS.escape(path)} .bulk-btn`).forEach(b => b.classList.remove('project-active'));
   btn.classList.add('project-active');
   const inp = document.getElementById(`newproj-${CSS.escape(path)}`);
-  inp.style.display = 'block';
-  inp.focus();
+  inp.style.display = 'block'; inp.focus();
   bulkState[path].project = inp.value.trim();
 }
 
 function tagBulk(path) {
   const s = bulkState[path];
-  if (!s.category) { toast('Pick a category first', 'error'); return; }
-  if (!s.title)    { toast('Add a title first', 'error'); return; }
-  s.tagged = true;
-  s.skipped = false;
+  if (!s.title) { toast('Add a title or caption first', 'error'); return; }
+  if (s.dest === 'design' && !s.category) { toast('Pick a category first', 'error'); return; }
+  if (s.dest !== 'design' && s.galleryType === 'cat' && !s.galleryCategory) { toast('Enter a category name', 'error'); return; }
+  s.tagged = true; s.skipped = false;
   const card = document.getElementById(`bulk-${CSS.escape(path)}`);
-  card.classList.add('tagged');
-  card.classList.remove('skipped');
-  // Replace actions with badge
-  card.querySelector('.bulk-actions').outerHTML =
-    `<div class="bulk-tagged-badge">✓ Tagged — ${s.category}${s.project?' · '+s.project:''}</div>`;
+  card.classList.add('tagged'); card.classList.remove('skipped');
+  const destLabel = s.dest === 'design'
+    ? `Design · ${s.category}${s.project?' · '+s.project:''}`
+    : `${PROJ_CFGS[s.dest].label} · ${s.galleryType === 'main' ? 'Main' : s.galleryCategory}`;
+  card.querySelector('.bulk-actions').outerHTML = `<div class="bulk-tagged-badge">✓ ${destLabel}</div>`;
   updateBulkSaveLabel();
 }
 
 function skipBulk(path) {
-  bulkState[path].skipped = true;
-  bulkState[path].tagged  = false;
+  bulkState[path].skipped = true; bulkState[path].tagged = false;
   const card = document.getElementById(`bulk-${CSS.escape(path)}`);
-  card.classList.add('skipped');
-  card.classList.remove('tagged');
+  card.classList.add('skipped'); card.classList.remove('tagged');
 }
-
-function refreshCardState(path) { /* live validation placeholder */ }
 
 function updateBulkSaveLabel() {
   const n = Object.values(bulkState).filter(s => s.tagged).length;
-  document.getElementById('bulkSaveLbl').textContent =
-    n ? `Save ${n} Tagged Item${n>1?'s':''}` : 'Save Tagged Items';
+  document.getElementById('bulkSaveLbl').textContent = n ? `Save ${n} Tagged Item${n>1?'s':''}` : 'Save Tagged Items';
+}
+
+// Helper: inject a photo into an in-memory project HTML string
+function injectIntoGalleryHtml(html, proj, type, filename, altText, catName) {
+  const cfg = PROJ_CFGS[proj];
+  if (type === 'main') {
+    const counterPos = html.indexOf(`id="${cfg.labelId}"`);
+    const closePos   = html.lastIndexOf('</div>', counterPos - 10);
+    const newItem    = `\n    <div class="gallery-item"><img src="${filename}" alt="${altText}"></div>`;
+    return html.slice(0, closePos) + newItem + '\n    ' + html.slice(closePos);
+  } else {
+    // Category
+    const catLabelIdx = html.indexOf(`>${catName}<`);
+    if (catLabelIdx === -1) {
+      // New category — append before closing section tag
+      const newCat = `\n  <div class="cat-section">\n    <div class="cat-header"><span>${catName}</span><span class="cat-header-count">1 photo</span></div>\n    <div class="cat-gallery">\n      <div class="cat-item"><img src="${filename}" alt="${altText}"></div>\n    </div>\n  </div>`;
+      const sectionClose = html.lastIndexOf('</section>');
+      return html.slice(0, sectionClose) + newCat + '\n' + html.slice(sectionClose);
+    } else {
+      const catGalStart = html.indexOf('class="cat-gallery"', catLabelIdx);
+      const catGalClose = html.indexOf('</div>', catGalStart + 20);
+      const newItem     = `\n      <div class="cat-item"><img src="${filename}" alt="${altText}"></div>`;
+      let updated = html.slice(0, catGalClose) + newItem + '\n    ' + html.slice(catGalClose);
+      const cntIdx   = updated.indexOf('cat-header-count', catLabelIdx);
+      const cntMatch = updated.slice(cntIdx).match(/(\d+) photo/);
+      if (cntMatch) updated = updated.slice(0, cntIdx) + updated.slice(cntIdx).replace(`${cntMatch[1]} photo`, `${parseInt(cntMatch[1])+1} photo`);
+      return updated;
+    }
+  }
 }
 
 async function saveBulkItems() {
   const toSave = Object.entries(bulkState).filter(([,s]) => s.tagged);
   if (!toSave.length) { toast('Tag at least one photo first', 'error'); return; }
   setLoading('bulkSaveLbl', true);
+  const designAdded = [];
   try {
-    toSave.forEach(([path, s]) => {
-      const item = {
-        file: path,
-        title: s.title,
-        category: s.category,
-        description: s.title, // default desc = title; user can refine in Design tab
-        tags: [s.category === '3d-print' ? '3D Print' :
-               s.category === 'fea' ? 'FEA' :
-               s.category.charAt(0).toUpperCase() + s.category.slice(1)]
-      };
+    // 1. Design page items
+    const designItems_ = toSave.filter(([,s]) => s.dest === 'design');
+    designItems_.forEach(([path, s]) => {
+      const item = { file:path, title:s.title, category:s.category, description:s.title,
+        tags:[s.category==='3d-print'?'3D Print':s.category==='fea'?'FEA':s.category.charAt(0).toUpperCase()+s.category.slice(1)] };
       if (s.project) item.project = s.project;
-      dItems.push(item);
+      dItems.push(item); designAdded.push(item);
     });
-    await saveDesignData();
-    toast(`✓ ${toSave.length} item${toSave.length>1?'s':''} added — live in ~30s`);
-    // Remove saved cards from grid
+    if (designAdded.length) await saveDesignData();
+
+    // 2. Gallery items — batch by project
+    for (const proj of ['jeep','ps']) {
+      const galItems = toSave.filter(([,s]) => s.dest === proj);
+      if (!galItems.length) continue;
+      if (!pHtml[proj]) await loadGalleryPreview(proj);
+      let html = pHtml[proj];
+      galItems.forEach(([path, s]) => {
+        html = injectIntoGalleryHtml(html, proj, s.galleryType, path, s.title, s.galleryCategory);
+      });
+      const cfg = PROJ_CFGS[proj];
+      await ghPutText(cfg.htmlFile, html, `Add ${galItems.length} photo(s) via bulk import`, pShas[proj]);
+      const updated = await ghGet(cfg.htmlFile);
+      pShas[proj] = updated.sha; pHtml[proj] = b64dec(updated.content);
+    }
+
+    const n = toSave.length;
+    toast(`✓ ${n} item${n>1?'s':''} saved — live in ~30s`);
     toSave.forEach(([path]) => {
       delete bulkState[path];
       const card = document.getElementById(`bulk-${CSS.escape(path)}`);
       if (card) card.remove();
     });
     updateBulkSaveLabel();
-    if (!Object.keys(bulkState).length)
-      document.getElementById('bulkStatus').textContent = 'All done!';
+    if (!Object.keys(bulkState).length) document.getElementById('bulkStatus').textContent = 'All done!';
   } catch(e) {
-    // Roll back
-    toSave.forEach(() => dItems.pop());
+    designAdded.forEach(() => dItems.pop());
     toast(e.message, 'error');
   } finally {
     setLoading('bulkSaveLbl', false, 'Save Tagged Items');
