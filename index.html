@@ -211,13 +211,18 @@
   .wide-text .flow{margin-top:4px}
   .wide-photos{display:grid;grid-template-columns:1.3fr 1fr;grid-template-rows:1fr 1fr;gap:8px;height:400px}
   .wide-photos .ph:first-child{grid-row:span 2}
+  .wide-photos.one{grid-template-columns:1fr;grid-template-rows:1fr;height:320px}
+  .wide-photos.one .ph img{object-fit:contain;background:#fff}
+  .wide-photos.two{grid-template-columns:1fr;grid-template-rows:1fr 1fr;height:440px}
+  .wide-photos.two .ph:first-child{grid-row:auto}
+  .wide-photos.two .ph img{object-fit:contain;background:#fff}
   .wide-photos.four{grid-template-rows:repeat(3,1fr);height:460px}
   .wide-photos.four .ph:first-child{grid-row:span 3}
   .wide-photos.four .ph:first-child img{object-fit:contain;background:#fff}
   .feat-body .tag-row{margin-bottom:16px}
   .feat-body .spec{margin-top:22px}
   .sketches{margin-top:18px}
-  .sketch-row{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+  .sketch-row{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
   .sketch-row .ph{aspect-ratio:4/3;background:#fff}
   .sketch-row figcaption{opacity:1;position:static;background:none;color:var(--ink-3);padding:8px 2px 0;font-size:13px}
   .sketch-row .ph{overflow:visible;background:none}
@@ -358,6 +363,25 @@
         <h3>7.3L Powerstroke rebuild</h3>
         <p>A full rebuild of Ford's 7.3L Powerstroke diesel, covering precision measurement, injectors, cylinder heads, and the turbo system.</p>
         <div class="tag-row"><span class="pill">Diesel systems</span><span class="pill">Precision measurement</span><span class="pill">Turbocharging</span></div>
+      </div>
+    </article>
+    <div class="sub">CAD design projects</div>
+    <article class="card wide-card">
+      <div class="wide-photos two"><figure class="ph" data-full="img/xm-top.jpg" data-cap="Crossmember: top view"><img src="img/t/xm-top.jpg" alt="Crossmember: top view" loading="lazy"><figcaption>Crossmember: top view</figcaption></figure><figure class="ph" data-full="img/xm-under.jpg" data-cap="Crossmember: underside with ribbed, lightened webs"><img src="img/t/xm-under.jpg" alt="Crossmember: underside with ribbed, lightened webs" loading="lazy"><figcaption>Crossmember: underside with ribbed, lightened webs</figcaption></figure></div>
+      <div class="wide-text">
+        <div class="meta">Personal project</div>
+        <h3>Sheet metal crossmember</h3>
+        <p>A bolt-in crossmember designed in Fusion 360. It has bent flanges with bolt holes at each end, a slotted center mount, and lightening holes along the webs to cut weight without giving up stiffness.</p>
+        <div class="tag-row"><span class="pill">Fusion 360</span><span class="pill">Sheet metal design</span><span class="pill">Lightweighting</span></div>
+      </div>
+    </article>
+    <article class="card wide-card" style="margin-top:20px">
+      <div class="wide-photos one"><figure class="ph" data-full="img/bracket.jpg" data-cap="Formed bracket with flanged edges"><img src="img/t/bracket.jpg" alt="Formed bracket with flanged edges" loading="lazy"><figcaption>Formed bracket with flanged edges</figcaption></figure></div>
+      <div class="wide-text">
+        <div class="meta">Personal project</div>
+        <h3>Formed mounting bracket</h3>
+        <p>A bent bracket designed in Fusion 360. It has a two-hole bolt pattern at one end and a hooked lip at the other, with flanged edges along its length for stiffness.</p>
+        <div class="tag-row"><span class="pill">Fusion 360</span><span class="pill">Sheet metal design</span></div>
       </div>
     </article>
   </div>
