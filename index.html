@@ -33,7 +33,7 @@
   /* intro */
   .intro{display:grid;grid-template-columns:1.6fr 1fr;gap:56px;padding:56px 0 20px}
   .intro p{margin:0 0 14px;font-size:19px}
-  .intro .side{font-size:16px;border-left:3px solid #2b6c8c;padding-left:18px;color:#3b3f44}
+  .intro .side{align-self:start;font-size:16px;border-left:3px solid #2b6c8c;padding-left:18px;color:#3b3f44}
   .intro .side div{margin-bottom:8px}
   .intro .side b{display:block;font-weight:600;color:#16191c}
   /* sections */
@@ -104,8 +104,10 @@
   <div>
     <p>I'm a mechanical engineering student at the University of Idaho, graduating in May 2027. Before engineering I got an automotive technology degree and worked in residential construction, so most of what I do ends up somewhere between the CAD model and the shop.</p>
     <p>Below are the projects I've worked on, from school and on my own time.</p>
+    <img src="img/me.jpg" alt="Kristian Felten" style="width:100%;display:block;border-radius:2px;margin-top:10px">
   </div>
   <div class="side">
+
     <div><b>Most recent</b>Mechanical Engineering Intern, Z&middot;AERO (summer 2026)</div>
     <div><b>Capstone</b>Mechanical design lead, IFIRE Lab pine needle separator</div>
     <div><b>Contact</b><a href="mailto:kristianf@outlook.com">kristianf@outlook.com</a> &middot; <a href="https://www.linkedin.com/in/kristian-felten-22a126294" target="_blank" rel="noopener">LinkedIn</a></div>
@@ -165,8 +167,9 @@
     
   </div>
   <div>
-    <figure class="lead"><video src="img/pinball.mp4" poster="img/pinball.jpg" autoplay muted loop playsinline controls preload="metadata" style="display:block;max-width:440px;width:100%;border-radius:2px;background:#000"></video><figcaption>Flipper test with the cabinet open.</figcaption></figure>
-    <div class="grid c2" style="max-width:440px">
+    <figure class="lead"><video src="img/pinball-game.mp4" poster="img/pinball-game.jpg" autoplay muted loop playsinline controls preload="metadata" style="display:block;max-width:440px;width:100%;border-radius:2px;background:#000"></video><figcaption>The finished machine being played.</figcaption></figure>
+    <div class="grid c3">
+      <figure><video src="img/pinball.mp4" poster="img/pinball.jpg" muted loop playsinline controls preload="none" style="display:block;width:100%;border-radius:2px;background:#000;aspect-ratio:9/16;object-fit:cover"></video><figcaption>Flipper test with the cabinet open</figcaption></figure>
       <figure><a href="img/coil.jpg" data-cap="One of the hand-wound solenoid coils"><img src="img/t/coil.jpg" alt="Hand-wound copper solenoid coil" style="aspect-ratio:9/16"></a><figcaption>One of the coils I wound</figcaption></figure>
       <figure><video src="img/eos.mp4" poster="img/eos.jpg" muted loop playsinline controls preload="none" style="display:block;width:100%;border-radius:2px;background:#000;aspect-ratio:9/16;object-fit:cover"></video><figcaption>End-of-stroke switch</figcaption></figure>
     </div>
