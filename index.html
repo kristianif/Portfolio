@@ -6,158 +6,230 @@
 <title>Kristian Felten</title>
 <meta name="description" content="Kristian Felten, mechanical engineering student at the University of Idaho.">
 <style>
+  @font-face{font-family:'Barlow';src:url(fonts/barlow-latin-400-normal.woff2) format('woff2');font-weight:400;font-style:normal;font-display:swap}
+  @font-face{font-family:'Barlow';src:url(fonts/barlow-latin-400-italic.woff2) format('woff2');font-weight:400;font-style:italic;font-display:swap}
+  @font-face{font-family:'Barlow';src:url(fonts/barlow-latin-500-normal.woff2) format('woff2');font-weight:500;font-style:normal;font-display:swap}
+  @font-face{font-family:'Barlow';src:url(fonts/barlow-latin-600-normal.woff2) format('woff2');font-weight:600;font-style:normal;font-display:swap}
+  @font-face{font-family:'Barlow Condensed';src:url(fonts/barlow-condensed-latin-500-normal.woff2) format('woff2');font-weight:500;font-style:normal;font-display:swap}
+  @font-face{font-family:'Barlow Condensed';src:url(fonts/barlow-condensed-latin-600-normal.woff2) format('woff2');font-weight:600;font-style:normal;font-display:swap}
+  @font-face{font-family:'Barlow Condensed';src:url(fonts/barlow-condensed-latin-700-normal.woff2) format('woff2');font-weight:700;font-style:normal;font-display:swap}
   *{box-sizing:border-box}
   html{scroll-behavior:smooth}
-  body{margin:0;background:#fff;color:#222;font:17px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif}
-  a{color:#1a5fb4}
-  a:hover{color:#0b3d7a}
-  .page{max-width:880px;margin:0 auto;padding:0 22px}
-  header.top{display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:8px;padding:26px 0 18px;border-bottom:1px solid #ddd}
-  header.top .name{font-weight:700;font-size:18px;color:#222;text-decoration:none}
-  header.top nav a{margin-left:18px;font-size:15px;color:#444;text-decoration:none}
-  header.top nav a:hover{color:#000;text-decoration:underline}
-  .intro{padding:44px 0 30px}
-  .intro h1{font-size:34px;margin:0 0 10px;line-height:1.2}
-  .intro p{margin:0 0 10px;max-width:640px;color:#333}
-  .intro .links{font-size:15px;color:#555}
-  .intro .links a{margin-right:4px}
-  h2{font-size:24px;margin:56px 0 4px;padding-top:10px}
-  h2.section{font-size:14px;text-transform:uppercase;letter-spacing:.06em;color:#666;font-weight:600;border-bottom:1px solid #ddd;padding-bottom:8px;margin:64px 0 8px}
-  h3{font-size:21px;margin:40px 0 2px}
-  h4{font-size:16px;margin:26px 0 10px;color:#333}
-  .when{font-size:14.5px;color:#777;margin:0 0 12px}
-  p{margin:0 0 14px}
-  .lead-photo{margin:16px 0 18px}
-  .lead-photo img{width:100%;display:block;border-radius:3px}
-  .lead-photo figcaption{font-size:13.5px;color:#777;margin-top:6px}
-  .grid{display:grid;gap:10px;margin:10px 0 18px}
+  body{margin:0;background:#f4f3f0;color:#23262a;font:400 17.5px/1.62 'Barlow',system-ui,sans-serif}
+  a{color:#2b6c8c} a:hover{color:#174a63}
+  .page{max-width:1120px;margin:0 auto;padding:0 28px}
+  h1,h2,h3,h4{font-family:'Barlow Condensed',sans-serif;font-weight:600;letter-spacing:.005em;color:#16191c}
+  /* hero */
+  .hero{position:relative;height:min(78vh,720px);min-height:460px;background:#222 url(img/jeep-front.jpg) center 62%/cover;color:#fff}
+  .hero::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.35) 0,rgba(0,0,0,0) 30%,rgba(0,0,0,0) 45%,rgba(0,0,0,.72) 100%)}
+  .hero .bar{position:relative;z-index:1;display:flex;justify-content:space-between;align-items:center;padding:22px 0}
+  .hero .bar a{color:#fff;text-decoration:none}
+  .hero .bar .name{font-family:'Barlow Condensed';font-weight:600;font-size:21px;letter-spacing:.02em}
+  .hero .bar nav a{margin-left:24px;font-size:16px;opacity:.9} .hero .bar nav a:hover{opacity:1;text-decoration:underline}
+  .hero .text{position:absolute;z-index:1;left:0;right:0;bottom:44px}
+  .hero h1{color:#fff;font-size:clamp(52px,8vw,92px);line-height:.95;margin:0 0 12px;font-weight:700}
+  .hero p{margin:0;font-size:20px;max-width:560px;color:#eceae5}
+  .hero .credit{position:absolute;z-index:1;right:28px;bottom:16px;font-size:13px;color:#cfcac0}
+  /* intro */
+  .intro{display:grid;grid-template-columns:1.6fr 1fr;gap:56px;padding:56px 0 20px}
+  .intro p{margin:0 0 14px;font-size:19px}
+  .intro .side{font-size:16px;border-left:3px solid #2b6c8c;padding-left:18px;color:#3b3f44}
+  .intro .side div{margin-bottom:8px}
+  .intro .side b{display:block;font-weight:600;color:#16191c}
+  /* sections */
+  .label{font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:#6c6f73;margin:80px 0 0;padding-bottom:10px;border-bottom:2px solid #16191c}
+  .proj{display:grid;grid-template-columns:minmax(0,360px) minmax(0,1fr);gap:48px;padding:48px 0;border-bottom:1px solid #d9d6cf}
+  .proj:last-of-type{border-bottom:0}
+  .proj .copy{position:sticky;top:24px;align-self:start}
+  .proj h3{font-size:36px;line-height:1.02;margin:0 0 6px}
+  .proj .when{font-size:15px;color:#6c6f73;margin:0 0 18px}
+  .proj p{margin:0 0 14px}
+  h4{font-size:19px;margin:26px 0 10px}
+  h4:first-child{margin-top:0}
+  figure{margin:0}
+  .lead img{width:100%;display:block;border-radius:2px}
+  .lead figcaption,.grid figcaption{font-size:14px;color:#6c6f73;margin-top:6px;line-height:1.35}
+  .lead{margin-bottom:22px}
+  .grid{display:grid;gap:12px;margin:0 0 22px}
   .grid.c2{grid-template-columns:repeat(2,minmax(0,1fr))}
   .grid.c3{grid-template-columns:repeat(3,minmax(0,1fr))}
   .grid.c4{grid-template-columns:repeat(4,minmax(0,1fr))}
-  figure{margin:0}
-  .grid img{width:100%;aspect-ratio:4/3;object-fit:cover;display:block;border-radius:3px;background:#eee}
-  .grid.fit img{object-fit:contain;background:#f6f6f6;border:1px solid #e6e6e6}
-  figcaption{font-size:13px;color:#777;margin-top:4px;line-height:1.35}
-  details{margin:8px 0 10px}
-  details summary{cursor:pointer;color:#1a5fb4;font-size:15.5px}
-  hr{border:0;border-top:1px solid #eee;margin:40px 0 0}
-  .job{margin:22px 0}
-  .job .head{display:flex;justify-content:space-between;flex-wrap:wrap;gap:4px 16px}
-  .job b{font-size:17px}
-  .job .d{color:#777;font-size:14.5px}
-  .job .org{color:#555;font-size:15px}
-  ul{margin:6px 0 0;padding-left:20px}
-  li{margin-bottom:4px}
-  .skills p{margin:0 0 8px}
-  footer{margin-top:70px;padding:22px 0 40px;border-top:1px solid #ddd;font-size:14px;color:#777}
-  .lb{position:fixed;inset:0;background:rgba(0,0,0,.9);display:none;align-items:center;justify-content:center;flex-direction:column;z-index:10;padding:20px}
-  .lb.on{display:flex}
-  .lb img{max-width:100%;max-height:calc(100vh - 90px)}
-  .lb .cap{color:#ddd;font-size:14px;margin-top:10px}
-  .lb button{position:absolute;background:none;border:0;color:#fff;font-size:34px;cursor:pointer;padding:10px 16px}
+  .grid img{width:100%;aspect-ratio:4/3;object-fit:cover;display:block;border-radius:2px;background:#ddd;transition:opacity .15s}
+  .grid a:hover img,.lead a:hover img{opacity:.88}
+  .grid.fit img{object-fit:contain;background:#fff}
+  details summary{cursor:pointer;font-family:'Barlow Condensed';font-weight:600;font-size:19px;color:#2b6c8c;margin:4px 0 14px}
+  /* experience */
+  .job{display:grid;grid-template-columns:200px minmax(0,1fr);gap:24px;padding:26px 0;border-bottom:1px solid #d9d6cf}
+  .job .d{color:#6c6f73;font-size:15.5px;padding-top:4px}
+  .job b{font-family:'Barlow Condensed';font-weight:600;font-size:23px;display:block;line-height:1.15;color:#16191c}
+  .job .org{color:#4a4e53;margin-bottom:6px}
+  ul{margin:6px 0 0;padding-left:20px} li{margin-bottom:5px}
+  .two{display:grid;grid-template-columns:1fr 1fr;gap:56px}
+  .two .item{padding:16px 0;border-bottom:1px solid #d9d6cf}
+  .two .item b{font-weight:600} .two .item span{display:block;color:#6c6f73;font-size:15.5px}
+  .skills p{margin:0;padding:14px 0;border-bottom:1px solid #d9d6cf}
+  .skills b{font-weight:600}
+  .contact{background:#16191c;color:#d8d5cf;margin-top:90px;padding:56px 0 40px}
+  .contact h2{color:#fff;font-size:44px;margin:0 0 10px}
+  .contact a{color:#fff}
+  .contact p{font-size:19px;margin:0 0 8px}
+  .contact .small{margin-top:40px;font-size:14px;color:#8d8a84}
+  .lb{position:fixed;inset:0;background:rgba(10,10,10,.93);display:none;align-items:center;justify-content:center;flex-direction:column;z-index:10;padding:20px}
+  .lb.on{display:flex} .lb img{max-width:100%;max-height:calc(100vh - 90px)}
+  .lb .cap{color:#ddd;font-size:15px;margin-top:10px}
+  .lb button{position:absolute;background:none;border:0;color:#fff;font-size:36px;cursor:pointer;padding:10px 16px}
   .lb .x{top:6px;right:8px}.lb .p{left:4px;top:45%}.lb .n{right:4px;top:45%}
-  @media (max-width:640px){
-    body{font-size:16px}
-    header.top nav a{margin:0 14px 0 0}
+  @media (max-width:860px){
+    .intro,.proj,.two{grid-template-columns:1fr;gap:20px}
+    .proj .copy{position:static}
+    .job{grid-template-columns:1fr;gap:2px}
     .grid.c3,.grid.c4{grid-template-columns:repeat(2,minmax(0,1fr))}
-    .intro h1{font-size:28px}
+  }
+  @media (max-width:560px){
+    body{font-size:16.5px} .page{padding:0 18px}
+    .hero .bar nav a{margin-left:14px;font-size:15px} .hero .bar .name{display:none}
+    .hero p{font-size:17px} .hero .credit{right:18px}
   }
 </style>
 </head>
 <body>
+<header class="hero">
+  <div class="page bar"><a class="name" href="#">Kristian Felten</a><nav><a href="#projects">Projects</a><a href="#experience">Experience</a><a href="#contact">Contact</a></nav></div>
+  <div class="page text"><h1>Kristian Felten</h1><p>Mechanical engineering student at the University of Idaho.</p></div>
+  <div class="credit">My 1973 CJ5, in the shop</div>
+</header>
 <div class="page">
 
-<header class="top">
-  <a class="name" href="#">Kristian Felten</a>
-  <nav><a href="#projects">Projects</a><a href="#experience">Experience</a><a href="#contact">Contact</a></nav>
-</header>
-
 <section class="intro">
-  <h1>Kristian Felten</h1>
-  <p>I'm a mechanical engineering student at the University of Idaho, graduating in May 2027. Before engineering I got an automotive technology degree and worked in residential construction, so most of what I do ends up somewhere between the CAD model and the shop.</p>
-  <p>This page has the projects I've worked on, from school and on my own time.</p>
-  <p class="links"><a href="mailto:kristianf@outlook.com">kristianf@outlook.com</a> &middot; <a href="https://www.linkedin.com/in/kristian-felten-22a126294" target="_blank" rel="noopener">LinkedIn</a> &middot; Moscow, Idaho</p>
+  <div>
+    <p>I'm a mechanical engineering student at the University of Idaho, graduating in May 2027. Before engineering I got an automotive technology degree and worked in residential construction, so most of what I do ends up somewhere between the CAD model and the shop.</p>
+    <p>Below are the projects I've worked on, from school and on my own time.</p>
+  </div>
+  <div class="side">
+    <div><b>Most recent</b>Mechanical Engineering Intern, Z&middot;AERO (summer 2026)</div>
+    <div><b>Capstone</b>Mechanical design lead, IFIRE Lab pine needle separator</div>
+    <div><b>Contact</b><a href="mailto:kristianf@outlook.com">kristianf@outlook.com</a> &middot; <a href="https://www.linkedin.com/in/kristian-felten-22a126294" target="_blank" rel="noopener">LinkedIn</a></div>
+  </div>
 </section>
 
-<h2 class="section" id="projects">Projects</h2>
+<h2 class="label" id="projects">Projects</h2>
 
-<h3>1973 Jeep CJ5</h3>
-<p class="when">Personal project, 2020 &ndash; present</p>
-<figure class="lead-photo"><a href="img/jeep-hero.jpg" data-cap="The CJ5 after paint, still in the booth"><img src="img/jeep-hero.jpg" alt="Light blue 1973 Jeep CJ5 in a paint booth"></a><figcaption>After paint, still in the booth.</figcaption></figure>
-<p>This is a frame-off restoration I've been doing in my own shop since 2020. I took it down to the bare frame and sandblasted everything, then painted or powder coated every part before it went back on.</p>
-<p>Along the way I swapped the engine, rebuilt the transmission and transfer case linkage, and ran new fuel lines. I cut out and rebuilt rusted floor sections and made a battery tray, shifter tunnel covers and other brackets as I needed them. I also designed and built the wiring harness and relay panel from scratch. The body work and paint are done, and right now I'm on final assembly.</p>
-<details open><summary>Build photos</summary>
-<h4>Where it started</h4><div class="grid c4 "><figure><a href="img/before-tub.jpg" data-cap="Body tub as I got it"><img src="img/t/before-tub.jpg" alt="Body tub as I got it" loading="lazy"></a><figcaption>Body tub as I got it</figcaption></figure><figure><a href="img/before-frame.jpg" data-cap="Original frame and drivetrain"><img src="img/t/before-frame.jpg" alt="Original frame and drivetrain" loading="lazy"></a><figcaption>Original frame and drivetrain</figcaption></figure><figure><a href="img/before-hood.jpg" data-cap="Hood before repair"><img src="img/t/before-hood.jpg" alt="Hood before repair" loading="lazy"></a><figcaption>Hood before repair</figcaption></figure></div><h4>Engine and drivetrain</h4><div class="grid c4 "><figure><a href="img/engine-teardown.jpg" data-cap="Engine teardown"><img src="img/t/engine-teardown.jpg" alt="Engine teardown" loading="lazy"></a><figcaption>Engine teardown</figcaption></figure><figure><a href="img/engine-paint.jpg" data-cap="Engine painted and on the hoist"><img src="img/t/engine-paint.jpg" alt="Engine painted and on the hoist" loading="lazy"></a><figcaption>Engine painted and on the hoist</figcaption></figure><figure><a href="img/engine-trans.jpg" data-cap="Engine and trans ready to go in"><img src="img/t/engine-trans.jpg" alt="Engine and trans ready to go in" loading="lazy"></a><figcaption>Engine and trans ready to go in</figcaption></figure><figure><a href="img/transfer.jpg" data-cap="Transmission and transfer case linkage"><img src="img/t/transfer.jpg" alt="Transmission and transfer case linkage" loading="lazy"></a><figcaption>Transmission and transfer case linkage</figcaption></figure><figure><a href="img/fuel-lines.jpg" data-cap="Fuel lines"><img src="img/t/fuel-lines.jpg" alt="Fuel lines" loading="lazy"></a><figcaption>Fuel lines</figcaption></figure><figure><a href="img/carb.jpg" data-cap="Rebuilt Quadrajet carb"><img src="img/t/carb.jpg" alt="Rebuilt Quadrajet carb" loading="lazy"></a><figcaption>Rebuilt Quadrajet carb</figcaption></figure></div><h4>Fabrication</h4><div class="grid c4 "><figure><a href="img/floor-weld.jpg" data-cap="Floor section cut out and rebuilt"><img src="img/t/floor-weld.jpg" alt="Floor section cut out and rebuilt" loading="lazy"></a><figcaption>Floor section cut out and rebuilt</figcaption></figure><figure><a href="img/battery-tray.jpg" data-cap="Battery tray"><img src="img/t/battery-tray.jpg" alt="Battery tray" loading="lazy"></a><figcaption>Battery tray</figcaption></figure><figure><a href="img/tig-weld.jpg" data-cap="TIG-welded aluminum"><img src="img/t/tig-weld.jpg" alt="TIG-welded aluminum" loading="lazy"></a><figcaption>TIG-welded aluminum</figcaption></figure><figure><a href="img/tunnel.jpg" data-cap="Shifter tunnel covers"><img src="img/t/tunnel.jpg" alt="Shifter tunnel covers" loading="lazy"></a><figcaption>Shifter tunnel covers</figcaption></figure><figure><a href="img/tube-weld.jpg" data-cap="Tube weld"><img src="img/t/tube-weld.jpg" alt="Tube weld" loading="lazy"></a><figcaption>Tube weld</figcaption></figure><figure><a href="img/machined.jpg" data-cap="Machined fittings"><img src="img/t/machined.jpg" alt="Machined fittings" loading="lazy"></a><figcaption>Machined fittings</figcaption></figure><figure><a href="img/jeep-cad.jpg" data-cap="Threaded fitting and lock ring (CAD)"><img src="img/t/jeep-cad.jpg" alt="Threaded fitting and lock ring (CAD)" loading="lazy"></a><figcaption>Threaded fitting and lock ring (CAD)</figcaption></figure><figure><a href="img/jeep-cad2.jpg" data-cap="Second version with bolt flange (CAD)"><img src="img/t/jeep-cad2.jpg" alt="Second version with bolt flange (CAD)" loading="lazy"></a><figcaption>Second version with bolt flange (CAD)</figcaption></figure></div><h4>Wiring</h4><div class="grid c4 "><figure><a href="img/pedals-wiring.jpg" data-cap="Harness routing on the firewall"><img src="img/t/pedals-wiring.jpg" alt="Harness routing on the firewall" loading="lazy"></a><figcaption>Harness routing on the firewall</figcaption></figure><figure><a href="img/harness.jpg" data-cap="Harness at the bulkhead"><img src="img/t/harness.jpg" alt="Harness at the bulkhead" loading="lazy"></a><figcaption>Harness at the bulkhead</figcaption></figure><figure><a href="img/relay-panel.jpg" data-cap="Relay and fuse panel"><img src="img/t/relay-panel.jpg" alt="Relay and fuse panel" loading="lazy"></a><figcaption>Relay and fuse panel</figcaption></figure><figure><a href="img/dash.jpg" data-cap="Dash panel"><img src="img/t/dash.jpg" alt="Dash panel" loading="lazy"></a><figcaption>Dash panel</figcaption></figure></div><h4>Body and paint</h4><div class="grid c4 "><figure><a href="img/primer-tub.jpg" data-cap="Tub in primer"><img src="img/t/primer-tub.jpg" alt="Tub in primer" loading="lazy"></a><figcaption>Tub in primer</figcaption></figure><figure><a href="img/primer-fit.jpg" data-cap="Test-fitting panels"><img src="img/t/primer-fit.jpg" alt="Test-fitting panels" loading="lazy"></a><figcaption>Test-fitting panels</figcaption></figure><figure><a href="img/primer-front.jpg" data-cap="Front clip in primer"><img src="img/t/primer-front.jpg" alt="Front clip in primer" loading="lazy"></a><figcaption>Front clip in primer</figcaption></figure><figure><a href="img/paint-booth.jpg" data-cap="In the paint booth"><img src="img/t/paint-booth.jpg" alt="In the paint booth" loading="lazy"></a><figcaption>In the paint booth</figcaption></figure><figure><a href="img/jeep-front.jpg" data-cap="Front end after paint"><img src="img/t/jeep-front.jpg" alt="Front end after paint" loading="lazy"></a><figcaption>Front end after paint</figcaption></figure></div>
-</details>
+<article class="proj">
+  <div class="copy">
+    <h3>1973 Jeep CJ5</h3>
+    <p class="when">Personal project, 2020 &ndash; present</p>
+    <p>This is a frame-off restoration I've been doing in my own shop since 2020. I took it down to the bare frame and sandblasted everything, then painted or powder coated every part before it went back on.</p>
+    <p>Along the way I swapped the engine, rebuilt the transmission and transfer case linkage, and ran new fuel lines. I cut out and rebuilt rusted floor sections and made a battery tray, shifter tunnel covers and other brackets as I needed them. I also designed and built the wiring harness and relay panel from scratch. The body work and paint are done, and right now I'm on final assembly.</p>
+  </div>
+  <div>
+    <figure class="lead"><a href="img/jeep-hero.jpg" data-cap="After paint, still in the booth"><img src="img/jeep-hero.jpg" alt="Light blue 1973 Jeep CJ5 in a paint booth"></a><figcaption>After paint, still in the booth.</figcaption></figure>
+    <details open><summary>Build photos</summary>
+    <h4>Where it started</h4><div class="grid c3 "><figure><a href="img/before-tub.jpg" data-cap="Body tub as I got it"><img src="img/t/before-tub.jpg" alt="Body tub as I got it" loading="lazy"></a><figcaption>Body tub as I got it</figcaption></figure><figure><a href="img/before-frame.jpg" data-cap="Original frame and drivetrain"><img src="img/t/before-frame.jpg" alt="Original frame and drivetrain" loading="lazy"></a><figcaption>Original frame and drivetrain</figcaption></figure><figure><a href="img/before-hood.jpg" data-cap="Hood before repair"><img src="img/t/before-hood.jpg" alt="Hood before repair" loading="lazy"></a><figcaption>Hood before repair</figcaption></figure></div><h4>Engine and drivetrain</h4><div class="grid c3 "><figure><a href="img/engine-teardown.jpg" data-cap="Engine teardown"><img src="img/t/engine-teardown.jpg" alt="Engine teardown" loading="lazy"></a><figcaption>Engine teardown</figcaption></figure><figure><a href="img/engine-paint.jpg" data-cap="Engine painted and on the hoist"><img src="img/t/engine-paint.jpg" alt="Engine painted and on the hoist" loading="lazy"></a><figcaption>Engine painted and on the hoist</figcaption></figure><figure><a href="img/engine-trans.jpg" data-cap="Engine and trans ready to go in"><img src="img/t/engine-trans.jpg" alt="Engine and trans ready to go in" loading="lazy"></a><figcaption>Engine and trans ready to go in</figcaption></figure><figure><a href="img/transfer.jpg" data-cap="Transmission and transfer case linkage"><img src="img/t/transfer.jpg" alt="Transmission and transfer case linkage" loading="lazy"></a><figcaption>Transmission and transfer case linkage</figcaption></figure><figure><a href="img/fuel-lines.jpg" data-cap="Fuel lines"><img src="img/t/fuel-lines.jpg" alt="Fuel lines" loading="lazy"></a><figcaption>Fuel lines</figcaption></figure><figure><a href="img/carb.jpg" data-cap="Rebuilt Quadrajet carb"><img src="img/t/carb.jpg" alt="Rebuilt Quadrajet carb" loading="lazy"></a><figcaption>Rebuilt Quadrajet carb</figcaption></figure></div><h4>Fabrication</h4><div class="grid c3 "><figure><a href="img/floor-weld.jpg" data-cap="Floor section cut out and rebuilt"><img src="img/t/floor-weld.jpg" alt="Floor section cut out and rebuilt" loading="lazy"></a><figcaption>Floor section cut out and rebuilt</figcaption></figure><figure><a href="img/battery-tray.jpg" data-cap="Battery tray"><img src="img/t/battery-tray.jpg" alt="Battery tray" loading="lazy"></a><figcaption>Battery tray</figcaption></figure><figure><a href="img/tig-weld.jpg" data-cap="TIG-welded aluminum"><img src="img/t/tig-weld.jpg" alt="TIG-welded aluminum" loading="lazy"></a><figcaption>TIG-welded aluminum</figcaption></figure><figure><a href="img/tunnel.jpg" data-cap="Shifter tunnel covers"><img src="img/t/tunnel.jpg" alt="Shifter tunnel covers" loading="lazy"></a><figcaption>Shifter tunnel covers</figcaption></figure><figure><a href="img/tube-weld.jpg" data-cap="Tube weld"><img src="img/t/tube-weld.jpg" alt="Tube weld" loading="lazy"></a><figcaption>Tube weld</figcaption></figure><figure><a href="img/machined.jpg" data-cap="Machined fittings"><img src="img/t/machined.jpg" alt="Machined fittings" loading="lazy"></a><figcaption>Machined fittings</figcaption></figure><figure><a href="img/jeep-cad.jpg" data-cap="Threaded fitting and lock ring (CAD)"><img src="img/t/jeep-cad.jpg" alt="Threaded fitting and lock ring (CAD)" loading="lazy"></a><figcaption>Threaded fitting and lock ring (CAD)</figcaption></figure><figure><a href="img/jeep-cad2.jpg" data-cap="Second version with bolt flange (CAD)"><img src="img/t/jeep-cad2.jpg" alt="Second version with bolt flange (CAD)" loading="lazy"></a><figcaption>Second version with bolt flange (CAD)</figcaption></figure></div><h4>Wiring</h4><div class="grid c3 "><figure><a href="img/pedals-wiring.jpg" data-cap="Harness routing on the firewall"><img src="img/t/pedals-wiring.jpg" alt="Harness routing on the firewall" loading="lazy"></a><figcaption>Harness routing on the firewall</figcaption></figure><figure><a href="img/harness.jpg" data-cap="Harness at the bulkhead"><img src="img/t/harness.jpg" alt="Harness at the bulkhead" loading="lazy"></a><figcaption>Harness at the bulkhead</figcaption></figure><figure><a href="img/relay-panel.jpg" data-cap="Relay and fuse panel"><img src="img/t/relay-panel.jpg" alt="Relay and fuse panel" loading="lazy"></a><figcaption>Relay and fuse panel</figcaption></figure><figure><a href="img/dash.jpg" data-cap="Dash panel"><img src="img/t/dash.jpg" alt="Dash panel" loading="lazy"></a><figcaption>Dash panel</figcaption></figure></div><h4>Body and paint</h4><div class="grid c3 "><figure><a href="img/primer-tub.jpg" data-cap="Tub in primer"><img src="img/t/primer-tub.jpg" alt="Tub in primer" loading="lazy"></a><figcaption>Tub in primer</figcaption></figure><figure><a href="img/primer-fit.jpg" data-cap="Test-fitting panels"><img src="img/t/primer-fit.jpg" alt="Test-fitting panels" loading="lazy"></a><figcaption>Test-fitting panels</figcaption></figure><figure><a href="img/primer-front.jpg" data-cap="Front clip in primer"><img src="img/t/primer-front.jpg" alt="Front clip in primer" loading="lazy"></a><figcaption>Front clip in primer</figcaption></figure><figure><a href="img/paint-booth.jpg" data-cap="In the paint booth"><img src="img/t/paint-booth.jpg" alt="In the paint booth" loading="lazy"></a><figcaption>In the paint booth</figcaption></figure><figure><a href="img/jeep-front.jpg" data-cap="Front end after paint"><img src="img/t/jeep-front.jpg" alt="Front end after paint" loading="lazy"></a><figcaption>Front end after paint</figcaption></figure></div>
+    </details>
+  </div>
+</article>
 
-<h3>Pine needle separator (capstone)</h3>
-<p class="when">University of Idaho senior capstone for the IFIRE Lab, Sep 2026 &ndash; present &middot; Mechanical design lead</p>
-<p>The IFIRE Lab uses large amounts of pine needles as fuel for fire testing, and right now they're cleaned by hand. Our team is building a machine that does it automatically. Material goes up an inclined conveyor that pulls out the big debris like pinecones and sticks, then into a rotating trommel that sieves out the rest. The goal is less than 1% debris in the finished needles.</p>
-<p>I'm leading the mechanical design and working mostly on the conveyor stage. One idea we're testing uses a cam to bump the belt so larger pieces jump over a baffle while the needles keep going.</p>
-<div class="grid c3 fit"><figure><a href="img/cap-cad.jpg" data-cap="Trommel assembly (Fusion 360)"><img src="img/t/cap-cad.jpg" alt="Trommel assembly (Fusion 360)" loading="lazy"></a><figcaption>Trommel assembly (Fusion 360)</figcaption></figure><figure><a href="img/cap-cad2.jpg" data-cap="Drum frame with inlet funnel"><img src="img/t/cap-cad2.jpg" alt="Drum frame with inlet funnel" loading="lazy"></a><figcaption>Drum frame with inlet funnel</figcaption></figure><figure><a href="img/cap-print.jpg" data-cap="3D-printed inlet funnel"><img src="img/t/cap-print.jpg" alt="3D-printed inlet funnel" loading="lazy"></a><figcaption>3D-printed inlet funnel</figcaption></figure></div>
-<div class="grid c2 "><figure><a href="img/cap-proto.jpg" data-cap="First trommel prototype with sorted samples"><img src="img/t/cap-proto.jpg" alt="First trommel prototype with sorted samples" loading="lazy"></a><figcaption>First trommel prototype with sorted samples</figcaption></figure><figure><a href="img/cap-poster.jpg" data-cap="Design review poster"><img src="img/t/cap-poster.jpg" alt="Design review poster" loading="lazy"></a><figcaption>Design review poster</figcaption></figure></div>
-<h4>Early sketches</h4>
-<div class="grid c3 fit"><figure><a href="img/cap-draw3.jpg" data-cap="Sep 24: full system layout"><img src="img/t/cap-draw3.jpg" alt="Sep 24: full system layout" loading="lazy"></a><figcaption>Sep 24: full system layout</figcaption></figure><figure><a href="img/cap-draw1.jpg" data-cap="Oct 13: sorting drum"><img src="img/t/cap-draw1.jpg" alt="Oct 13: sorting drum" loading="lazy"></a><figcaption>Oct 13: sorting drum</figcaption></figure><figure><a href="img/cap-draw2.jpg" data-cap="Oct 20: conveyor and trommel layout"><img src="img/t/cap-draw2.jpg" alt="Oct 20: conveyor and trommel layout" loading="lazy"></a><figcaption>Oct 20: conveyor and trommel layout</figcaption></figure></div>
+<article class="proj">
+  <div class="copy">
+    <h3>Pine needle separator</h3>
+    <p class="when">Senior capstone for the IFIRE Lab, Sep 2026 &ndash; present<br>Mechanical design lead</p>
+    <p>The IFIRE Lab uses large amounts of pine needles as fuel for fire testing, and right now they're cleaned by hand. Our team is building a machine that does it automatically. Material goes up an inclined conveyor that pulls out the big debris like pinecones and sticks, then into a rotating trommel that sieves out the rest. The goal is less than 1% debris in the finished needles.</p>
+    <p>I'm leading the mechanical design and working mostly on the conveyor stage. One idea we're testing uses a cam to bump the belt so larger pieces jump over a baffle while the needles keep going.</p>
+  </div>
+  <div>
+    <figure class="lead"><a href="img/cap-cad.jpg" data-cap="Trommel assembly in Fusion 360"><img src="img/cap-cad.jpg" alt="CAD render of the trommel assembly" style="background:#fff"></a><figcaption>Trommel assembly in Fusion 360.</figcaption></figure>
+    <div class="grid c2 fit"><figure><a href="img/cap-cad2.jpg" data-cap="Drum frame with inlet funnel"><img src="img/t/cap-cad2.jpg" alt="Drum frame with inlet funnel" loading="lazy"></a><figcaption>Drum frame with inlet funnel</figcaption></figure><figure><a href="img/cap-print.jpg" data-cap="3D-printed inlet funnel"><img src="img/t/cap-print.jpg" alt="3D-printed inlet funnel" loading="lazy"></a><figcaption>3D-printed inlet funnel</figcaption></figure></div>
+    <div class="grid c2 "><figure><a href="img/cap-proto.jpg" data-cap="First trommel prototype with sorted samples"><img src="img/t/cap-proto.jpg" alt="First trommel prototype with sorted samples" loading="lazy"></a><figcaption>First trommel prototype with sorted samples</figcaption></figure><figure><a href="img/cap-poster.jpg" data-cap="Design review poster"><img src="img/t/cap-poster.jpg" alt="Design review poster" loading="lazy"></a><figcaption>Design review poster</figcaption></figure></div>
+    <h4>Early sketches</h4>
+    <div class="grid c3 fit"><figure><a href="img/cap-draw3.jpg" data-cap="Sep 24: full system layout"><img src="img/t/cap-draw3.jpg" alt="Sep 24: full system layout" loading="lazy"></a><figcaption>Sep 24: full system layout</figcaption></figure><figure><a href="img/cap-draw1.jpg" data-cap="Oct 13: sorting drum"><img src="img/t/cap-draw1.jpg" alt="Oct 13: sorting drum" loading="lazy"></a><figcaption>Oct 13: sorting drum</figcaption></figure><figure><a href="img/cap-draw2.jpg" data-cap="Oct 20: conveyor and trommel"><img src="img/t/cap-draw2.jpg" alt="Oct 20: conveyor and trommel" loading="lazy"></a><figcaption>Oct 20: conveyor and trommel</figcaption></figure></div>
+  </div>
+</article>
 
-<h3>Thermal conductivity of concrete mixes</h3>
-<p class="when">Senior design lab, University of Idaho</p>
-<p>For this lab we looked at how mix design affects how well concrete conducts heat. We batched samples by weight with different aggregates and water-cement ratios of 0.4 and 0.6, cured them in hot and cold conditions, and measured each one with a KD2 Pro thermal properties analyzer.</p>
-<div class="grid c3 "><figure><a href="img/con-cups.jpg" data-cap="Samples at 0.4 and 0.6 water-cement ratio"><img src="img/t/con-cups.jpg" alt="Samples at 0.4 and 0.6 water-cement ratio" loading="lazy"></a><figcaption>Samples at 0.4 and 0.6 water-cement ratio</figcaption></figure><figure><a href="img/con-kd2.jpg" data-cap="Taking a reading with the KD2 Pro"><img src="img/t/con-kd2.jpg" alt="Taking a reading with the KD2 Pro" loading="lazy"></a><figcaption>Taking a reading with the KD2 Pro</figcaption></figure><figure><a href="img/con-set.jpg" data-cap="The full set of samples"><img src="img/t/con-set.jpg" alt="The full set of samples" loading="lazy"></a><figcaption>The full set of samples</figcaption></figure></div>
+<article class="proj">
+  <div class="copy">
+    <h3>Thermal conductivity of concrete mixes</h3>
+    <p class="when">Senior design lab, University of Idaho</p>
+    <p>For this lab we looked at how mix design affects how well concrete conducts heat. We batched samples by weight with different aggregates and water-cement ratios of 0.4 and 0.6, cured them in hot and cold conditions, and measured each one with a KD2 Pro thermal properties analyzer.</p>
+  </div>
+  <div>
+    <figure class="lead"><a href="img/con-cups.jpg" data-cap="Samples at 0.4 and 0.6 water-cement ratio"><img src="img/con-cups.jpg" alt="Concrete samples in labeled cups"></a><figcaption>Samples at 0.4 and 0.6 water-cement ratio.</figcaption></figure>
+    <div class="grid c2 "><figure><a href="img/con-kd2.jpg" data-cap="Taking a reading with the KD2 Pro"><img src="img/t/con-kd2.jpg" alt="Taking a reading with the KD2 Pro" loading="lazy"></a><figcaption>Taking a reading with the KD2 Pro</figcaption></figure><figure><a href="img/con-set.jpg" data-cap="The full set of samples"><img src="img/t/con-set.jpg" alt="The full set of samples" loading="lazy"></a><figcaption>The full set of samples</figcaption></figure></div>
+  </div>
+</article>
 
-<h3>7.3L Powerstroke rebuild</h3>
-<p class="when">Personal project</p>
-<p>A full rebuild of a Ford 7.3L Powerstroke diesel, including measuring and checking the bottom end, the injectors, the cylinder heads and the turbo.</p>
-<div class="grid c3 "><figure><a href="img/ps-built.jpg" data-cap="Assembled engine"><img src="img/t/ps-built.jpg" alt="Assembled engine" loading="lazy"></a><figcaption>Assembled engine</figcaption></figure><figure><a href="img/ps-block.jpg" data-cap="Block and crank"><img src="img/t/ps-block.jpg" alt="Block and crank" loading="lazy"></a><figcaption>Block and crank</figcaption></figure><figure><a href="img/ps-top.jpg" data-cap="Top end and turbo"><img src="img/t/ps-top.jpg" alt="Top end and turbo" loading="lazy"></a><figcaption>Top end and turbo</figcaption></figure></div>
+<article class="proj">
+  <div class="copy">
+    <h3>7.3L Powerstroke rebuild</h3>
+    <p class="when">Personal project</p>
+    <p>A full rebuild of a Ford 7.3L Powerstroke diesel, including measuring and checking the bottom end, the injectors, the cylinder heads and the turbo.</p>
+  </div>
+  <div>
+    <figure class="lead"><a href="img/ps-built.jpg" data-cap="Assembled engine"><img src="img/ps-built.jpg" alt="Assembled 7.3L Powerstroke"></a><figcaption>Assembled engine.</figcaption></figure>
+    <div class="grid c2 "><figure><a href="img/ps-block.jpg" data-cap="Block and crank"><img src="img/t/ps-block.jpg" alt="Block and crank" loading="lazy"></a><figcaption>Block and crank</figcaption></figure><figure><a href="img/ps-top.jpg" data-cap="Top end and turbo"><img src="img/t/ps-top.jpg" alt="Top end and turbo" loading="lazy"></a><figcaption>Top end and turbo</figcaption></figure></div>
+  </div>
+</article>
 
-<h3>Other CAD work</h3>
-<p class="when">Personal projects, Fusion 360</p>
-<p>A few smaller parts I've modeled.</p>
-<div class="grid c4 fit"><figure><a href="img/xm-top.jpg" data-cap="Sheet metal crossmember, top"><img src="img/t/xm-top.jpg" alt="Sheet metal crossmember, top" loading="lazy"></a><figcaption>Sheet metal crossmember, top</figcaption></figure><figure><a href="img/xm-under.jpg" data-cap="Crossmember underside"><img src="img/t/xm-under.jpg" alt="Crossmember underside" loading="lazy"></a><figcaption>Crossmember underside</figcaption></figure><figure><a href="img/bracket.jpg" data-cap="Formed mounting bracket"><img src="img/t/bracket.jpg" alt="Formed mounting bracket" loading="lazy"></a><figcaption>Formed mounting bracket</figcaption></figure><figure><a href="img/fuelcap.jpg" data-cap="Cessna fuel cap"><img src="img/t/fuelcap.jpg" alt="Cessna fuel cap" loading="lazy"></a><figcaption>Cessna fuel cap</figcaption></figure></div>
+<article class="proj">
+  <div class="copy">
+    <h3>Other CAD work</h3>
+    <p class="when">Personal projects, Fusion 360</p>
+    <p>A few smaller parts I've modeled.</p>
+  </div>
+  <div>
+    <div class="grid c2 fit"><figure><a href="img/xm-top.jpg" data-cap="Sheet metal crossmember, top"><img src="img/t/xm-top.jpg" alt="Sheet metal crossmember, top" loading="lazy"></a><figcaption>Sheet metal crossmember, top</figcaption></figure><figure><a href="img/xm-under.jpg" data-cap="Crossmember underside"><img src="img/t/xm-under.jpg" alt="Crossmember underside" loading="lazy"></a><figcaption>Crossmember underside</figcaption></figure><figure><a href="img/bracket.jpg" data-cap="Formed mounting bracket"><img src="img/t/bracket.jpg" alt="Formed mounting bracket" loading="lazy"></a><figcaption>Formed mounting bracket</figcaption></figure><figure><a href="img/fuelcap.jpg" data-cap="Cessna fuel cap"><img src="img/t/fuelcap.jpg" alt="Cessna fuel cap" loading="lazy"></a><figcaption>Cessna fuel cap</figcaption></figure></div>
+  </div>
+</article>
 
-<h2 class="section" id="experience">Experience</h2>
+<h2 class="label" id="experience">Experience</h2>
 
-<div class="job"><div class="head"><b>Mechanical Engineering Intern</b><span class="d">Jun &ndash; Aug 2026</span></div><div class="org">Z&middot;AERO, Sandpoint, Idaho</div>
+<div class="job"><div class="d">Jun &ndash; Aug 2026</div><div><b>Mechanical Engineering Intern</b><div class="org">Z&middot;AERO, Sandpoint, Idaho</div>
 <ul>
 <li>Designed a commercial hospitality product from concept to final design and delivered the manufacturing package for injection molding.</li>
 <li>Prototyped and validated proof-of-concept mechanisms using CAD and 3D printing.</li>
 <li>Revised structural test plans and compliance analysis reports to meet FAA airworthiness regulations.</li>
 <li>Evaluated static and fatigue life through hand calculations in Excel; added VBA routines to the FEM validation calculator that display reference images, making elements easier to identify.</li>
 <li>Designed dynamic test fixture sensor mounts; helped diagnose, troubleshoot and repair hardware during structural test runs.</li>
-</ul></div>
+</ul></div></div>
 
-<div class="job"><div class="head"><b>Machine Shop Mentor</b><span class="d">Jan &ndash; May 2026</span></div><div class="org">University of Idaho</div>
-<ul><li>Guided students through semester projects, including tool selection, machine setup, workpiece holding, and safe practices.</li></ul></div>
+<div class="job"><div class="d">Jan &ndash; May 2026</div><div><b>Machine Shop Mentor</b><div class="org">University of Idaho</div>
+<ul><li>Guided students through semester projects, including tool selection, machine setup, workpiece holding, and safe practices.</li></ul></div></div>
 
-<div class="job"><div class="head"><b>Field Professional Intern</b><span class="d">Summers 2024 and 2025</span></div><div class="org">STRATA, Hayden, Idaho</div>
+<div class="job"><div class="d">Summers 2024, 2025</div><div><b>Field Professional Intern</b><div class="org">STRATA, Hayden, Idaho</div>
 <ul>
 <li>Performed laboratory volumetric testing of hot mix asphalt to QMS, AASHTO, and ASTM standards.</li>
 <li>Coordinated with engineers and the Idaho Transportation Department to collect field material samples.</li>
 <li>Calibrated and maintained lab equipment on scheduled and as-needed maintenance.</li>
-</ul></div>
+</ul></div></div>
 
-<div class="job"><div class="head"><b>Residential Construction</b><span class="d">2018 &ndash; 2023</span></div><div class="org">Felten Enterprises, Sagle, Idaho</div>
+<div class="job"><div class="d">2018 &ndash; 2023</div><div><b>Residential Construction</b><div class="org">Felten Enterprises, Sagle, Idaho</div>
 <ul>
 <li>Built custom homes, remodels, and full structural renovations from groundwork through finish work.</li>
 <li>Worked directly with homeowners to review plans, changes, and progress.</li>
-</ul></div>
+</ul></div></div>
 
-<h2 class="section">Education</h2>
-<div class="job"><div class="head"><b>B.S. Mechanical Engineering</b><span class="d">Expected May 2027</span></div><div class="org">University of Idaho</div></div>
-<div class="job"><div class="head"><b>A.A.S. Automotive Technology</b><span class="d">May 2025</span></div><div class="org">North Idaho College</div></div>
-
-<h2 class="section">Skills</h2>
-<div class="skills">
-<p><b>CAD and analysis:</b> SolidWorks (CSWA, May 2025), Fusion 360, ANSYS Mechanical, Excel/VBA</p>
-<p><b>Programming:</b> Python, MATLAB, Arduino</p>
-<p><b>Shop:</b> TIG and MIG welding, manual and CNC machining, sheet metal fabrication, 3D printing</p>
-<p><b>Other:</b> electrical and mechanical diagnostics, wiring design, powder coating, automotive paint, electroplating</p>
+<div class="two">
+  <div>
+    <h2 class="label">Education</h2>
+    <div class="item"><b>B.S. Mechanical Engineering</b><span>University of Idaho &middot; expected May 2027</span></div>
+    <div class="item"><b>A.A.S. Automotive Technology</b><span>North Idaho College &middot; May 2025</span></div>
+    <div class="item"><b>Certified SolidWorks Associate (CSWA)</b><span>May 2025</span></div>
+  </div>
+  <div class="skills">
+    <h2 class="label">Skills</h2>
+    <p><b>CAD and analysis:</b> SolidWorks, Fusion 360, ANSYS Mechanical, Excel/VBA</p>
+    <p><b>Programming:</b> Python, MATLAB, Arduino</p>
+    <p><b>Shop:</b> TIG and MIG welding, manual and CNC machining, sheet metal, 3D printing</p>
+    <p><b>Other:</b> electrical diagnostics, wiring design, powder coating, automotive paint, electroplating</p>
+  </div>
+</div>
 </div>
 
-<h2 class="section" id="contact">Contact</h2>
-<p>The best way to reach me is email: <a href="mailto:kristianf@outlook.com">kristianf@outlook.com</a>. I'm also on <a href="https://www.linkedin.com/in/kristian-felten-22a126294" target="_blank" rel="noopener">LinkedIn</a>.</p>
-
-<footer>Kristian Felten &middot; Moscow, Idaho</footer>
-</div>
+<section class="contact" id="contact"><div class="page">
+  <h2>Get in touch</h2>
+  <p>Email is the best way to reach me: <a href="mailto:kristianf@outlook.com">kristianf@outlook.com</a></p>
+  <p>I'm also on <a href="https://www.linkedin.com/in/kristian-felten-22a126294" target="_blank" rel="noopener">LinkedIn</a>.</p>
+  <div class="small">Kristian Felten &middot; Moscow, Idaho</div>
+</div></section>
 
 <div class="lb" id="lb"><button class="x" aria-label="Close">&times;</button><button class="p" aria-label="Previous">&lsaquo;</button><img alt=""><div class="cap"></div><button class="n" aria-label="Next">&rsaquo;</button></div>
 <script>
