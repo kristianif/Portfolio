@@ -90,18 +90,6 @@
     .hero .bar nav a{margin-left:14px;font-size:15px} .hero .bar .name{display:none}
     .hero p{font-size:17px} .hero .credit{right:18px}
   }
-  details.pd{border-bottom:1px solid #d9d6cf}
-  details.pd > summary{list-style:none;cursor:pointer;display:grid;grid-template-columns:96px minmax(0,1fr) 28px;gap:20px;align-items:center;padding:20px 0}
-  details.pd > summary::-webkit-details-marker{display:none}
-  details.pd .th{width:96px;height:72px;object-fit:cover;border-radius:2px;background:#ddd;transition:opacity .2s}
-  details.pd .h3{display:block;font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:30px;line-height:1.05;color:#16191c}
-  details.pd .st .when{display:block;font-size:15px;color:#6c6f73;margin-top:4px}
-  details.pd .chev{width:12px;height:12px;border-right:2px solid #16191c;border-bottom:2px solid #16191c;transform:rotate(45deg);justify-self:center;transition:transform .2s}
-  details.pd[open] .chev{transform:rotate(-135deg)}
-  details.pd > summary:hover .h3{color:#2b6c8c}
-  details.pd .proj{border-bottom:0;padding-top:8px}
-  details.pd[open] .th{opacity:.35}
-  @media (max-width:560px){details.pd > summary{grid-template-columns:64px minmax(0,1fr) 20px;gap:14px} details.pd .th{width:64px;height:48px} details.pd .h3{font-size:24px}}
 </style>
 </head>
 <body>
@@ -128,8 +116,10 @@
 
 <h2 class="label" id="projects">Projects</h2>
 
-<details class="pd" open><summary><img class="th" src="img/t/jeep-hero.jpg" alt=""><span class="st"><span class="h3">1973 Jeep CJ5</span><span class="when">Personal project, 2020 &ndash; present</span></span><span class="chev" aria-hidden="true"></span></summary><article class="proj">
+<article class="proj">
   <div class="copy">
+    <h3>1973 Jeep CJ5</h3>
+    <p class="when">Personal project, 2020 &ndash; present</p>
     <p>This is a frame-off restoration I've been doing in my own shop since 2020. I took it down to the bare frame and sandblasted everything, then painted or powder coated every part before it went back on.</p>
     <p>Along the way I swapped the engine, rebuilt the transmission and transfer case linkage, and ran new fuel lines. I cut out and rebuilt rusted floor sections and made a battery tray, shifter tunnel covers and other brackets as I needed them. I also designed and built the wiring harness and relay panel from scratch. The body work and paint are done, and right now I'm on final assembly.</p>
   </div>
@@ -139,10 +129,12 @@
     <h4>Where it started</h4><div class="grid c3 "><figure><a href="img/before-tub.jpg" data-cap="Body tub as I got it"><img src="img/t/before-tub.jpg" alt="Body tub as I got it" loading="lazy"></a><figcaption>Body tub as I got it</figcaption></figure><figure><a href="img/before-frame.jpg" data-cap="Original frame and drivetrain"><img src="img/t/before-frame.jpg" alt="Original frame and drivetrain" loading="lazy"></a><figcaption>Original frame and drivetrain</figcaption></figure><figure><a href="img/before-hood.jpg" data-cap="Hood before repair"><img src="img/t/before-hood.jpg" alt="Hood before repair" loading="lazy"></a><figcaption>Hood before repair</figcaption></figure></div><h4>Engine and drivetrain</h4><div class="grid c3 "><figure><a href="img/engine-teardown.jpg" data-cap="Engine teardown"><img src="img/t/engine-teardown.jpg" alt="Engine teardown" loading="lazy"></a><figcaption>Engine teardown</figcaption></figure><figure><a href="img/engine-paint.jpg" data-cap="Engine painted and on the hoist"><img src="img/t/engine-paint.jpg" alt="Engine painted and on the hoist" loading="lazy"></a><figcaption>Engine painted and on the hoist</figcaption></figure><figure><a href="img/engine-trans.jpg" data-cap="Engine and trans ready to go in"><img src="img/t/engine-trans.jpg" alt="Engine and trans ready to go in" loading="lazy"></a><figcaption>Engine and trans ready to go in</figcaption></figure><figure><a href="img/transfer.jpg" data-cap="Transmission and transfer case linkage"><img src="img/t/transfer.jpg" alt="Transmission and transfer case linkage" loading="lazy"></a><figcaption>Transmission and transfer case linkage</figcaption></figure><figure><a href="img/fuel-lines.jpg" data-cap="Fuel lines"><img src="img/t/fuel-lines.jpg" alt="Fuel lines" loading="lazy"></a><figcaption>Fuel lines</figcaption></figure><figure><a href="img/carb.jpg" data-cap="Rebuilt Quadrajet carb"><img src="img/t/carb.jpg" alt="Rebuilt Quadrajet carb" loading="lazy"></a><figcaption>Rebuilt Quadrajet carb</figcaption></figure></div><h4>Fabrication</h4><div class="grid c3 "><figure><a href="img/floor-weld.jpg" data-cap="Floor section cut out and rebuilt"><img src="img/t/floor-weld.jpg" alt="Floor section cut out and rebuilt" loading="lazy"></a><figcaption>Floor section cut out and rebuilt</figcaption></figure><figure><a href="img/battery-tray.jpg" data-cap="Battery tray"><img src="img/t/battery-tray.jpg" alt="Battery tray" loading="lazy"></a><figcaption>Battery tray</figcaption></figure><figure><a href="img/tig-weld.jpg" data-cap="TIG-welded aluminum"><img src="img/t/tig-weld.jpg" alt="TIG-welded aluminum" loading="lazy"></a><figcaption>TIG-welded aluminum</figcaption></figure><figure><a href="img/tunnel.jpg" data-cap="Shifter tunnel covers"><img src="img/t/tunnel.jpg" alt="Shifter tunnel covers" loading="lazy"></a><figcaption>Shifter tunnel covers</figcaption></figure><figure><a href="img/tube-weld.jpg" data-cap="Tube weld"><img src="img/t/tube-weld.jpg" alt="Tube weld" loading="lazy"></a><figcaption>Tube weld</figcaption></figure><figure><a href="img/machined.jpg" data-cap="Machined fittings"><img src="img/t/machined.jpg" alt="Machined fittings" loading="lazy"></a><figcaption>Machined fittings</figcaption></figure><figure><a href="img/jeep-cad.jpg" data-cap="Threaded fitting and lock ring (CAD)"><img src="img/t/jeep-cad.jpg" alt="Threaded fitting and lock ring (CAD)" loading="lazy"></a><figcaption>Threaded fitting and lock ring (CAD)</figcaption></figure><figure><a href="img/jeep-cad2.jpg" data-cap="Second version with bolt flange (CAD)"><img src="img/t/jeep-cad2.jpg" alt="Second version with bolt flange (CAD)" loading="lazy"></a><figcaption>Second version with bolt flange (CAD)</figcaption></figure></div><h4>Wiring</h4><div class="grid c3 "><figure><a href="img/pedals-wiring.jpg" data-cap="Harness routing on the firewall"><img src="img/t/pedals-wiring.jpg" alt="Harness routing on the firewall" loading="lazy"></a><figcaption>Harness routing on the firewall</figcaption></figure><figure><a href="img/harness.jpg" data-cap="Harness at the bulkhead"><img src="img/t/harness.jpg" alt="Harness at the bulkhead" loading="lazy"></a><figcaption>Harness at the bulkhead</figcaption></figure><figure><a href="img/relay-panel.jpg" data-cap="Relay and fuse panel"><img src="img/t/relay-panel.jpg" alt="Relay and fuse panel" loading="lazy"></a><figcaption>Relay and fuse panel</figcaption></figure><figure><a href="img/dash.jpg" data-cap="Dash panel"><img src="img/t/dash.jpg" alt="Dash panel" loading="lazy"></a><figcaption>Dash panel</figcaption></figure></div><h4>Body and paint</h4><div class="grid c3 "><figure><a href="img/primer-tub.jpg" data-cap="Tub in primer"><img src="img/t/primer-tub.jpg" alt="Tub in primer" loading="lazy"></a><figcaption>Tub in primer</figcaption></figure><figure><a href="img/primer-fit.jpg" data-cap="Test-fitting panels"><img src="img/t/primer-fit.jpg" alt="Test-fitting panels" loading="lazy"></a><figcaption>Test-fitting panels</figcaption></figure><figure><a href="img/primer-front.jpg" data-cap="Front clip in primer"><img src="img/t/primer-front.jpg" alt="Front clip in primer" loading="lazy"></a><figcaption>Front clip in primer</figcaption></figure><figure><a href="img/paint-booth.jpg" data-cap="In the paint booth"><img src="img/t/paint-booth.jpg" alt="In the paint booth" loading="lazy"></a><figcaption>In the paint booth</figcaption></figure><figure><a href="img/jeep-front.jpg" data-cap="Front end after paint"><img src="img/t/jeep-front.jpg" alt="Front end after paint" loading="lazy"></a><figcaption>Front end after paint</figcaption></figure></div>
     </details>
   </div>
-</article></details>
+</article>
 
-<details class="pd"><summary><img class="th" src="img/t/cap-built.jpg" alt=""><span class="st"><span class="h3">Pine needle separator</span><span class="when">Senior capstone for the IFIRE Lab, Sep 2026 &ndash; present<br>Mechanical design lead</span></span><span class="chev" aria-hidden="true"></span></summary><article class="proj">
+<article class="proj">
   <div class="copy">
+    <h3>Pine needle separator</h3>
+    <p class="when">Senior capstone for the IFIRE Lab, Sep 2026 &ndash; present<br>Mechanical design lead</p>
     <p>The IFIRE Lab uses large amounts of pine needles as fuel for fire testing, and right now they're cleaned by hand. Our team is building a machine that does it automatically. Material goes up an inclined conveyor that pulls out the big debris like pinecones and sticks, then into a rotating trommel that sieves out the rest. The goal is less than 1% debris in the finished needles.</p>
     <p>I'm leading the mechanical design and working mostly on the conveyor stage. One idea we're testing uses a cam to bump the belt so larger pieces jump over a baffle while the needles keep going.</p>
   </div>
@@ -153,20 +145,24 @@
     <h4>Early sketches</h4>
     <div class="grid c3 fit"><figure><a href="img/cap-draw3.jpg" data-cap="Sep 24: full system layout"><img src="img/t/cap-draw3.jpg" alt="Sep 24: full system layout" loading="lazy"></a><figcaption>Sep 24: full system layout</figcaption></figure><figure><a href="img/cap-draw1.jpg" data-cap="Oct 13: sorting drum"><img src="img/t/cap-draw1.jpg" alt="Oct 13: sorting drum" loading="lazy"></a><figcaption>Oct 13: sorting drum</figcaption></figure><figure><a href="img/cap-draw2.jpg" data-cap="Oct 20: conveyor and trommel"><img src="img/t/cap-draw2.jpg" alt="Oct 20: conveyor and trommel" loading="lazy"></a><figcaption>Oct 20: conveyor and trommel</figcaption></figure></div>
   </div>
-</article></details>
+</article>
 
-<details class="pd"><summary><img class="th" src="img/t/con-cups.jpg" alt=""><span class="st"><span class="h3">Thermal conductivity of concrete mixes</span><span class="when">Senior design lab, University of Idaho</span></span><span class="chev" aria-hidden="true"></span></summary><article class="proj">
+<article class="proj">
   <div class="copy">
+    <h3>Thermal conductivity of concrete mixes</h3>
+    <p class="when">Senior design lab, University of Idaho</p>
     <p>For this lab we looked at how mix design affects how well concrete conducts heat. We batched samples by weight with different aggregates and water-cement ratios of 0.4 and 0.6, cured them in hot and cold conditions, and measured each one with a KD2 Pro thermal properties analyzer.</p>
   </div>
   <div>
     <figure class="lead"><a href="img/con-cups.jpg" data-cap="Samples at 0.4 and 0.6 water-cement ratio"><img src="img/con-cups.jpg" alt="Concrete samples in labeled cups"></a><figcaption>Samples at 0.4 and 0.6 water-cement ratio.</figcaption></figure>
     <div class="grid c2 "><figure><a href="img/con-kd2.jpg" data-cap="Taking a reading with the KD2 Pro"><img src="img/t/con-kd2.jpg" alt="Taking a reading with the KD2 Pro" loading="lazy"></a><figcaption>Taking a reading with the KD2 Pro</figcaption></figure><figure><a href="img/con-set.jpg" data-cap="The full set of samples"><img src="img/t/con-set.jpg" alt="The full set of samples" loading="lazy"></a><figcaption>The full set of samples</figcaption></figure></div>
   </div>
-</article></details>
+</article>
 
-<details class="pd"><summary><img class="th" src="img/pinball-game.jpg" alt=""><span class="st"><span class="h3">Pinball machine</span><span class="when">Class project, ME 223</span></span><span class="chev" aria-hidden="true"></span></summary><article class="proj">
+<article class="proj">
   <div class="copy">
+    <h3>Pinball machine</h3>
+    <p class="when">Class project, ME 223</p>
     <p>We built a working pinball machine for this class. I made the flipper drive: I wound the solenoid coils myself, paired them with 3D-printed flippers, and added end-of-stroke switches that signal when each flipper reaches the top of its travel. The whole system runs off a 20V DeWalt battery and is switched through relays from arcade buttons on the side of the cabinet.</p>
     
   </div>
@@ -178,40 +174,48 @@
       <figure><video src="img/eos.mp4" poster="img/eos.jpg" muted loop playsinline controls preload="none" style="display:block;width:100%;border-radius:2px;background:#000;aspect-ratio:9/16;object-fit:cover"></video><figcaption>End-of-stroke switch</figcaption></figure>
     </div>
   </div>
-</article></details>
+</article>
 
-<details class="pd"><summary><img class="th" src="img/t/cube.jpg" alt=""><span class="st"><span class="h3">Machining projects</span><span class="when">Machine shop</span></span><span class="chev" aria-hidden="true"></span></summary><article class="proj">
+<article class="proj">
   <div class="copy">
+    <h3>Machining projects</h3>
+    <p class="when">Machine shop</p>
     <p><b>Turner's cube.</b> I made this aluminum turner's cube on a CNC mill. It's three nested cubes cut from a single block, and each inner cube is free to move but can't come out. Getting it right takes careful setups and tool paths so each pocket breaks through to the next one without cutting into the cube inside.</p>
     <p><b>Tap wrench.</b> An adjustable tap wrench I machined. It has knurled handles and a sliding jaw that's tightened with brass screws to hold the tap.</p>
   </div>
   <div>
     <div class="grid c2 "><figure><a href="img/cube.jpg" data-cap="Turner's cube, CNC milled from one block of aluminum"><img src="img/t/cube.jpg" alt="Turner's cube, CNC milled from one block of aluminum" loading="lazy"></a><figcaption>Turner's cube, CNC milled from one block of aluminum</figcaption></figure><figure><a href="img/tapwrench.jpg" data-cap="Finished tap wrench"><img src="img/t/tapwrench.jpg" alt="Finished tap wrench" loading="lazy"></a><figcaption>Finished tap wrench</figcaption></figure></div>
   </div>
-</article></details>
+</article>
 
-<details class="pd"><summary><img class="th" src="img/t/ps-built.jpg" alt=""><span class="st"><span class="h3">7.3L Powerstroke rebuild</span><span class="when">Personal project</span></span><span class="chev" aria-hidden="true"></span></summary><article class="proj">
+<article class="proj">
   <div class="copy">
+    <h3>7.3L Powerstroke rebuild</h3>
+    <p class="when">Personal project</p>
     <p>A full rebuild of a Ford 7.3L Powerstroke diesel, including measuring and checking the bottom end, the injectors, the cylinder heads and the turbo.</p>
   </div>
   <div>
     <figure class="lead"><a href="img/ps-built.jpg" data-cap="Assembled engine"><img src="img/ps-built.jpg" alt="Assembled 7.3L Powerstroke"></a><figcaption>Assembled engine.</figcaption></figure>
     <div class="grid c2 "><figure><a href="img/ps-block.jpg" data-cap="Block and crank"><img src="img/t/ps-block.jpg" alt="Block and crank" loading="lazy"></a><figcaption>Block and crank</figcaption></figure><figure><a href="img/ps-top.jpg" data-cap="Top end and turbo"><img src="img/t/ps-top.jpg" alt="Top end and turbo" loading="lazy"></a><figcaption>Top end and turbo</figcaption></figure></div>
   </div>
-</article></details>
+</article>
 
-<details class="pd"><summary><img class="th" src="img/t/cvt.jpg" alt=""><span class="st"><span class="h3">Subaru CVT cutaway</span><span class="when">Automotive technology program, North Idaho College</span></span><span class="chev" aria-hidden="true"></span></summary><article class="proj">
+<article class="proj">
   <div class="copy">
+    <h3>Subaru CVT cutaway</h3>
+    <p class="when">Automotive technology program, North Idaho College</p>
     <p>For this project I cut away the case of a Subaru CVT so the inside of the transmission is visible, including the pulleys, the chain that runs between them, and the transfer drive at the back of the case.</p>
   </div>
   <div>
     <figure class="lead"><video src="img/cvt.mp4" poster="img/cvt.jpg" autoplay muted loop playsinline controls preload="metadata" style="display:block;max-width:420px;width:100%;border-radius:2px;background:#000"></video><figcaption>A walk around the cutaway: the pulley chain, then the transfer gears on the back of the case.</figcaption></figure>
     <div class="grid c2 "><figure><a href="img/cvt-pulleys.jpg" data-cap="Primary and secondary pulleys with the chain"><img src="img/t/cvt-pulleys.jpg" alt="Primary and secondary pulleys with the chain" loading="lazy"></a><figcaption>Primary and secondary pulleys with the chain</figcaption></figure><figure><a href="img/cvt-teardown.jpg" data-cap="Pulleys and chain out of the case"><img src="img/t/cvt-teardown.jpg" alt="Pulleys and chain out of the case" loading="lazy"></a><figcaption>Pulleys and chain out of the case</figcaption></figure></div>
   </div>
-</article></details>
+</article>
 
-<details class="pd"><summary><img class="th" src="img/t/xm-fab.jpg" alt=""><span class="st"><span class="h3">Other projects</span><span class="when">Personal projects</span></span><span class="chev" aria-hidden="true"></span></summary><article class="proj">
+<article class="proj">
   <div class="copy">
+    <h3>Other projects</h3>
+    <p class="when">Personal projects</p>
     <p><b>Sheet metal crossmember.</b> I designed this in Fusion 360 as a sheet metal part with lightening holes along the webs. Then I cut it from flat stock, bent it, welded it and finished it.</p>
     <p><b>Smaller CAD parts.</b> A formed mounting bracket and a Cessna fuel cap, both modeled in Fusion 360.</p>
   </div>
@@ -219,7 +223,7 @@
     <div class="grid c2 "><figure><a href="img/xm-fab.jpg" data-cap="Crossmember cut from flat sheet, before bending"><img src="img/t/xm-fab.jpg" alt="Crossmember cut from flat sheet, before bending" loading="lazy"></a><figcaption>Crossmember cut from flat sheet, before bending</figcaption></figure><figure><a href="img/xm-under.jpg" data-cap="Crossmember CAD, underside"><img src="img/t/xm-under.jpg" alt="Crossmember CAD, underside" loading="lazy"></a><figcaption>Crossmember CAD, underside</figcaption></figure></div>
     <div class="grid c3 fit"><figure><a href="img/xm-top.jpg" data-cap="Crossmember CAD, top"><img src="img/t/xm-top.jpg" alt="Crossmember CAD, top" loading="lazy"></a><figcaption>Crossmember CAD, top</figcaption></figure><figure><a href="img/bracket.jpg" data-cap="Formed mounting bracket"><img src="img/t/bracket.jpg" alt="Formed mounting bracket" loading="lazy"></a><figcaption>Formed mounting bracket</figcaption></figure><figure><a href="img/fuelcap.jpg" data-cap="Cessna fuel cap"><img src="img/t/fuelcap.jpg" alt="Cessna fuel cap" loading="lazy"></a><figcaption>Cessna fuel cap</figcaption></figure></div>
   </div>
-</article></details>
+</article>
 
 <h2 class="label" id="experience">Experience</h2>
 
